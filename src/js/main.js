@@ -2,7 +2,7 @@
 
 var PlayScene = require('./play_scene.js');
 
-
+var prueba = 9;
 var BootScene = {
   preload: function () {
     // load here assets required for the loading screen
