@@ -21,8 +21,8 @@ var PreloaderScene = {
     this.load.setPreloadSprite(this.loadingBar);
 
     // TODO: load here the assets for the game
-    this.game.load.image('logo', 'images/phaser.png');
-    this.game.load.image('oso', 'images/oso.png')
+   // this.game.load.image('logo', 'images/phaser.png');
+    this.game.load.image('popo', 'images/oso.png')
   },
 
   create: function () {
