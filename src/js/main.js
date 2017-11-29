@@ -1,42 +1,48 @@
-'use strict';
 
-var PlayScene = require('./play_scene.js');
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
-var BootScene = {
-  preload: function () {
-    // load here assets required for the loading screen
-    this.game.load.image('preloader_bar', 'images/preloader_bar.png');
-  },
+function preload() {
 
-  create: function () {
-    this.game.state.start('preloader');
-  }
-};
+    game.load.image('atari', '../images/oaso.png');
+    game.load.image('mushroom', '../images/osoa.png');
 
+}
 
-var PreloaderScene = {
-  preload: function () {
-    this.loadingBar = this.game.add.sprite(0, 240, 'preloader_bar');
-    this.loadingBar.anchor.setTo(0, 0.5);
-    this.load.setPreloadSprite(this.loadingBar);
+var sprite1;
+var sprite2;
 
-    // TODO: load here the assets for the game
-   // this.game.load.image('logo', 'images/phaser.png');
-    this.game.load.image('popo', 'images/oso.png')
-  },
+function create() {
 
-  create: function () {
-    this.game.state.start('play');
-  }
-};
+    game.physics.startSystem(Phaser.Physics.ARCADE);
 
+    game.stage.backgroundColor = '#2d2d2d';
 
-window.onload = function () {
-  var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game');
+    sprite1 = game.add.sprite(400, 50, 'atari');
+    sprite2 = game.add.sprite(400, 450, 'mushroom');
 
-  game.state.add('boot', BootScene);
-  game.state.add('preloader', PreloaderScene);
-  game.state.add('play', PlayScene);
+    game.physics.arcade.enable([ sprite1, sprite2 ], Phaser.Physics.ARCADE);
 
-  game.state.start('boot');
-};
+    game.add.tween(sprite1.body).to( { y: 400 }, 3000, Phaser.Easing.Linear.None, true);
+
+}
+
+function update() {
+
+    game.physics.arcade.overlap(sprite1, sprite2, overlapHandler, null, this);
+
+}
+
+function overlapHandler (obj1, obj2) {
+
+    game.stage.backgroundColor = '#992d2d';
+
+    obj2.kill();
+
+}
+
+function render() {
+
+    game.debug.body(sprite1);
+    game.debug.body(sprite2);
+
+}
