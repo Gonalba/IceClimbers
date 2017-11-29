@@ -22,12 +22,13 @@ function create() {
 
     game.physics.arcade.enable([ sprite1, sprite2 ], Phaser.Physics.ARCADE);
 
-    game.add.tween(sprite1.body).to( { y: 400 }, 3000, Phaser.Easing.Linear.None, true);
+    //game.add.tween(sprite1.body).to( { y: 450 }, 3000, Phaser.Easing.Linear.None, true);
 
 }
 
 function update() {
 
+	//sprite1.body.velocity.x = -150;
     game.physics.arcade.overlap(sprite1, sprite2, overlapHandler, null, this);
 
 }
@@ -42,7 +43,7 @@ function overlapHandler (obj1, obj2) {
 
 function render() {
 
-    game.debug.body(sprite1);
-    game.debug.body(sprite2);
+   // game.debug.body(sprite1);
+   // game.debug.body(sprite2);
 
 }
