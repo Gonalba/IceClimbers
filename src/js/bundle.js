@@ -79,11 +79,12 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 
 
 function preload() {
+	
 	game.load.baseURL = 'https://gonalba.github.io/IceClimbers/src/';
 
     game.load.crossOrigin = 'anonymous';
 
-    game.load.image('phaser', 'sprites/phaser-dude.png');
+    //game.load.image('phaser', 'sprites/phaser-dude.png');
 
     game.load.image('oso', 'images/oso.png');
     game.load.image('plataforma', 'images/preloader_bar.png');
