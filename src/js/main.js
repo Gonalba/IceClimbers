@@ -85,7 +85,7 @@ function preload() {
     //game.load.image('phaser', 'sprites/phaser-dude.png');
 
     game.load.image('oso', 'images/oso.png');
-    game.load.image('plataforma', 'images/preloader_bar.png');
+    game.load.image('plataforma', 'images/preloader_bar.png'),
     //game.load.image('mushroom', 'assets/sprites/mushroom2.png');
 
 }
