@@ -1,9 +1,23 @@
 <!doctype html>
 <html>
 <head>
-  <title>Awesome game</title>
-  <meta charset="utf-8">
+  <script language="JavaScript">
 
+
+	function preload() {
+
+		game.load.baseURL = 'https://gonalba.github.io/IceClimbers/src/';
+
+		game.load.crossOrigin = 'anonymous';
+
+		game.load.image('phaser', 'sprites/phaser-dude.png');
+
+	}
+
+  </script>
+  <title>Ice Climber</title>
+  <meta charset="utf-8">
+	
   <link href="styles.css" rel="stylesheet" type="text/css">
   <style>
   #game {
