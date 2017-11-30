@@ -3,14 +3,16 @@
 <head>
   <script language="JavaScript">
 
-
+	var PlayScene = require('./play_scene.js');
 	function preload() {
-
-		game.load.baseURL = 'https://gonalba.github.io/IceClimbers/src/js';
+		game.state.add('play', PlayScene);
+		
+		//game.load.baseURL = 'https://gonalba.github.io/IceClimbers/src/js';
 
 		game.load.crossOrigin = 'anonymous';
 
 		game.load.image('phaser', 'sprites/phaser-dude.png');
+		game.state.start('play');
 
 	}
 
