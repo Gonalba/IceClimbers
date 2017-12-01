@@ -105,7 +105,7 @@ function create() {
 
     game.stage.backgroundColor = '#2d2d2d';
 
-    game.physics.arcade.gravity.y = 3000; // gravedad
+    game.physics.arcade.gravity.y = 300; // gravedad
 //oso
     // añado el sprite del oso y le doy fisica
     oso = game.add.sprite(100, 300, 'oso');
