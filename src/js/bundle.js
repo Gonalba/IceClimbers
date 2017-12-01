@@ -79,18 +79,19 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 
 
 function preload() {
+	
 	game.load.baseURL = 'https://gonalba.github.io/IceClimbers/src/';
 
     game.load.crossOrigin = 'anonymous';
 
-    game.load.image('phaser', 'sprites/phaser-dude.png');
+    //game.load.image('phaser', 'sprites/phaser-dude.png');
 
     game.load.image('oso', 'images/oso.png');
     game.load.image('plataforma', 'images/preloader_bar.png');
     //game.load.image('mushroom', 'assets/sprites/mushroom2.png');
 
 }
-
+var collisionPlatOso = false;
 var oso;
 var plataforma;
 var cursors;
@@ -101,31 +102,38 @@ var jumpTimer = 0;
 
 function create() {
 
-    game.physics.startSystem(Phaser.Physics.ARCADE);
+    game.physics.startSystem(Phaser.Physics.ARCADE); //añado la fisica al juego
 
     game.stage.backgroundColor = '#2d2d2d';
-	
-    plataforma = game.add.sprite(300, 100, 'plataforma');
-	//game.physics.arcade.enable(plataforma, Phaser.Physics.ARCADE);
 
-    game.physics.arcade.gravity.y = 500;
-
-    oso = game.add.sprite(300, 300, 'oso');
+    game.physics.arcade.gravity.y = 3000; // gravedad
+//oso
+    // añado el sprite del oso y le doy fisica
+    oso = game.add.sprite(100, 300, 'oso');
+    oso.anchor.set(0.5);
+    oso.scale.set(0.5);
    	game.physics.arcade.enable(oso, Phaser.Physics.ARCADE);
-   // sprite2 = game.add.sprite(400, 450, 'mushroom');
+	//oso.body.bounce.y = 0.3;  // para que al caer rebote en el suelo
+    oso.body.collideWorldBounds = true;	// el collider no sale de los limites del mundo
+
+//plataforma
+    // añado el sprite de la plataforma y le doy fisica
+    plataforma = game.add.sprite(300, 450, 'plataforma');
+   	game.physics.arcade.enable(plataforma, Phaser.Physics.ARCADE);
     
+    plataforma.body.allowGravity = false;	//	la gravedad no le afecta
+    plataforma.body.immovable = true;	//	la plataforma es inmovible
 
-	oso.body.bounce.y = 0.2;
-    oso.body.collideWorldBounds = true;
-    oso.body.setSize(oso.width, oso.height);
 
-    //game.add.tween(sprite1.body).to( { y: 400 }, 3000, Phaser.Easing.Linear.None, true);
    	cursors = game.input.keyboard.createCursorKeys();
    	jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
 }
 
 function update() {
+	game.physics.arcade.collide(oso, plataforma,collisionTrue, null, this);//para que el oso se quede encima de la plataforma y no la atraviese
+	
+
 	oso.body.velocity.x = 0;
 	if (cursors.left.isDown){
 		oso.body.velocity.x = -250;
@@ -134,12 +142,19 @@ function update() {
 		oso.body.velocity.x = 250;
 	}
 
-	if (jumpButton.isDown && oso.body.onFloor())
+	if ((jumpButton.isDown) && (oso.body.onFloor() || collisionPlatOso)) // si se a pulsado el espacio y esta en el suelo o en una plataforma
     {
-        oso.body.velocity.y = -450;
-        //jumpTimer = game.time.now + 750;
+        oso.body.velocity.y = -1000;
+        
     }
-   // game.physics.arcade.overlap(sprite1, sprite2, overlapHandler, null, this);			&& game.time.now > jumpTimer
+    collisionPlatOso = false;
+
+}
+
+//metodo para saber si esta colisionando con una plataforma
+function collisionTrue (obj1, obj2) {
+
+    collisionPlatOso = true;
 
 }
 
@@ -147,9 +162,8 @@ function update() {
 
 function render() {
 
-   // game.debug.body(sprite1);
-    //game.debug.body(sprite2);
-
+    game.debug.body(plataforma);
+    game.debug.body(oso);
 }
 
 },{}]},{},[1]);
