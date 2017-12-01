@@ -105,7 +105,7 @@ function create() {
 
     game.stage.backgroundColor = '#2d2d2d';
 
-    game.physics.arcade.gravity.y = 9000; // gravedad
+    game.physics.arcade.gravity.y = 6000; // gravedad
 //oso
     // añado el sprite del oso y le doy fisica
     oso = game.add.sprite(100, 300, 'oso');
@@ -135,15 +135,15 @@ function update() {
 
 	oso.body.velocity.x = 0;
 	if (cursors.left.isDown){
-		oso.body.velocity.x = -300;
+		oso.body.velocity.x = -250;
 	}
 	else if(cursors.right.isDown){
-		oso.body.velocity.x = 300;
+		oso.body.velocity.x = 250;
 	}
 
 	if ((jumpButton.isDown) && (oso.body.onFloor() || collisionPlatOso)) // si se a pulsado el espacio y esta en el suelo o en una plataforma
     {
-        oso.body.velocity.y = -1500;
+        oso.body.velocity.y = -1000;
         
     }
     collisionPlatOso = false;
