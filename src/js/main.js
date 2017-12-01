@@ -160,7 +160,7 @@ function collisionTrue (obj1, obj2) {
 
 
 function render() {
-
+/*
     game.debug.body(plataforma);
-    game.debug.body(oso);
+    game.debug.body(oso);*/
 }
