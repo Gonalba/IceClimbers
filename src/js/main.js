@@ -1,3 +1,4 @@
+
 /*
 //var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 'use strict';
@@ -27,7 +28,8 @@ window.onload = function () {
 	game.state.start('preloader');
 };
 */
-/*
+//-------------------------------------------------------------------------------
+
 'use strict';
 
 var PlayScene = require('./play_scene.js');
@@ -52,7 +54,7 @@ var PreloaderScene = {
     this.load.setPreloadSprite(this.loadingBar);
 
     // TODO: load here the assets for the game
-    this.game.load.image('oso', 'images/oso.png');
+    this.game.load.image('popo', '../images/oso.png');
   },
 
   create: function () {
@@ -71,8 +73,9 @@ window.onload = function () {
   game.state.start('boot');
 };
 
-*/
 
+//-------------------------------------------------------------------------
+/*
 var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
@@ -119,4 +122,4 @@ function render() {
     game.debug.body(sprite1);
     game.debug.body(sprite2);
 
-}
+}*/

@@ -1,2 +1,0 @@
-function Player (game, x,y, playerInfo){
-	this._player = game.add.sprite(x,y,playerInfo.name);
