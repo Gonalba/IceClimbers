@@ -65,6 +65,7 @@ window.onload = function () {
   game.state.start('boot');
 };
 
+<<<<<<< HEAD
 },{"./play_scene.js":3}],3:[function(require,module,exports){
 'use strict';
 var entities = require('./entities.js');
@@ -99,6 +100,7 @@ var PlayScene = {
 	}
 };
 
+<<<<<<< HEAD
 module.exports = PlayScene;
 
 },{"./entities.js":1}]},{},[2]);

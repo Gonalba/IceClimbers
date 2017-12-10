@@ -40,3 +40,4 @@ window.onload = function () {
 
   game.state.start('boot');
 };
+>>>>>>> parent of 62124ff... calibracion gravedad
