@@ -1,15 +1,21 @@
+'use strict';
+function Popo (game, x,y){
+	this._popo = game.add.sprite(x,y,'popo');
 
-/*
-function Player (game, x,y){
-	this._player = game.add.sprite(x,y,'popo');
-
-	this._player.moveLeft = function(x){
-    	this.direction = Direction.LEFT;
-    	this.body.velocity.x = this._speed*(-x); 
+	this._popo.moveLeft = function(x){
+    	this.body.velocity.x = x; 
     }
-    this._player.moveRight = function(x){
-      this.direction = Direction.RIGHT;
-      this.body.velocity.x = this._speed*x; 
+    this._popo.moveRight = function(x){
+      this.body.velocity.x = x; 
     }
 
-}*/
+    this._popo.jump = function(y){
+          if(this.body.onFloor())this.body.velocity.y = y;
+	}
+	return this._popo;
+};
+Popo.prototype.constructor = Popo;
+
+module.exports = {
+  Popo: Popo
+};
