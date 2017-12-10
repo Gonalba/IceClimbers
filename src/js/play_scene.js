@@ -12,7 +12,6 @@ var PlayScene = {
         this.game.physics.arcade.gravity.y = 500;  
         this._popo.body.bounce.y = 0.2;
         this._popo.body.collideWorldBounds = true;
-
 		this.cursors = this.game.input.keyboard.createCursorKeys();
 	},
 
