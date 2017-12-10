@@ -64,26 +64,7 @@ window.onload = function () {
 
   game.state.start('boot');
 };
-
-<<<<<<< HEAD
-},{"./play_scene.js":3}],3:[function(require,module,exports){
-'use strict';
-var entities = require('./entities.js');
-
-var PlayScene = {
-	_popo: {},
-
-	create: function () {
-		this._popo = new entities.Popo(this.game, this.game.world.centerX, this.game.world.centerY);
-    	//this.configure();
-    	this.game.physics.startSystem(Phaser.Physics.ARCADE);
-        this.game.physics.arcade.enable(this._popo);        
-        this.game.physics.arcade.gravity.y = 300;  
-        this._popo.body.bounce.y = 0.2;
-        this._popo.body.collideWorldBounds = true;
-=======
-*/
-
+/*
 var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
 
@@ -142,29 +123,16 @@ function create() {
 
 function update() {
 	game.physics.arcade.collide(oso, plataforma,collisionTrue, null, this);//para que el oso se quede encima de la plataforma y no la atraviese
->>>>>>> parent of 62124ff... calibracion gravedad
 	
-	this.cursors = this.game.input.keyboard.createCursorKeys();
-	},
 
-	update: function(){
-		this._popo.body.velocity.x = 0;
-
-		if (this.cursors.left.isDown){
-			this._popo.moveLeft(-250);
-		}
-		else if(this.cursors.right.isDown){
-			this._popo.moveRight(250);
-		}
-		else if(this.cursors.up.isDown && this._popo.body.onFloor()){
-			this._popo.jump(1000);
-		}
+	oso.body.velocity.x = 0;
+	if (cursors.left.isDown){
+		oso.body.velocity.x = -250;
 	}
-};
+	else if(cursors.right.isDown){
+		oso.body.velocity.x = 250;
+	}
 
-<<<<<<< HEAD
-module.exports = PlayScene;
-=======
 	if ((jumpButton.isDown) && (oso.body.onFloor() || collisionPlatOso)) // si se a pulsado el espacio y esta en el suelo o en una plataforma
     {
         oso.body.velocity.y = -1000;
@@ -185,9 +153,45 @@ function collisionTrue (obj1, obj2) {
 
 function render() {
 
-    /*game.debug.body(plataforma);
-    game.debug.body(oso);*/
+    game.debug.body(plataforma);
+    game.debug.body(oso);
 }
->>>>>>> parent of 62124ff... calibracion gravedad
+*/
+
+},{"./play_scene.js":3}],3:[function(require,module,exports){
+'use strict';
+var entities = require('./entities.js');
+
+var PlayScene = {
+	_popo: {},
+
+	create: function () {
+		this._popo = new entities.Popo(this.game, this.game.world.centerX, this.game.world.centerY);
+    	//this.configure();
+    	this.game.physics.startSystem(Phaser.Physics.ARCADE);
+        this.game.physics.arcade.enable(this._popo);        
+        this.game.physics.arcade.gravity.y = 300;  
+        this._popo.body.bounce.y = 0.2;
+        this._popo.body.collideWorldBounds = true;
+	
+	this.cursors = this.game.input.keyboard.createCursorKeys();
+	},
+
+	update: function(){
+		this._popo.body.velocity.x = 0;
+
+		if (this.cursors.left.isDown){
+			this._popo.moveLeft(-250);
+		}
+		else if(this.cursors.right.isDown){
+			this._popo.moveRight(250);
+		}
+		else if(this.cursors.up.isDown && this._popo.body.onFloor()){
+			this._popo.jump(1000);
+		}
+	}
+};
+
+module.exports = PlayScene;
 
 },{"./entities.js":1}]},{},[2]);
