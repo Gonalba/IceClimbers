@@ -24,6 +24,11 @@ var PreloaderScene = {
 
     // TODO: load here the assets for the game
     this.game.load.image('popo', '../images/popo.png');
+    this.game.load.tilemap('mapPrueba', 'images/PruebaMapa1..csv', null, Phaser.Tilemap.CSV);
+    this.game.load.image('tile', '../images/SueloTile.png');
+    this.layer = this.map.createLayer('World1');
+    layer.resizeWorld();
+
   },
 
   create: function () {
