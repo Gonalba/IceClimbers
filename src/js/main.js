@@ -1,4 +1,3 @@
-
 'use strict';
 
 var PlayScene = require('./play_scene.js');
@@ -24,11 +23,8 @@ var PreloaderScene = {
 
     // TODO: load here the assets for the game
     this.game.load.image('popo', '../images/popo.png');
-    this.game.load.tilemap('mapPrueba', 'images/PruebaMapa1..csv', null, Phaser.Tilemap.CSV);
-    this.game.load.image('tile', '../images/SueloTile.png');
-    this.layer = this.map.createLayer('World1');
-    layer.resizeWorld();
-
+    this.game.load.tilemap('mapa', 'images/PuebaMap2.json', null, Phaser.Tilemap.TILED_JSON);
+    this.game.load.image('patron', 'images/SueloTile.png');
   },
 
   create: function () {
@@ -43,7 +39,6 @@ window.onload = function () {
   game.state.add('boot', BootScene);
   game.state.add('preloader', PreloaderScene);
   game.state.add('play', PlayScene);
-
 
   game.state.start('boot');
 };
