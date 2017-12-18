@@ -9,6 +9,7 @@ Objeto.prototype.constructor = Objeto;
 //MOVIBLE-----------------------------------------
 function Movable (game, x, y, graphic){
   Objeto.call(this, game, x, y, graphic);
+  
 }
 Movable.prototype = Object.create(Objeto.prototype);
 Movable.prototype.constructor = Movable;
@@ -21,17 +22,16 @@ Movable.prototype.move = function (vel) {
 //POPO-----------------------------------------------------------------
 function Popo (game, x,y,graphic){
   Movable.call(this, game, x, y, graphic);
-
-
   /*this._popo.moveLeft = function(x){
       this.body.velocity.x = x; 
     }
     this._popo.moveRight = function(x){
       this.body.velocity.x = x; 
-    }
-*/this._obj.move = function (vel) {
-    this.body.velocity.x = vel; 
+    }*/
+this._obj.move = function (vel) {
+    this.body.velocity.x = vel;
   }
+  
   this._obj.jump = function(y){
       if(this.body.onFloor())
          this.body.velocity.y = y;
@@ -44,6 +44,16 @@ Popo.prototype.constructor = Popo;
 //ENEMIGO-------------------------------------------------------------
 function Enemy(game, x, y, graphic){
   Movable.call(this, game, x, y, graphic);
+  //this.game.physics.arcade.enable(this._obj);
+  //this._obj.body.collideWorldBounds = true;
+
+ /* this._obj.move = function (vel) {
+    if(this._obj.body.x >= (500)){
+          vel = -vel;
+        }
+    this.body.velocity.x = vel; 
+  }
+  return this._obj;*/
 }
 Enemy.prototype = Object.create(Movable.prototype);
 Enemy.prototype.constructor = Enemy;
@@ -55,10 +65,10 @@ Enemy.prototype.atravesarVerticales = function (){};*/
 function Yeti(game, x, y){
   Enemy.call(this, game, x, y, 'yeti');
 
- /* this._obj.move = function (vel) {
-    this.body.velocity.x = vel; 
-  }*/
   this._obj.move = function (vel) {
+    if(this.body.x >= (this.game.widht-200)){
+          vel = -vel;
+        }
     this.body.velocity.x = vel; 
   }
   return this._obj;
@@ -72,10 +82,11 @@ Yeti.prototype.constructor = Yeti;
 function Oso(game, x, y){
   Enemy.call(this, game, x, y, 'oso');
 
-  /*this._obj.move = function (vel) {
-    this.body.velocity.x = vel; 
-  }*/
+  //this.body.velocity.x = 50;
   this._obj.move = function (vel) {
+    if(this.body.x >= (1000)){
+          vel = -vel;
+        }
     this.body.velocity.x = vel; 
   }
   return this._obj;
@@ -87,4 +98,6 @@ module.exports = {
   Objeto: Objeto,
   Movable: Movable,
   Popo: Popo,
+  Yeti: Yeti,
+  Oso: Oso,
 };
