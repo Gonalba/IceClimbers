@@ -65,12 +65,23 @@ Enemy.prototype.atravesarVerticales = function (){};*/
 //YETI--------------------------------------------------------------
 function Yeti(game, x, y){
   Enemy.call(this, game, x, y, 'yeti');
+  var cambioSentido = true;
+  var aux;
 
   this._obj.move = function (vel) {
-    if(this.body.x >= (this.game.widht-200)){
-          vel = -vel;
+    
+    if(cambioSentido){
+        aux = vel;
+        if(this.body.x >= (700)){
+          cambioSentido = false;
+          aux = - vel;
         }
-    this.body.velocity.x = vel; 
+    }else{
+       // aux = vel;
+        if(this.body.x <= (50))
+          cambioSentido = true;  
+    }
+    this.body.velocity.x = aux; 
   }
   return this._obj;
 }
@@ -82,13 +93,22 @@ Yeti.prototype.constructor = Yeti;
 //OSO-----------------------------------------------------------------
 function Oso(game, x, y){
   Enemy.call(this, game, x, y, 'oso');
-
+  var cambioSentido = true;
+  var aux;
   //this.body.velocity.x = 50;
   this._obj.move = function (vel) {
-    if(this.body.x >= (1000)){
-          vel = -vel;
-        }
-    this.body.velocity.x = vel; 
+    if(cambioSentido){
+      aux = vel;
+      if(this.body.x >= (750)){
+        cambioSentido = false;
+        aux = - vel;
+      }
+    }else{
+       // aux = vel;
+        if(this.body.x <= (470))
+          cambioSentido = true;  
+    }
+    this.body.velocity.x = aux; 
   }
   return this._obj;
 }

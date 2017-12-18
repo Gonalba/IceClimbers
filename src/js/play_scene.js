@@ -32,9 +32,7 @@ var PlayScene = {
 		this.map.setCollisionBetween(1, 50);// true, 'Capa de Patrones 1');
  		this.groundLayer.resizeWorld();
  		this.game.camera.follow(this._popo);
-		this._yeti.move(50);
-
-		this._oso.move(50);
+		
 
 
 	},
@@ -43,6 +41,10 @@ var PlayScene = {
 		this.game.physics.arcade.collide(this._popo, this.groundLayer);
 		this.game.physics.arcade.collide(this._oso, this.groundLayer);
 		this.game.physics.arcade.collide(this._yeti, this.groundLayer);
+		
+		this._yeti.move(80);
+		this._oso.move(50);
+
 		this._popo.body.velocity.x = 0;
 		
 
@@ -55,6 +57,10 @@ var PlayScene = {
 		if(this.cursors.up.isDown){
 			this._popo.jump(-500);
 		}
+	},
+	render: function(){
+		//this.game.debug.bodyInfo(_oso, 32, 32);
+        //this.game.debug.body(_oso);
 	}
 };
 module.exports = PlayScene;

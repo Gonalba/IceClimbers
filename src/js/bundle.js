@@ -66,12 +66,23 @@ Enemy.prototype.atravesarVerticales = function (){};*/
 //YETI--------------------------------------------------------------
 function Yeti(game, x, y){
   Enemy.call(this, game, x, y, 'yeti');
+  var cambioSentido = true;
+  var aux;
 
   this._obj.move = function (vel) {
-    if(this.body.x >= (this.game.widht-200)){
-          vel = -vel;
+    
+    if(cambioSentido){
+        aux = vel;
+        if(this.body.x >= (700)){
+          cambioSentido = false;
+          aux = - vel;
         }
-    this.body.velocity.x = vel; 
+    }else{
+       // aux = vel;
+        if(this.body.x <= (50))
+          cambioSentido = true;  
+    }
+    this.body.velocity.x = aux; 
   }
   return this._obj;
 }
@@ -83,13 +94,22 @@ Yeti.prototype.constructor = Yeti;
 //OSO-----------------------------------------------------------------
 function Oso(game, x, y){
   Enemy.call(this, game, x, y, 'oso');
-
+  var cambioSentido = true;
+  var aux;
   //this.body.velocity.x = 50;
   this._obj.move = function (vel) {
-    if(this.body.x >= (1000)){
-          vel = -vel;
-        }
-    this.body.velocity.x = vel; 
+    if(cambioSentido){
+      aux = vel;
+      if(this.body.x >= (750)){
+        cambioSentido = false;
+        aux = - vel;
+      }
+    }else{
+       // aux = vel;
+        if(this.body.x <= (470))
+          cambioSentido = true;  
+    }
+    this.body.velocity.x = aux; 
   }
   return this._obj;
 }
@@ -192,9 +212,7 @@ var PlayScene = {
 		this.map.setCollisionBetween(1, 50);// true, 'Capa de Patrones 1');
  		this.groundLayer.resizeWorld();
  		this.game.camera.follow(this._popo);
-		this._yeti.move(50);
-
-		this._oso.move(50);
+		
 
 
 	},
@@ -203,6 +221,10 @@ var PlayScene = {
 		this.game.physics.arcade.collide(this._popo, this.groundLayer);
 		this.game.physics.arcade.collide(this._oso, this.groundLayer);
 		this.game.physics.arcade.collide(this._yeti, this.groundLayer);
+		
+		this._yeti.move(80);
+		this._oso.move(50);
+
 		this._popo.body.velocity.x = 0;
 		
 
@@ -215,6 +237,10 @@ var PlayScene = {
 		if(this.cursors.up.isDown){
 			this._popo.jump(-500);
 		}
+	},
+	render: function(){
+		//this.game.debug.bodyInfo(_oso, 32, 32);
+        //this.game.debug.body(_oso);
 	}
 };
 module.exports = PlayScene;
