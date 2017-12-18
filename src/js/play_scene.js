@@ -3,11 +3,18 @@ var entities = require('./entities.js');
 
 var PlayScene = {
 	_popo: {},
-
+	_oso:{},
+	_yeti:{},
 	create: function () {
-		this._popo = new entities.Popo(this.game, 500, 1900);
+		this._popo = new entities.Popo(this.game, 500, 1900,'popo');
+    	//this._oso = new entities.Oso(this.game, 500, 1900);
+    	//this._yeti = new entities.Yeti(this.game, 100, 100);
+
     	this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.physics.arcade.enable(this._popo);        
+       // this.game.physics.arcade.enable(this._oso);
+        //this.game.physics.arcade.enable(this._yeti);
+
         this.game.physics.arcade.gravity.y = 500;  
         this._popo.body.bounce.y = 0.2;
         //this._popo.body.collideWorldBounds = true;
@@ -25,6 +32,8 @@ var PlayScene = {
 
 	update: function(){
 		this.game.physics.arcade.collide(this._popo, this.groundLayer);
+		//this.game.physics.arcade.collide(this._oso, this.groundLayer);
+		//this.game.physics.arcade.collide(this._yeti, this.groundLayer);
 
 		this._popo.body.velocity.x = 0;
 
