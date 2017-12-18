@@ -1,5 +1,6 @@
 'use strict';
 var entities = require('./entities.js');
+ 
 
 var PlayScene = {
 	_popo: {},

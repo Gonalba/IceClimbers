@@ -17,6 +17,10 @@ var BootScene = {
 
 var PreloaderScene = {
   preload: function () {
+
+    /*this.game.load.baseURL = 'https://Gonalba.github.io/IceClimbers/src/';
+    this.game.load.crossOrigin = 'anonymous';*/
+
     this.loadingBar = this.game.add.sprite(0, 240, 'preloader_bar');
     this.loadingBar.anchor.setTo(0, 0.5);
     this.load.setPreloadSprite(this.loadingBar);

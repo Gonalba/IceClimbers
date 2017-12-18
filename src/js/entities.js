@@ -1,4 +1,5 @@
 'use strict';
+
 //OBJETO-----------------------------------------------------
 function Objeto (game, x, y, graphic){
     this._obj = game.add.sprite( x,  y, graphic);
