@@ -26,9 +26,9 @@ var PreloaderScene = {
     this.load.setPreloadSprite(this.loadingBar);
 
     // TODO: load here the assets for the game
-    this.game.load.image('popo', '../images/popo.png');
-    this.game.load.image('oso', '../images/oso.png');
-    this.game.load.image('yeti', '../images/yeti.png');
+    this.game.load.image('popo', 'images/popo.png');
+    this.game.load.image('oso', 'images/oso.png');
+    this.game.load.image('yeti', 'images/yeti.png');
     
     this.game.load.tilemap('mapa', 'images/PuebaMap2.json', null, Phaser.Tilemap.TILED_JSON);
     this.game.load.image('patron', 'images/SueloTile.png');
