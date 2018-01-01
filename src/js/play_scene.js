@@ -42,8 +42,8 @@ var PlayScene = {
 		this.game.physics.arcade.collide(this._oso, this.groundLayer);
 		this.game.physics.arcade.collide(this._yeti, this.groundLayer);
 		
-		this._yeti.move(80);
-		this._oso.move(50);
+		//this._yeti.move(80);
+		//this._oso.move(50);
 
 		this._popo.body.velocity.x = 0;
 		

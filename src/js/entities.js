@@ -65,14 +65,14 @@ Enemy.prototype.atravesarVerticales = function (){};*/
 //YETI--------------------------------------------------------------
 function Yeti(game, x, y){
   Enemy.call(this, game, x, y, 'yeti');
-  var cambioSentido = true;
-  var aux;
+  var cambioSentido = true; // poned los this y separar por prototype
+  //var aux;
 
-  this._obj.move = function (vel) {
+  /*this._obj.move = function (vel) {
     
     if(cambioSentido){
         aux = vel;
-        if(this.body.x >= (700)){
+        if(this.body.x >= (700)){ // fuera parentesis
           cambioSentido = false;
           aux = - vel;
         }
@@ -83,7 +83,7 @@ function Yeti(game, x, y){
     }
     this.body.velocity.x = aux; 
   }
-  return this._obj;
+  return this._obj;*/
 }
 Yeti.prototype = Object.create(Enemy.prototype);
 Yeti.prototype.constructor = Yeti;
@@ -93,24 +93,24 @@ Yeti.prototype.constructor = Yeti;
 //OSO-----------------------------------------------------------------
 function Oso(game, x, y){
   Enemy.call(this, game, x, y, 'oso');
-  var cambioSentido = true;
-  var aux;
+  this.cambioSentido = true;
+  //var aux;
   //this.body.velocity.x = 50;
-  this._obj.move = function (vel) {
-    if(cambioSentido){
+  /*this._obj.move = function (vel) {
+    if(this.cambioSentido){
       aux = vel;
       if(this.body.x >= (750)){
-        cambioSentido = false;
+        this.cambioSentido = false;
         aux = - vel;
       }
     }else{
        // aux = vel;
         if(this.body.x <= (470))
-          cambioSentido = true;  
+          this.cambioSentido = true;  
     }
     this.body.velocity.x = aux; 
   }
-  return this._obj;
+  return this._obj;*/
 }
 Oso.prototype = Object.create(Enemy.prototype);
 Oso.prototype.constructor = Oso;
