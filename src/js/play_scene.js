@@ -46,17 +46,6 @@ var PlayScene = {
 		//this._oso.move(50);
 
 		this._popo.body.velocity.x = 0;
-		
-
-		if (this.cursors.left.isDown){
-			this._popo.move(-250);
-		}
-		else if(this.cursors.right.isDown){
-			this._popo.move(250);
-		}
-		if(this.cursors.up.isDown){
-			this._popo.jump(-500);
-		}
 	},
 	render: function(){
 		//this.game.debug.bodyInfo(_oso, 32, 32);

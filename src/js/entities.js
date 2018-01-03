@@ -2,9 +2,9 @@
 
 //OBJETO-----------------------------------------------------
 function Objeto (game, x, y, graphic){
-    this._obj = game.add.sprite( x,  y, graphic);
-    this._obj.scale.setTo(0.5, 0.5);
+    Phaser.Sprite.call(this, game, x, y, graphic);
 };
+Objeto.prototype = Object.create(Phaser.Sprite.prototype)
 Objeto.prototype.constructor = Objeto;
 
 //MOVIBLE-----------------------------------------
@@ -15,29 +15,9 @@ function Movable (game, x, y, graphic){
 Movable.prototype = Object.create(Objeto.prototype);
 Movable.prototype.constructor = Movable;
 
-/*
-Movable.prototype.move = function (vel) {
-  this.body.velocity.x = vel; 
-};*/
-
 //POPO-----------------------------------------------------------------
 function Popo (game, x,y,graphic){
   Movable.call(this, game, x, y, graphic);
-  /*this._popo.moveLeft = function(x){
-      this.body.velocity.x = x; 
-    }
-    this._popo.moveRight = function(x){
-      this.body.velocity.x = x; 
-    }*/
-this._obj.move = function (vel) {
-    this.body.velocity.x = vel;
-  }
-  
-  this._obj.jump = function(y){
-      if(this.body.onFloor())
-         this.body.velocity.y = y;
-  }
-  return this._obj;
 }
 Popo.prototype = Object.create(Movable.prototype);
 Popo.prototype.constructor = Popo;
@@ -45,16 +25,6 @@ Popo.prototype.constructor = Popo;
 //ENEMIGO-------------------------------------------------------------
 function Enemy(game, x, y, graphic){
   Movable.call(this, game, x, y, graphic);
-  //this.game.physics.arcade.enable(this._obj);
-  //this._obj.body.collideWorldBounds = true;
-
- /* this._obj.move = function (vel) {
-    if(this._obj.body.x >= (500)){
-          vel = -vel;
-        }
-    this.body.velocity.x = vel; 
-  }
-  return this._obj;*/
 }
 Enemy.prototype = Object.create(Movable.prototype);
 Enemy.prototype.constructor = Enemy;
@@ -65,25 +35,6 @@ Enemy.prototype.atravesarVerticales = function (){};*/
 //YETI--------------------------------------------------------------
 function Yeti(game, x, y){
   Enemy.call(this, game, x, y, 'yeti');
-  var cambioSentido = true; // poned los this y separar por prototype
-  //var aux;
-
-  /*this._obj.move = function (vel) {
-    
-    if(cambioSentido){
-        aux = vel;
-        if(this.body.x >= (700)){ // fuera parentesis
-          cambioSentido = false;
-          aux = - vel;
-        }
-    }else{
-       // aux = vel;
-        if(this.body.x <= (50))
-          cambioSentido = true;  
-    }
-    this.body.velocity.x = aux; 
-  }
-  return this._obj;*/
 }
 Yeti.prototype = Object.create(Enemy.prototype);
 Yeti.prototype.constructor = Yeti;
@@ -93,24 +44,7 @@ Yeti.prototype.constructor = Yeti;
 //OSO-----------------------------------------------------------------
 function Oso(game, x, y){
   Enemy.call(this, game, x, y, 'oso');
-  this.cambioSentido = true;
-  //var aux;
-  //this.body.velocity.x = 50;
-  /*this._obj.move = function (vel) {
-    if(this.cambioSentido){
-      aux = vel;
-      if(this.body.x >= (750)){
-        this.cambioSentido = false;
-        aux = - vel;
-      }
-    }else{
-       // aux = vel;
-        if(this.body.x <= (470))
-          this.cambioSentido = true;  
-    }
-    this.body.velocity.x = aux; 
-  }
-  return this._obj;*/
+  
 }
 Oso.prototype = Object.create(Enemy.prototype);
 Oso.prototype.constructor = Oso;
@@ -118,6 +52,7 @@ Oso.prototype.constructor = Oso;
 module.exports = {
   Objeto: Objeto,
   Movable: Movable,
+  Enemy: Enemy,
   Popo: Popo,
   Yeti: Yeti,
   Oso: Oso,
