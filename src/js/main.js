@@ -15,24 +15,15 @@ var BootScene = {
 };
 
 
-
 var PreloaderScene = {
   preload: function () {
-
-    /*this.game.load.baseURL = 'https://Gonalba.github.io/IceClimbers/src/';
-    this.game.load.crossOrigin = 'anonymous';*/
-
     this.loadingBar = this.game.add.sprite(0, 240, 'preloader_bar');
     this.loadingBar.anchor.setTo(0, 0.5);
     this.load.setPreloadSprite(this.loadingBar);
 
     // TODO: load here the assets for the game
-    this.game.load.image('popo', 'images/Popo.PNG');
-    this.game.load.image('oso', 'images/oso.png');
-    this.game.load.image('yeti', 'images/Yeti.png');
-    
-    this.game.load.tilemap('mapa', 'images/PuebaMap2.json', null, Phaser.Tilemap.TILED_JSON);
-    this.game.load.image('patron', 'images/SueloTile.png');
+    this.game.load.image('logo', 'images/phaser.png');
+    this.game.load.image('popo', 'images/popo.PNG');
   },
 
   create: function () {
