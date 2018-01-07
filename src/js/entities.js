@@ -22,6 +22,19 @@ Movable.prototype.constructor = Movable;
 Movable.prototype.move = function(){
 	//USO this.x EN VEZ DE this.body.velocity.x PORQUE CON EL SEGUNDO SE MUEVE CON ACELERACION
 	this.x += this._velocity * this._direction;
+	
+	//toroide
+	if(this.x > this.game.width - this.width-1)
+		this.x = 2;
+	else if(this.x < 1)
+		this.x = this.game.width - this.width-1;
+};
+
+
+//MARTILLO-------------------------------------------------------------------------------
+//PREGUNTAR A CARLOS COMO IMPLEMENTAR EL ATAQUE DEL MARTILLO
+function Martillo (){
+
 };
 
 //POPO-----------------------------------------------------------------------------------
@@ -51,12 +64,46 @@ Popo.prototype.keyboardInput = function(){
   	if (this._cursors.up.isDown&&this.body.onFloor())
   		this.jump();
 };
-
 //METODO DE SALTO
+	//falta implementar que ataque cuando salte
 Popo.prototype.jump = function(){
 	this.body.velocity.y = this._jumpPower;
 };
+//metodo pierde vida
+//metodo morir
+Popo.prototype.morir = function (){};
+//metodo atacar
+
+
+//YETI--------------------------------------------------------------------------------------
+function Yeti(game, x, y, graphic){
+	Movable.call(this, game, x, y, graphic);
+};
+Yeti.prototype = Object.create(Movable.prototype);
+Yeti.prototype.constructor = Yeti;
+
+Yeti.prototype.update = function(){
+	this.move();
+};
+
+Yeti.prototype.morir = function (){};
+
+
+//OSO--------------------------------------------------------------------------------------
+function Oso(game, x, y, graphic){
+	Movable.call(this, game, x, y, graphic);
+};
+Oso.prototype = Object.create(Movable.prototype);
+Oso.prototype.constructor = Yeti;
+
+Oso.prototype.update = function(){
+	this.move();
+};
+
+Oso.prototype.morir = function (){};
 
 module.exports = {
-	Popo: Popo
+	Popo: Popo,
+	Yeti: Yeti,
+	Oso: Oso
 };
