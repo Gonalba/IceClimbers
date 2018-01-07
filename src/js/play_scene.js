@@ -5,9 +5,9 @@ var PlayScene = {
   create: function () {
 
   	//POPO--------------------------------------
-   	this._popo = new entities.Popo(this.game, 100, 100,'sprites');
-   	this._popo.height *= 0.5;
-   	this._popo.width *= 0.5;
+   	this._popo = new entities.Popo(this.game, 100, 100,'spritesGame');
+   	this._popo.height *= 3;
+   	this._popo.width *= 3;
    	this.game.world.addChild(this._popo);
    	
    	//YETI-------------------------------------
