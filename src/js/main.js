@@ -27,7 +27,7 @@ var PreloaderScene = {
     this.game.load.image('oso', 'images/oso.png');
     this.game.load.image('yeti', 'images/yeti.png');
     
-    this.game.load.spritesheet('spritesGame', 'images/Sprites.png', 27, 35, 19);
+    this.game.load.spritesheet('spritesGame', 'images/Sprites.png', 27, 35, 64);
 	
   },
 

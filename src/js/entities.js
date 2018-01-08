@@ -3,6 +3,8 @@
 //OBJETO-----------------------------------------------------
 function Objeto (game,x,y,graphic){
 	Phaser.Sprite.call(this, game, x, y, graphic);
+	this.MoveLeft = this.animations.add('MoveLeft',[0,1,2,3]);
+	this.JumpLeft = this.animations.add('JumpLeft',[6,4,5]);
 };
 
 Objeto.prototype = Object.create(Phaser.Sprite.prototype);
@@ -13,6 +15,7 @@ Objeto.prototype.constructor = Objeto;
 function Movable (game, x, y, graphic){
  	this._velocity = 1;
  	this._direction = 1;
+ 	this.facing = '';
  	Objeto.call(this, game, x, y, graphic);
   
 };
@@ -57,22 +60,47 @@ Popo.prototype.update = function(){
 //EN ESTE METODO SE CAPTURAN LAS TECLAS QUE SE PULSAN Y SE REALIZA LA FUNCION CORRESPONDIENTE
 Popo.prototype.keyboardInput = function(){
 	this._direction = 0;
-	if (this._cursors.left.isDown)
+	if (this._cursors.left.isDown){
 		this._direction = -1;
-	else if (this._cursors.right.isDown)
+		if(this.body.onFloor()){
+			this.play('MoveLeft',20);
+			this.facing = 'left';
+		}
+	}
+	else if (this._cursors.right.isDown){
   		this._direction = 1
-  	if (this._cursors.up.isDown&&this.body.onFloor())
+  		if(this.body.onFloor()){
+			this.play('MoveLeft',20);
+			this.facing = 'right';
+		}
+	}
+
+  	if (this._cursors.up.isDown&&this.body.onFloor()){
   		this.jump();
+  		if(this.facing === 'left'){
+	  		this.play('JumpLeft', 10)
+	  		this.facing = 'JumpLeft';
+	  	}else if (this.facing === 'right'){
+	  		this.play('JumpLeft', 10)
+	  		this.facing = 'JumpRight';
+	  	}
+  	}
+
+  	if(this.facing !== 'left' && this.facing !== 'right' && this.body.onFloor())
+  		this.frame = 3;
+
 };
 //METODO DE SALTO
 	//falta implementar que ataque cuando salte
 Popo.prototype.jump = function(){
 	this.body.velocity.y = this._jumpPower;
 };
+
 //metodo pierde vida
 //metodo morir
 Popo.prototype.morir = function (){};
 //metodo atacar
+
 
 
 //YETI--------------------------------------------------------------------------------------
