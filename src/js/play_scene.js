@@ -3,23 +3,24 @@ var entities = require('./entities.js');
 
 
 var PlayScene = {
-
+	//no se si funciona asi
 	pool: function (game, entities) {
 		this._group = game.add.group();
 		this._group.add(entities);
 		this._group.callAll('kill');
 	},
+	
 	create: function () {
 
 		//MARTILLO-------
-		this.martillo = new entities.Martillo(this.game, 100, 100,'x');
-		this.pool(this.game, this.martillo);
+		this.martillo = new entities.Martillo(this.game, 100, 100,'7');
+		this.game.world.addChild(this.martillo);
 		//POPO--------------------------------------
 		this._popo = new entities.Popo(this.game, 100, 100,this.martillo, 'spritesGame');
 		this._popo.height *= 3;
 		this._popo.width *= 3;
 		this.game.world.addChild(this._popo);
-		this._popo.addChild(this.martillo);
+		//this._popo.addChild(this.martillo);
 
 		//YETI-------------------------------------
 		this._yeti = new entities.Yeti(this.game,100,100,'yeti');
@@ -52,7 +53,7 @@ var PlayScene = {
 	configure: function(){
 		//Start the Arcade Physics system
 		//this.game.world.setBounds(0,0, 2560 , 800);
-		       this.game.physics.startSystem(Phaser.Physics.ARCADE);
+		this.game.physics.startSystem(Phaser.Physics.ARCADE);
 		this.game.physics.arcade.gravity.y = 200;  
 		this.cursors = this.game.input.keyboard.createCursorKeys();
 

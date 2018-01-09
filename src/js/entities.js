@@ -65,11 +65,10 @@ Popo.prototype.keyboardInput = function(){
 	//PROBAR ESTE IF 
 	if(this._cursors.down.isDown){
 		this.play('JumpLeft', 10);
-		this.martillo.reset(this.x+20, this.y-10);
+		this.martillo.reset(this.x-10, this.y+50);
+		//this.martillo.reset(100, 500);
 		this.JumpLeft.onComplete.add(this.killMartillo,this);
 	}
-
-
 
 	//TECLAS MOVIMIENTO-------------------------
 	this._direction = 0;
