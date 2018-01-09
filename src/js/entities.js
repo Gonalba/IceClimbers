@@ -15,7 +15,6 @@ Objeto.prototype.constructor = Objeto;
 function Movable (game, x, y, graphic){
  	this._velocity = 1;
  	this._direction = 1;
- 	this.facing = '';
  	Objeto.call(this, game, x, y, graphic);
   
 };
@@ -64,9 +63,9 @@ Popo.prototype.update = function(){
 Popo.prototype.keyboardInput = function(){
 	//PROBAR ESTE IF 
 	if(this._cursors.down.isDown){
+		this.addChild(this.martillo);
 		this.play('JumpLeft', 10);
 		this.martillo.reset(this.x-10, this.y+50);
-		//this.martillo.reset(100, 500);
 		this.JumpLeft.onComplete.add(this.killMartillo,this);
 	}
 
@@ -76,30 +75,22 @@ Popo.prototype.keyboardInput = function(){
 		this._direction = -1;
 		if(this.body.onFloor()){
 			this.play('MoveLeft',20);
-			this.facing = 'left';
 		}
 	}
 	else if (this._cursors.right.isDown){
   		this._direction = 1
   		if(this.body.onFloor()){
 			this.play('MoveLeft',20);
-			this.facing = 'right';
 		}
 	}
 	//SALTO-------------------------------------
   	if (this._cursors.up.isDown&&this.body.onFloor()){
   		this.jump();
-  		if(this.facing === 'left'){
-	  		this.play('JumpLeft', 10);
-	  		this.facing = 'JumpLeft';
-	  	}else if (this.facing === 'right'){
-	  		this.play('JumpLeft', 10);
-	  		this.facing = 'JumpRight';
-	  	}
+	  	this.play('JumpLeft', 10);
+	  	this.martillo.reset(this.x-10, this.y+50);
+		this.JumpLeft.onComplete.add(this.killMartillo,this);
   	}
 
-  	//if(this.facing !== 'left' && this.facing !== 'right' && this.body.onFloor())
-  	//	this.frame = 3;
 
 };
 //METODO DE SALTO
@@ -110,6 +101,7 @@ Popo.prototype.jump = function(){
 
 Popo.prototype.killMartillo = function(){
 	this.martillo.kill();
+	this._popo.removeChild(this.martillo);
 };
 //metodo pierde vida
 //metodo morir

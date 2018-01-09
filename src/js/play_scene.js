@@ -3,24 +3,20 @@ var entities = require('./entities.js');
 
 
 var PlayScene = {
-	//no se si funciona asi
-	pool: function (game, entities) {
-		this._group = game.add.group();
-		this._group.add(entities);
-		this._group.callAll('kill');
-	},
-	
+	//no se si funciona asi	
 	create: function () {
 
 		//MARTILLO-------
-		this.martillo = new entities.Martillo(this.game, 100, 100,'7');
+		this.martillo = new entities.Martillo(this.game, 1000, 100,'logo');
+		this.martillo.height *= 0.1;
+		this.martillo.width *= 0.1;
+		this.martillo.body;
 		this.game.world.addChild(this.martillo);
 		//POPO--------------------------------------
-		this._popo = new entities.Popo(this.game, 100, 100,this.martillo, 'spritesGame');
+		this._popo = new entities.Popo(this.game, 500, 100,this.martillo, 'spritesGame');
 		this._popo.height *= 3;
 		this._popo.width *= 3;
 		this.game.world.addChild(this._popo);
-		//this._popo.addChild(this.martillo);
 
 		//YETI-------------------------------------
 		this._yeti = new entities.Yeti(this.game,100,100,'yeti');
@@ -39,16 +35,27 @@ var PlayScene = {
 	},
 	update: function(){
 		this._popo.update();
-
+		this.collision();
 
 
 	},
 	render : function(){
 		this.game.debug.bodyInfo(this._popo, 32, 32);
 
-		this.game.debug.body(this._popo);
+		//this.game.debug.body(this._popo);
 		this.game.debug.body(this.martillo);
+		this.game.debug.body(this._oso);
+		this.game.debug.body(this._yeti);
 
+
+	},
+	collision: function(){
+		if(this.martillo.overlap(this._yeti)){
+			this._yeti.kill();// KILL ES SOLO PARA PROBAR QUE FUNCIONA, SE DEBE EJECUTAR LA LÓGICA DE MUERTE
+		}
+		if(this.martillo.overlap(this._oso)){
+			this._oso.kill();
+		}
 	},
 	configure: function(){
 		//Start the Arcade Physics system
@@ -56,7 +63,9 @@ var PlayScene = {
 		this.game.physics.startSystem(Phaser.Physics.ARCADE);
 		this.game.physics.arcade.gravity.y = 200;  
 		this.cursors = this.game.input.keyboard.createCursorKeys();
-
+		//MARTILLO------------------------
+		this.game.physics.arcade.enable(this.martillo);
+		this.martillo.body.allowGravity = false;
 		//POPO----------------------------
 		this.game.physics.arcade.enable(this._popo);        
 		this._popo.body.collideWorldBounds = true;
@@ -73,3 +82,5 @@ var PlayScene = {
 };
 
 module.exports = PlayScene;
+
+
