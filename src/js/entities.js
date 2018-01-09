@@ -26,7 +26,7 @@ Movable.prototype.move = function(){
 	//USO this.x EN VEZ DE this.body.velocity.x PORQUE CON EL SEGUNDO SE MUEVE CON ACELERACION
 	this.x += this._velocity * this._direction;
 	
-	//toroide
+	//TOROIDE
 	if(this.x > this.game.width - this.width-1)
 		this.x = 2;
 	else if(this.x < 1)
@@ -36,17 +36,20 @@ Movable.prototype.move = function(){
 
 //MARTILLO-------------------------------------------------------------------------------
 //PREGUNTAR A CARLOS COMO IMPLEMENTAR EL ATAQUE DEL MARTILLO
-function Martillo (){
-
+function Martillo (game, x, y, graphic){
+ 	Objeto.call(this, game, x, y, graphic);
 };
+Martillo.prototype = Object.create(Objeto.prototype);
+Martillo.prototype.constructor = Martillo;
+
 
 //POPO-----------------------------------------------------------------------------------
 // EN EL MÉTODO UPDATE SE IMPLEMENTA LA LÓGICA DEL MOVIMIENTO
 // EN FUNCION DE LAS TECLAS QUE SE PULSEN
-function Popo (game, x,y,graphic){
+function Popo (game, x, y, martillo, graphic){
 	this._cursors = game.input.keyboard.createCursorKeys();
 	this._jumpPower = -300;
-
+	this.martillo = martillo;
  	Movable.call(this, game, x, y, graphic);
 };
 Popo.prototype = Object.create(Movable.prototype);
@@ -59,6 +62,16 @@ Popo.prototype.update = function(){
 
 //EN ESTE METODO SE CAPTURAN LAS TECLAS QUE SE PULSAN Y SE REALIZA LA FUNCION CORRESPONDIENTE
 Popo.prototype.keyboardInput = function(){
+	//PROBAR ESTE IF 
+	if(this._cursors.down.isDown){
+		this.play('JumpLeft', 10);
+		this.martillo.reset(this.x+20, this.y-10);
+		this.JumpLeft.onComplete.add(this.killMartillo,this);
+	}
+
+
+
+	//TECLAS MOVIMIENTO-------------------------
 	this._direction = 0;
 	if (this._cursors.left.isDown){
 		this._direction = -1;
@@ -74,20 +87,20 @@ Popo.prototype.keyboardInput = function(){
 			this.facing = 'right';
 		}
 	}
-
+	//SALTO-------------------------------------
   	if (this._cursors.up.isDown&&this.body.onFloor()){
   		this.jump();
   		if(this.facing === 'left'){
-	  		this.play('JumpLeft', 10)
+	  		this.play('JumpLeft', 10);
 	  		this.facing = 'JumpLeft';
 	  	}else if (this.facing === 'right'){
-	  		this.play('JumpLeft', 10)
+	  		this.play('JumpLeft', 10);
 	  		this.facing = 'JumpRight';
 	  	}
   	}
 
-  	if(this.facing !== 'left' && this.facing !== 'right' && this.body.onFloor())
-  		this.frame = 3;
+  	//if(this.facing !== 'left' && this.facing !== 'right' && this.body.onFloor())
+  	//	this.frame = 3;
 
 };
 //METODO DE SALTO
@@ -96,6 +109,9 @@ Popo.prototype.jump = function(){
 	this.body.velocity.y = this._jumpPower;
 };
 
+Popo.prototype.killMartillo = function(){
+	this.martillo.kill();
+};
 //metodo pierde vida
 //metodo morir
 Popo.prototype.morir = function (){};
@@ -133,5 +149,6 @@ Oso.prototype.morir = function (){};
 module.exports = {
 	Popo: Popo,
 	Yeti: Yeti,
-	Oso: Oso
+	Oso: Oso,
+	Martillo: Martillo
 };
