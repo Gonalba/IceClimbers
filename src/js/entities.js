@@ -101,7 +101,6 @@ Popo.prototype.jump = function(){
 
 Popo.prototype.killMartillo = function(){
 	this.martillo.kill();
-	this._popo.removeChild(this.martillo);
 };
 //metodo pierde vida
 //metodo morir
