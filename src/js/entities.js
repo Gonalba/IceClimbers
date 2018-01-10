@@ -36,7 +36,7 @@ Movable.prototype.move = function(){
 //MARTILLO-------------------------------------------------------------------------------
 //PREGUNTAR A CARLOS COMO IMPLEMENTAR EL ATAQUE DEL MARTILLO
 function Martillo (game, x, y, graphic){
- 	Objeto.call(this, game, x, y, graphic);	
+ 	Objeto.call(this, game, x, y, graphic);
 };
 Martillo.prototype = Object.create(Objeto.prototype);
 Martillo.prototype.constructor = Martillo;
@@ -45,16 +45,18 @@ Martillo.prototype.constructor = Martillo;
 //POPO-----------------------------------------------------------------------------------
 // EN EL MÉTODO UPDATE SE IMPLEMENTA LA LÓGICA DEL MOVIMIENTO
 // EN FUNCION DE LAS TECLAS QUE SE PULSEN
-function Popo (game, x, y,  graphic){
+function Popo (game, x, y, martillo, graphic){
 	this._cursors = game.input.keyboard.createCursorKeys();
 	this._jumpPower = -300;
-	//this.martillo = martillo;
+	this.martillo = martillo;
  	Movable.call(this, game, x, y, graphic);
+ 	this.atacando = false;
 };
 Popo.prototype = Object.create(Movable.prototype);
 Popo.prototype.constructor = Popo;
 
 Popo.prototype.update = function(){
+	this.atacando = false
 	this.keyboardInput();
 	this.move();
 };
@@ -63,9 +65,11 @@ Popo.prototype.update = function(){
 Popo.prototype.keyboardInput = function(){
 	//PROBAR ESTE IF 
 	if(this._cursors.down.isDown){
+			this.atacando = true;
+		this.addChild(this.martillo);
 		this.play('JumpLeft', 10);
-		//this.martillo.reset(this.x-10, this.y+50);
-		//this.JumpLeft.onComplete.add(this.killMartillo,this);
+		this.martillo.reset(this.x-10, this.y+50);
+		this.JumpLeft.onComplete.add(this.killMartillo,this);
 	}
 
 	//TECLAS MOVIMIENTO-------------------------
@@ -99,11 +103,15 @@ Popo.prototype.jump = function(){
 };
 
 Popo.prototype.killMartillo = function(){
-	this.martillo.destroy();
+	this.martillo.kill();
 };
 //metodo pierde vida
 //metodo morir
-Popo.prototype.morir = function (){};
+Popo.prototype.morir = function (){
+	if (atacando === false){
+		this.kill();
+	}
+};
 //metodo atacar
 
 
