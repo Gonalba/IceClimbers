@@ -30,15 +30,22 @@ var PlayScene = {
 		this._oso.width *= 0.5;
 		this.game.world.addChild(this._oso);
 
+		this.enemiesGroup = this.game.add.group();
+		this.enemiesGroup.add(this._yeti);
+		this.enemiesGroup.add(this._oso);
+
 		this.configure();	       
 	},
 	update: function(){
 		this.game.physics.arcade.collide(this._popo, this.groundLayer);
-		this.game.physics.arcade.collide(this._oso, this.groundLayer);
-		this.game.physics.arcade.collide(this._yeti, this.groundLayer);
+		//this.game.physics.arcade.collide(this._oso, this.groundLayer);
+		this.game.physics.arcade.collide(this.enemiesGroup, this.groundLayer);
 		this._popo.update();
 		this.collision();
-		this.mapa.setTileIndexCallback(0, this.hitTile(), this.groundLayer);
+		//this.game.physics.arcade.collide(this.martillo, this.mapa, this.hitTile, null, this)
+		//this.mapa.setTileIndexCallback(0, this.hitTile, this.groundLayer);
+		//this.mapa.setTileLocationCallback(2, 0, 1, 1, this.hitTile, this);
+
 
 	},
 	render : function(){
@@ -52,15 +59,15 @@ var PlayScene = {
 
 	},
 	collision: function(){
-		if (this.game.physics.arcade.collide(this.martillo, this._yeti)){
-			this._yeti.destroy();
+		if (this.game.physics.arcade.collide(this.martillo, this.enemiesGroup)){
+			this.mataEnemigo();
 		}
-		if (this.game.physics.arcade.collide(this.martillo, this._oso)){
-			this._oso.destroy();
-		}
-		if (this.game.physics.arcade.collide(this._popo, this._yeti) || this.game.physics.arcade.collide(this._popo, this._oso))
+		/*if (this.game.physics.arcade.collide(this.martillo, this._oso)){
+			this.mataEnemigo();
+		}*/
+		if (this.game.physics.arcade.collide(this._popo, this.enemiesGroup))//} || this.game.physics.arcade.collide(this._popo, this._oso))
 		{
-			//this._popo.morir();
+			this._popo.morir();
 		}
 	},
 	configure: function(){
@@ -88,14 +95,21 @@ var PlayScene = {
 		this.map = this.game.add.tilemap('mapa');
 		this.map.addTilesetImage('ice-suelo','patron');
 		this.groundLayer = this.map.createLayer('Capa de Patrones 1');
-		this.map.setCollisionBetween(1, 500);// true, 'Capa de Patrones 1');
+		this.map.setCollisionBetween(0,1);// true, 'Capa de Patrones 1');
  		this.groundLayer.resizeWorld();
  		this.martillo.kill();
 	},
-	hitTile: function(sprite, tile){
-		tile.destroy();
-		return true;
-	},
+
+	mataEnemigo: function(){
+		this.self = this;
+		this.enemiesGroup.forEach(function(obj)
+		{
+      if(self.game.physics.arcade.collide(self._popo, this.obj)){
+          	self.obj.destroy();
+          //self._keys++;}
+      }
+    })
+	}
 };
 
 module.exports = PlayScene;
