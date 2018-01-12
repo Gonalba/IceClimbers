@@ -6,17 +6,17 @@ var PlayScene = {
 	//no se si funciona asi	
 	create: function () {
 
-		//MARTILLO-------
-		this.martillo = new entities.Martillo(this.game, 400, 100,'logo');
+		//MARTILLO---------------------------------
+		this.martillo = new entities.Martillo(this.game, 1000, 0,'logo');
 		this.martillo.height *= 0.1;
 		this.martillo.width *= 0.1;
-		this.martillo.body;
-		this.game.world.addChild(this.martillo);
+
 		//POPO--------------------------------------
 		this._popo = new entities.Popo(this.game, 400, 100,this.martillo, 'spritesGame');
 		this._popo.height *= 3;
 		this._popo.width *= 3;
 		this.game.world.addChild(this._popo);
+		this._popo.addChild(this.martillo);
 
 		//YETI-------------------------------------
 		this._yeti = new entities.Yeti(this.game,20,100,'yeti');
@@ -40,7 +40,8 @@ var PlayScene = {
 		this.game.physics.arcade.collide(this._popo, this.groundLayer);
 		//this.game.physics.arcade.collide(this._oso, this.groundLayer);
 		this.game.physics.arcade.collide(this.enemiesGroup, this.groundLayer);
-		this._popo.update();
+		this.game.physics.arcade.collide(this.martillo, this.groundLayer);
+		
 		this.collision();
 		//this.game.physics.arcade.collide(this.martillo, this.mapa, this.hitTile, null, this)
 		//this.mapa.setTileIndexCallback(0, this.hitTile, this.groundLayer);
@@ -49,8 +50,9 @@ var PlayScene = {
 
 	},
 	render : function(){
-		this.game.debug.bodyInfo(this._popo, 32, 32);
+		this.game.debug.bodyInfo(this.martillo, 32, 32);
 
+		this.game.debug.body(this.map);
 		this.game.debug.body(this._popo);
 		this.game.debug.body(this.martillo);
 		this.game.debug.body(this._oso);
@@ -59,16 +61,11 @@ var PlayScene = {
 
 	},
 	collision: function(){
-		if (this.game.physics.arcade.collide(this.martillo, this.enemiesGroup)){
-			this.mataEnemigo();
-		}
-		/*if (this.game.physics.arcade.collide(this.martillo, this._oso)){
-			this.mataEnemigo();
-		}*/
-		if (this.game.physics.arcade.collide(this._popo, this.enemiesGroup))//} || this.game.physics.arcade.collide(this._popo, this._oso))
-		{
+		this.game.physics.arcade.collide(this.martillo, this.enemiesGroup, this.mataEnemigo);
+		if(this._popo.overlap(this.enemiesGroup)){
 			this._popo.morir();
 		}
+		
 	},
 	configure: function(){
 		//Start the Arcade Physics system
@@ -97,18 +94,11 @@ var PlayScene = {
 		this.groundLayer = this.map.createLayer('Capa de Patrones 1');
 		this.map.setCollisionBetween(0,1);// true, 'Capa de Patrones 1');
  		this.groundLayer.resizeWorld();
- 		this.martillo.kill();
+ 		//this.martillo.kill();
 	},
 
-	mataEnemigo: function(){
-		this.self = this;
-		this.enemiesGroup.forEach(function(obj)
-		{
-      if(self.game.physics.arcade.collide(self._popo, this.obj)){
-          	self.obj.destroy();
-          //self._keys++;}
-      }
-    })
+	mataEnemigo: function(martillo, enemy){
+		enemy.destroy();
 	}
 };
 
