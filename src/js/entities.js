@@ -48,7 +48,7 @@ Martillo.prototype.constructor = Martillo;
 // EN FUNCION DE LAS TECLAS QUE SE PULSEN
 function Popo (game, x, y, martillo, graphic){
 	this._cursors = game.input.keyboard.createCursorKeys();
-	this._jumpPower = -300;
+	this._jumpPower = -500; 
 	this.martillo = martillo;
  	Movable.call(this, game, x, y, graphic);
  	this.atacando = false;
@@ -63,7 +63,6 @@ Popo.prototype.update = function(){
 	if(this.vivo === true){
 		this.atacando = false
 		this.keyboardInput();
-		this.move();
 	}
 	else{
 		if(this.vidas > 0){
@@ -75,41 +74,48 @@ Popo.prototype.update = function(){
 
 //EN ESTE METODO SE CAPTURAN LAS TECLAS QUE SE PULSAN Y SE REALIZA LA FUNCION CORRESPONDIENTE
 Popo.prototype.keyboardInput = function(){
+	//ATAQUE-----------------------------------
 	//PROBAR ESTE IF 
 //	if(this.vivo === true){
 		if(this._cursors.down.isDown){
 			this.atacando = true;
-			this.addChild(this.martillo);
 			this.play('JumpLeft', 10);
-			if(this._direction <= 0){
+			if(this._direction === -1){
 				this.martillo.reset(this.x-10, this.y+50);
 			}
-			else{
+			else if(this._direction === 1){
 				this.martillo.reset(this.x+65, this.y+50);
 			}
 			this.JumpLeft.onComplete.add(this.killMartillo,this);
 		}
 
 	//TECLAS MOVIMIENTO-------------------------
-		this._direction = 0;
 		if (this._cursors.left.isDown){
-			this._direction = -1;
-			if(this.body.onFloor()){
-				this.play('MoveLeft',20);
+			if(this.atacando === false){
+				this._direction = -1;
+				this.move();
+				if(this.body.onFloor()){
+					this.play('MoveLeft',20);
+				}
 			}
 		}
 		else if (this._cursors.right.isDown){
-  			this._direction = 1
-  			if(this.body.onFloor()){
-				this.play('MoveRight',20);
-			}
+  			if(this.atacando === false){
+  				this._direction = 1
+	  			this.move();
+	  			if(this.body.onFloor()){
+					this.play('MoveRight',20);
+				}
+  			}
 		}
 	//SALTO-------------------------------------
   		if (this._cursors.up.isDown&&this.body.onFloor()){
-  			this.jump();
-	  		this.play('JumpLeft', 10);
-	  	//this.martillo.reset(this.x-10, this.y+50);
-		//this.JumpLeft.onComplete.add(this.killMartillo,this);
+  			if(this.atacando === false){
+	  			this.jump();
+		  		this.play('JumpLeft', 10);
+		  		this.martillo.reset(this.x+25, this.y-20);
+				//this.JumpLeft.onComplete.add(this.killMartillo,this);
+			}
   		}
  	 //}
 

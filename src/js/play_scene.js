@@ -19,7 +19,7 @@ var PlayScene = {
 		this.game.world.addChild(this._popo);
 
 		//YETI-------------------------------------
-		this._yeti = new entities.Yeti(this.game,200,100,'yeti');
+		this._yeti = new entities.Yeti(this.game,20,100,'yeti');
 		this._yeti.height *= 0.5;
 		this._yeti.width *= 0.5;
 		this.game.world.addChild(this._yeti);
@@ -74,7 +74,7 @@ var PlayScene = {
 		//Start the Arcade Physics system
 		//this.game.world.setBounds(0,0, 2560 , 800);
 		this.game.physics.startSystem(Phaser.Physics.ARCADE);
-		this.game.physics.arcade.gravity.y = 200;  
+		this.game.physics.arcade.gravity.y = 600;  
 		this.cursors = this.game.input.keyboard.createCursorKeys();
 		//MARTILLO------------------------
 		this.game.physics.arcade.enable(this.martillo);
