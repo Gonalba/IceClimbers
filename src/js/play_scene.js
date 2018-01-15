@@ -52,7 +52,7 @@ var PlayScene = {
 		//COLISION CON EL MAPA----------------------------------------
 		this.game.physics.arcade.collide(this._popo, this.groundLayer);
 		this.game.physics.arcade.collide(this.enemiesGroup, this.groundLayer);
-		this.game.physics.arcade.collide(this.martillo, this.groundLayer,this.destruyeTile);
+		this.game.physics.arcade.overlap(this.martillo, this.groundLayer,this.destruyeTile);
 
 		//COLISION ENEMIGOS------------------------------------------------------------
 		this.game.physics.arcade.collide(this.martillo, this.enemiesGroup, this.mataEnemigo);
@@ -71,7 +71,9 @@ var PlayScene = {
 		this.cursors = this.game.input.keyboard.createCursorKeys();
 		//MARTILLO------------------------
 		this.game.physics.arcade.enable(this.martillo);
-		this.martillo.body.allowGravity = false;
+		//this.martillo.body.allowGravity = false;
+		//this.martillo.body.immovible = true;
+		this.martillo.body.gravity.y = -600;
 
 		//POPO----------------------------
 		this.game.physics.arcade.enable(this._popo);        

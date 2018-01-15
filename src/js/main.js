@@ -30,7 +30,7 @@ var PreloaderScene = {
     
     this.game.load.spritesheet('spritesGame', 'images/Sprites.png', 27, 35, 128);
 
-    this.game.load.tilemap('mapa', 'images/PRuebaMap5.json', null, Phaser.Tilemap.TILED_JSON);
+    this.game.load.tilemap('mapa', 'images/PruebaMap5.json', null, Phaser.Tilemap.TILED_JSON);
     this.game.load.image('patron', 'images/SueloTile.png');
 	
   },

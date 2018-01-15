@@ -18,7 +18,7 @@
  "tileheight":40,
  "tilesets":[
         {
-         "columns":0,
+	"columns":0,
          "firstgid":1,
          "margin":0,
          "name":"Ice",
