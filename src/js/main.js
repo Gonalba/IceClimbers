@@ -28,7 +28,7 @@ var PreloaderScene = {
     this.game.load.image('yeti', 'images/yeti.png');
     this.game.load.image('m', 'images/martillo.png');
     
-    this.game.load.spritesheet('spritesGame', 'images/Sprites.png', 27, 35, 64);
+    this.game.load.spritesheet('spritesGame', 'images/Sprites.png', 27, 35, 128);
 
     this.game.load.tilemap('mapa', 'images/PRuebaMap5.json', null, Phaser.Tilemap.TILED_JSON);
     this.game.load.image('patron', 'images/SueloTile.png');

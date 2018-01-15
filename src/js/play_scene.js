@@ -52,13 +52,11 @@ var PlayScene = {
 	render : function(){
 		this.game.debug.bodyInfo(this.martillo, 32, 32);
 
-		this.game.debug.body(this.map);
+		/*this.game.debug.body(this.map);
 		this.game.debug.body(this._popo);
 		this.game.debug.body(this.martillo);
 		this.game.debug.body(this._oso);
-		this.game.debug.body(this._yeti);
-
-
+		this.game.debug.body(this._yeti);*/
 	},
 	collision: function(){
 		this.game.physics.arcade.collide(this.martillo, this.enemiesGroup, this.mataEnemigo);

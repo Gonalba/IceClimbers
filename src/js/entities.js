@@ -4,8 +4,9 @@
 function Objeto (game,x,y,graphic){
 	Phaser.Sprite.call(this, game, x, y, graphic);
 	this.MoveLeft = this.animations.add('MoveLeft',[0,1,2,3]);
-	this.MoveRight = this.animations.add('MoveRight',[12, 13, 14, 15]);
-	this.JumpLeft = this.animations.add('JumpLeft',[6,4,5]);
+	this.MoveRight = this.animations.add('MoveRight',[7, 6, 5, 4]);
+	this.JumpLeft = this.animations.add('JumpLeft',[10,8,9]);
+	this.JumpRight = this.animations.add('JumpRight',[15,13,14]);
 };
 
 Objeto.prototype = Object.create(Phaser.Sprite.prototype);
@@ -40,6 +41,7 @@ function Martillo (game, x, y, graphic){
  	Objeto.call(this, game, x, y, graphic);
  	this.xInit = x;
  	this.yInit = y;
+ 	this
 };
 Martillo.prototype = Object.create(Objeto.prototype);
 Martillo.prototype.constructor = Martillo;
@@ -50,15 +52,15 @@ Martillo.prototype.setPosInit = function(){
 Martillo.prototype.setPosIzq = function(){
 	this.x = -10;
 	this.y = 10;
-}
+};
 Martillo.prototype.setPosDer = function(){
 	this.x = 25;
 	this.y = 10;
-}
+};
 Martillo.prototype.setPosJump = function(){
 	this.x = 7;
 	this.y = -10;
-}
+};
 //POPO-----------------------------------------------------------------------------------
 // EN EL MÉTODO UPDATE SE IMPLEMENTA LA LÓGICA DEL MOVIMIENTO
 // EN FUNCION DE LAS TECLAS QUE SE PULSEN
@@ -90,16 +92,18 @@ Popo.prototype.update = function(){
 
 //EN ESTE METODO SE CAPTURAN LAS TECLAS QUE SE PULSAN Y SE REALIZA LA FUNCION CORRESPONDIENTE
 Popo.prototype.keyboardInput = function(){
+
 	//ATAQUE-----------------------------------
 		this.atacando = false;
 //	if(this.vivo){
 		if(this._cursors.down.isDown&&this.body.onFloor()){
 			this.atacando = true;
-			this.play('JumpLeft', 10);
 			if(this._direction === -1){
+				this.play('JumpLeft', 10);				
 				this.martillo.setPosIzq();
 			}
 			else if(this._direction === 1){
+				this.play('JumpRight', 10);
 				this.martillo.setPosDer();
 			}
 		}
@@ -107,20 +111,22 @@ Popo.prototype.keyboardInput = function(){
   		else if (this._cursors.up.isDown&&this.body.onFloor()){
   			if(!this.atacando){
 	  			this.jump();
-		  		this.play('JumpLeft', 10);
 				this.martillo.setPosJump();
-			
+				if(this._direction === -1)
+					this.play('JumpLeft', 10);
+				else if(this._direction === 1)
+					this.play('JumpRight', 10);			
 			}
+  			this.JumpLeft.onComplete.add(this.martillo.setPosInit,this.martillo);
   		}
-  		this.JumpLeft.onComplete.add(this.martillo.setPosInit,this.martillo);
 	//TECLAS MOVIMIENTO-------------------------
-		if (this._cursors.left.isDown){
+		else if (this._cursors.left.isDown){
 			if(!this.atacando){
 				this.martillo.setPosInit();
 				this._direction = -1;
 				this.move();
 				if(this.body.onFloor()){
-					this.play('MoveLeft',20);
+					this.play('MoveLeft',20);					
 				}
 			}
 		}
@@ -133,6 +139,11 @@ Popo.prototype.keyboardInput = function(){
 					this.play('MoveRight',20);
 				}
   			}
+		}else{
+			if(this._direction === 1&&this.body.onFloor())
+				this.frame = 4;
+			else if(this._direction === -1&&this.body.onFloor())
+				this.frame = 3;
 		}
 	
  	 //}
