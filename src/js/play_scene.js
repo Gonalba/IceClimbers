@@ -12,7 +12,7 @@ var PlayScene = {
 		this.martillo.width *= 0.1;
 
 		//POPO--------------------------------------
-		this._popo = new entities.Popo(this.game, 400, 100,this.martillo, 'spritesGame');
+		this._popo = new entities.Popo(this.game, 400, 2000,this.martillo, 'spritesGame');
 		this._popo.height *= 3;
 		this._popo.width *= 3;
 		this.game.world.addChild(this._popo);
@@ -50,8 +50,31 @@ var PlayScene = {
 	},
 	collision: function(){
 		//COLISION CON EL MAPA----------------------------------------
+//SI CAMBIAS DE MAPA
 		this.game.physics.arcade.collide(this._popo, this.groundLayer);
 		this.game.physics.arcade.collide(this.enemiesGroup, this.groundLayer);
+
+		this.game.physics.arcade.collide(this._popo, this.cloudLayer);
+		this.game.physics.arcade.collide(this.enemiesGroup, this.cloudLayer);
+
+		this.game.physics.arcade.collide(this._popo, this.bonusLayer);
+		this.game.physics.arcade.collide(this.enemiesGroup, this.bonusLayer);
+//Para que sólo aparezcan los hielitos
+		 /*
+		this.game.physics.arcade.collide(this._popo, this.groundLayer);
+		this.game.physics.arcade.collide(this.enemiesGroup, this.groundLayer);
+  		 */
+
+//Para que aparezcan hielitos y bonus
+  		/*
+		this.game.physics.arcade.collide(this._popo, this.groundLayer);
+		this.game.physics.arcade.collide(this.enemiesGroup, this.groundLayer);
+
+		this.game.physics.arcade.collide(this._popo, this.bonusLayer);
+		this.game.physics.arcade.collide(this.enemiesGroup, this.bonusLayer);
+  		*/
+//Y YA
+
 		this.game.physics.arcade.overlap(this.martillo, this.groundLayer,this.destruyeTile);
 
 		//COLISION ENEMIGOS------------------------------------------------------------
@@ -88,9 +111,39 @@ var PlayScene = {
 
 		//MAPA------------------------------
 		this.map = this.game.add.tilemap('mapa');
-		this.map.addTilesetImage('ice-suelo','patron');
-		this.groundLayer = this.map.createLayer('Capa de Patrones 1');
-		this.map.setCollisionBetween(0,100);// true, 'Capa de Patrones 1');
+		this.map.addTilesetImage('mapaTiles','tiles');
+
+//SI CAMBIAS DE MAPA
+		
+		this.groundLayer = this.map.createLayer('Pisos');
+		this.cloudLayer = this.map.createLayer('Nubes');
+		this.bonusLayer = this.map.createLayer('Bonus');
+
+		this.map.setCollisionBetween(0, 5000, true, 'Pisos');
+     	this.map.setCollisionBetween(0, 5000, true, 'Nubes');
+     	this.map.setCollisionBetween(0, 5000, true, 'Bonus');
+
+
+  //Para que sólo aparezcan los hielitos
+		 /*
+		this.groundLayer = this.map.createLayer('Pisos');
+
+	Esto:
+		this.map.setCollisionBetween(0, 5000, true, 'Pisos');
+	O esto:
+		this.map.setCollisionBetween(0,100);//Que es lo que estab antes
+  		 */
+
+  //Para que aparezcan hielitos y bonus
+  		/*
+		this.groundLayer = this.map.createLayer('Pisos');
+		this.bonusLayer = this.map.createLayer('Bonus');
+
+		this.map.setCollisionBetween(0, 5000, true, 'Pisos');
+     	this.map.setCollisionBetween(0, 5000, true, 'Bonus');
+  		*/
+//Y YA
+
  		this.groundLayer.resizeWorld();
 
  		//this.tiles = this.game.add.group();
