@@ -4,8 +4,9 @@
 function Objeto (game,x,y,graphic){
 	Phaser.Sprite.call(this, game, x, y, graphic);
 	this.MoveLeft = this.animations.add('MoveLeft',[0,1,2,3]);
-	this.MoveRight = this.animations.add('MoveRight',[12, 13, 14, 15]);
-	this.JumpLeft = this.animations.add('JumpLeft',[6,4,5]);
+	this.MoveRight = this.animations.add('MoveRight',[4,5,6,7]);
+	this.JumpLeft = this.animations.add('JumpLeft',[10,8,9]);
+	this.JumpRight = this.animations.add('JumpRight',[13,15,14]);
 };
 
 Objeto.prototype = Object.create(Phaser.Sprite.prototype);
@@ -90,54 +91,64 @@ Popo.prototype.update = function(){
 
 //EN ESTE METODO SE CAPTURAN LAS TECLAS QUE SE PULSAN Y SE REALIZA LA FUNCION CORRESPONDIENTE
 Popo.prototype.keyboardInput = function(){
-	//ATAQUE-----------------------------------
-		this.atacando = false;
-//	if(this.vivo){
-		if(this._cursors.down.isDown&&this.body.onFloor()){
-			this.atacando = true;
-			this.play('JumpLeft', 10);
+	
+	if(this._cursors.down.isDown&&this.body.onFloor()){
+		this.atacando = true;
+		if(this._direction === -1){
+			this.play('JumpLeft', 10);				
+			this.martillo.setPosIzq();
+  			this.JumpLeft.onComplete.add(this.martillo.setPosInit,this.martillo);
+  			this.JumpLeft.onComplete.add(this.atacandoOff,this);
+		}
+		else if(this._direction === 1){
+			this.play('JumpRight', 10);
+			this.martillo.setPosDer();
+  			this.JumpRight.onComplete.add(this.martillo.setPosInit,this.martillo);
+  			this.JumpRight.onComplete.add(this.atacandoOff,this);
+		}
+	}
+	//SALTO-------------------------------------
+  	else if (this._cursors.up.isDown&&this.body.onFloor()){
+  		if(!this.atacando){
+	 		this.jump();
+			this.martillo.setPosJump();
 			if(this._direction === -1){
-				this.martillo.setPosIzq();
+				this.play('JumpLeft', 10);
+  				this.JumpLeft.onComplete.add(this.martillo.setPosInit,this.martillo);
 			}
 			else if(this._direction === 1){
-				this.martillo.setPosDer();
+				this.play('JumpRight', 10);
+  				this.JumpRight.onComplete.add(this.martillo.setPosInit,this.martillo);			
 			}
 		}
-		//SALTO-------------------------------------
-  		else if (this._cursors.up.isDown&&this.body.onFloor()){
-  			if(!this.atacando){
-	  			this.jump();
-		  		this.play('JumpLeft', 10);
-				this.martillo.setPosJump();
-			
+  	}
+	//TECLAS MOVIMIENTO-------------------------
+	else if (this._cursors.left.isDown){
+		if(!this.atacando){
+			//this.martillo.setPosInit();
+			this._direction = -1;
+			this.move();
+			if(this.body.onFloor()){
+				this.play('MoveLeft',20);					
+			}
+		}
+	}
+	else if (this._cursors.right.isDown){
+  		if(!this.atacando){
+  			//this.martillo.setPosInit();
+  			this._direction = 1
+	 			this.move();
+	 			if(this.body.onFloor()){
+				this.play('MoveRight',20);
 			}
   		}
-  		this.JumpLeft.onComplete.add(this.martillo.setPosInit,this.martillo);
-	//TECLAS MOVIMIENTO-------------------------
-		if (this._cursors.left.isDown){
-			if(!this.atacando){
-				this.martillo.setPosInit();
-				this._direction = -1;
-				this.move();
-				if(this.body.onFloor()){
-					this.play('MoveLeft',20);
-				}
-			}
-		}
-		else if (this._cursors.right.isDown){
-  			if(!this.atacando){
-  				this.martillo.setPosInit();
-  				this._direction = 1
-	  			this.move();
-	  			if(this.body.onFloor()){
-					this.play('MoveRight',20);
-				}
-  			}
-		}
+	}else{
+		if(this._direction === 1&&this.body.onFloor()&&!this.atacando)
+			this.frame = 4;
+		else if(this._direction === -1&&this.body.onFloor()&&!this.atacando)
+			this.frame = 3;
+	}
 	
- 	 //}
-
-
 };
 //METODO DE SALTO
 	//falta implementar que ataque cuando salte
@@ -170,7 +181,10 @@ Popo.prototype.resetPopo = function(){
 };
 Popo.prototype.killMartillo = function(){
 	this.martillo.kill();
-}
+};
+Popo.prototype.atacandoOff = function(){
+	this.atacando = false;
+};
 
 //YETI--------------------------------------------------------------------------------------
 function Yeti(game, x, y, graphic){
