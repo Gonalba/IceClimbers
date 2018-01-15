@@ -1,0 +1,77 @@
+"frames": [
+{
+	"id":1,
+    "filename": "PopoParadoIzq",
+    "frame": { "x": 5, "y": 32, "w": 15, "h": 24 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 0, "y": 2, "w": 15, "h": 24 },
+    "sourceSize": { "w": 15, "h": 24 }
+},
+{
+	"id":2,
+    "filename": "PopoAndandoIzq1",
+    "frame": { "x": 54, "y": 0, "w": 56, "h": 58 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 0, "y": 3, "w": 56, "h": 58 },
+    "sourceSize": { "w": 56, "h": 64 }
+},
+{
+	"id":3,
+    "filename": "PopoAndandoIzq2",
+    "frame": { "x": 54, "y": 58, "w": 56, "h": 58 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 0, "y": 3, "w": 56, "h": 58 },
+    "sourceSize": { "w": 56, "h": 64 }
+},
+{
+	"id":4,
+    "filename": "PopoAndandoIzq3",
+    "frame": { "x": 0, "y": 192, "w": 34, "h": 64 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 11, "y": 0, "w": 34, "h": 64 },
+    "sourceSize": { "w": 56, "h": 64 }
+},
+{
+    "filename": "PopoParadoDer",
+    "frame": { "x": 34, "y": 128, "w": 56, "h": 60 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 0, "y": 2, "w": 56, "h": 60 },
+    "sourceSize": { "w": 56, "h": 64 }
+},
+{
+    "filename": "PopoAndandoDer1",
+    "frame": { "x": 54, "y": 0, "w": 56, "h": 58 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 0, "y": 3, "w": 56, "h": 58 },
+    "sourceSize": { "w": 56, "h": 64 }
+},
+{
+    "filename": "PopoAndandoDer2",
+    "frame": { "x": 54, "y": 58, "w": 56, "h": 58 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 0, "y": 3, "w": 56, "h": 58 },
+    "sourceSize": { "w": 56, "h": 64 }
+},
+{
+    "filename": "PopoAndandoDer3",
+    "frame": { "x": 0, "y": 192, "w": 34, "h": 64 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 11, "y": 0, "w": 34, "h": 64 },
+    "sourceSize": { "w": 56, "h": 64 }
+}
+
+],
+    "meta": {
+		"image": "PersonajesSprites.png",
+		"size": {"w": 236, "h": 232},
+		"scale": "1"
+    }
+};
