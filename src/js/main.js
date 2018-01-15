@@ -1,6 +1,8 @@
 'use strict';
 
 var PlayScene = require('./play_scene.js');
+var MenuPrincipal = require('./menu_principal.js');
+var Creditos = require('./creditos.js');
 
 
 var BootScene = {
@@ -27,6 +29,7 @@ var PreloaderScene = {
     this.game.load.image('oso', 'images/oso.png');
     this.game.load.image('yeti', 'images/yeti.png');
     this.game.load.image('m', 'images/martillo.png');
+    this.game.load.image('button', 'images/start.png');
     
     this.game.load.spritesheet('spritesGame', 'images/Sprites.png', 27, 35, 128);
 
@@ -36,7 +39,7 @@ var PreloaderScene = {
   },
 
   create: function () {
-    this.game.state.start('play');
+    this.game.state.start('menu_principal');
   }
 };
 
@@ -47,6 +50,9 @@ window.onload = function () {
   game.state.add('boot', BootScene);
   game.state.add('preloader', PreloaderScene);
   game.state.add('play', PlayScene);
+  game.state.add('menu_principal', MenuPrincipal);
+  game.state.add('creditos', Creditos);
+
 
   game.state.start('boot');
 };
