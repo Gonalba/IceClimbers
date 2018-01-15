@@ -94,17 +94,21 @@ Popo.prototype.update = function(){
 Popo.prototype.keyboardInput = function(){
 
 	//ATAQUE-----------------------------------
-		this.atacando = false;
+		//this.atacando = false;
 //	if(this.vivo){
 		if(this._cursors.down.isDown&&this.body.onFloor()){
 			this.atacando = true;
 			if(this._direction === -1){
 				this.play('JumpLeft', 10);				
 				this.martillo.setPosIzq();
+  				this.JumpLeft.onComplete.add(this.martillo.setPosInit,this.martillo);
+  				this.JumpLeft.onComplete.add(this.atacandoOff,this);
 			}
 			else if(this._direction === 1){
 				this.play('JumpRight', 10);
 				this.martillo.setPosDer();
+  				this.JumpRight.onComplete.add(this.martillo.setPosInit,this.martillo);
+  				this.JumpRight.onComplete.add(this.atacandoOff,this);
 			}
 		}
 		//SALTO-------------------------------------
@@ -112,17 +116,20 @@ Popo.prototype.keyboardInput = function(){
   			if(!this.atacando){
 	  			this.jump();
 				this.martillo.setPosJump();
-				if(this._direction === -1)
+				if(this._direction === -1){
 					this.play('JumpLeft', 10);
-				else if(this._direction === 1)
-					this.play('JumpRight', 10);			
+  					this.JumpLeft.onComplete.add(this.martillo.setPosInit,this.martillo);
+				}
+				else if(this._direction === 1){
+					this.play('JumpRight', 10);
+  					this.JumpRight.onComplete.add(this.martillo.setPosInit,this.martillo);			
+				}
 			}
-  			this.JumpLeft.onComplete.add(this.martillo.setPosInit,this.martillo);
   		}
 	//TECLAS MOVIMIENTO-------------------------
 		else if (this._cursors.left.isDown){
 			if(!this.atacando){
-				this.martillo.setPosInit();
+				//this.martillo.setPosInit();
 				this._direction = -1;
 				this.move();
 				if(this.body.onFloor()){
@@ -132,7 +139,7 @@ Popo.prototype.keyboardInput = function(){
 		}
 		else if (this._cursors.right.isDown){
   			if(!this.atacando){
-  				this.martillo.setPosInit();
+  				//this.martillo.setPosInit();
   				this._direction = 1
 	  			this.move();
 	  			if(this.body.onFloor()){
@@ -140,9 +147,9 @@ Popo.prototype.keyboardInput = function(){
 				}
   			}
 		}else{
-			if(this._direction === 1&&this.body.onFloor())
+			if(this._direction === 1&&this.body.onFloor()&&!this.atacando)
 				this.frame = 4;
-			else if(this._direction === -1&&this.body.onFloor())
+			else if(this._direction === -1&&this.body.onFloor()&&!this.atacando)
 				this.frame = 3;
 		}
 	
@@ -179,9 +186,9 @@ Popo.prototype.resetPopo = function(){
 		}
 	}
 };
-Popo.prototype.killMartillo = function(){
-	this.martillo.kill();
-}
+Popo.prototype.atacandoOff = function(){
+	this.atacando = false;
+};
 
 //YETI--------------------------------------------------------------------------------------
 function Yeti(game, x, y, graphic){
