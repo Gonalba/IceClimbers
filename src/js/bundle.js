@@ -97,7 +97,7 @@ Martillo.prototype.setPosJump = function(){
 function Popo (game, x, y, martillo, graphic,salto){
 	Movable.call(this, game, x, y, graphic);
 	this._cursors = game.input.keyboard.createCursorKeys();
-	this._jumpPower = -500;
+	this._jumpPower = -550;
  	this.atacando = false;
  	this.tiempo;
  	this.vivo = true;
@@ -106,7 +106,8 @@ function Popo (game, x, y, martillo, graphic,salto){
  	this.martillo = martillo;
 	this.hInit = this.height*3;
 	this.wInit = this.width*3;
-	
+	this.xInit = x;
+ 	this.yInit = y;
 	
 	this.MoveLeftPopo = this.animations.add('MoveRightPopo',[0,1,2,3]);
 	this.MoveRightPopo = this.animations.add('MoveLeftPopo',[4,5,6,7]);
@@ -238,7 +239,7 @@ Popo.prototype.resetPopo = function(){
 	if(!this.vivo){
 		if( this.game.time.totalElapsedSeconds() >= this.tiempo + 2)
 		{
-			this.reset(50, 50);
+			this.reset(this.xInit, this.yInit+50);
 			this.vivo = true;
 
 		}
@@ -331,7 +332,7 @@ var PreloaderScene = {
     this.game.load.image('logo', 'images/phaser.png');
     this.game.load.image('popo', 'images/popo.PNG');
     this.game.load.image('button', 'images/start.png');
-    
+    this.game.load.image('icestart', 'images/titleCompleted.png');
 
     this.game.load.spritesheet('saltoPopo', 'images/SaltoPopo.png', 23, 36, 8);
     this.game.load.spritesheet('popoMartillo', 'images/PopoMartillo.png', 23, 27, 16);
@@ -373,8 +374,11 @@ window.onload = function () {
 var scene;
 var MenuLevel = {
 	create: function () {
+
+		var imagen = this.game.add.sprite(this.game.world.centerX-182.5, this.game.world.centerY-260,'icestart');
+
 		var buttonPlay = this.game.add.button(this.game.world.centerX, 
-                                               this.game.world.centerY - 100, 
+                                               this.game.world.centerY, 
                                                'button', 
                                                this.actionOnClickPlay, 
                                                this, 2, 1, 0);
@@ -385,7 +389,7 @@ var MenuLevel = {
         buttonPlay.addChild(textPlay);
 
         var buttonCreditos = this.game.add.button(this.game.world.centerX, 
-                                               this.game.world.centerY + 100, 
+                                               this.game.world.centerY + 200, 
                                                'button', 
                                                this.actionOnClickCreditos, 
                                                this, 2, 1, 0);

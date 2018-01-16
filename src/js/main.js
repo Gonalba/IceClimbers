@@ -28,7 +28,7 @@ var PreloaderScene = {
     this.game.load.image('logo', 'images/phaser.png');
     this.game.load.image('popo', 'images/popo.PNG');
     this.game.load.image('button', 'images/start.png');
-    
+    this.game.load.image('icestart', 'images/titleCompleted.png');
 
     this.game.load.spritesheet('saltoPopo', 'images/SaltoPopo.png', 23, 36, 8);
     this.game.load.spritesheet('popoMartillo', 'images/PopoMartillo.png', 23, 27, 16);

@@ -2,8 +2,11 @@
 var scene;
 var MenuLevel = {
 	create: function () {
+
+		var imagen = this.game.add.sprite(this.game.world.centerX-182.5, this.game.world.centerY-260,'icestart');
+
 		var buttonPlay = this.game.add.button(this.game.world.centerX, 
-                                               this.game.world.centerY - 100, 
+                                               this.game.world.centerY, 
                                                'button', 
                                                this.actionOnClickPlay, 
                                                this, 2, 1, 0);
@@ -14,7 +17,7 @@ var MenuLevel = {
         buttonPlay.addChild(textPlay);
 
         var buttonCreditos = this.game.add.button(this.game.world.centerX, 
-                                               this.game.world.centerY + 100, 
+                                               this.game.world.centerY + 200, 
                                                'button', 
                                                this.actionOnClickCreditos, 
                                                this, 2, 1, 0);

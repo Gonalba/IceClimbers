@@ -331,7 +331,7 @@ var PreloaderScene = {
     this.game.load.image('logo', 'images/phaser.png');
     this.game.load.image('popo', 'images/popo.PNG');
     this.game.load.image('button', 'images/start.png');
-    
+    this.game.load.image('icestart', 'images/titleCompleted.png');
 
     this.game.load.spritesheet('saltoPopo', 'images/SaltoPopo.png', 23, 36, 8);
     this.game.load.spritesheet('popoMartillo', 'images/PopoMartillo.png', 23, 27, 16);
@@ -373,8 +373,11 @@ window.onload = function () {
 var scene;
 var MenuLevel = {
 	create: function () {
+
+		var imagen = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY-200,'icestart');
+
 		var buttonPlay = this.game.add.button(this.game.world.centerX, 
-                                               this.game.world.centerY - 100, 
+                                               this.game.world.centerY, 
                                                'button', 
                                                this.actionOnClickPlay, 
                                                this, 2, 1, 0);
@@ -385,7 +388,7 @@ var MenuLevel = {
         buttonPlay.addChild(textPlay);
 
         var buttonCreditos = this.game.add.button(this.game.world.centerX, 
-                                               this.game.world.centerY + 100, 
+                                               this.game.world.centerY + 300, 
                                                'button', 
                                                this.actionOnClickCreditos, 
                                                this, 2, 1, 0);

@@ -67,7 +67,7 @@ Martillo.prototype.setPosJump = function(){
 function Popo (game, x, y, martillo, graphic,salto){
 	Movable.call(this, game, x, y, graphic);
 	this._cursors = game.input.keyboard.createCursorKeys();
-	this._jumpPower = -500;
+	this._jumpPower = -550;
  	this.atacando = false;
  	this.tiempo;
  	this.vivo = true;
@@ -76,7 +76,8 @@ function Popo (game, x, y, martillo, graphic,salto){
  	this.martillo = martillo;
 	this.hInit = this.height*3;
 	this.wInit = this.width*3;
-	
+	this.xInit = x;
+ 	this.yInit = y;
 	
 	this.MoveLeftPopo = this.animations.add('MoveRightPopo',[0,1,2,3]);
 	this.MoveRightPopo = this.animations.add('MoveLeftPopo',[4,5,6,7]);
@@ -208,7 +209,7 @@ Popo.prototype.resetPopo = function(){
 	if(!this.vivo){
 		if( this.game.time.totalElapsedSeconds() >= this.tiempo + 2)
 		{
-			this.reset(50, 50);
+			this.reset(this.xInit, this.yInit+50);
 			this.vivo = true;
 
 		}
