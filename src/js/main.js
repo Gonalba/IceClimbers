@@ -31,11 +31,11 @@ var PreloaderScene = {
     
 
     this.game.load.spritesheet('saltoPopo', 'images/SaltoPopo.png', 23, 36, 8);
-    this.game.load.spritesheet('popoMartillo', 'images/popoMartillo.png', 23, 27, 16);
+    this.game.load.spritesheet('popoMartillo', 'images/PopoMartillo.png', 23, 27, 16);
     this.game.load.spritesheet('popo', 'images/popo.png', 17, 20, 8);
     this.game.load.spritesheet('pterodactilo', 'images/pterodactilo.png', 35, 30, 6);
     this.game.load.spritesheet('yetiMuerto', 'images/yetiMuerte.png', 16, 15, 6);
-    this.game.load.spritesheet('yeti', 'images/yeti.png', 17.8333, 14, 6);
+    this.game.load.spritesheet('yeti', 'images/Yeti.png', 17.8333, 14, 6);
     this.game.load.spritesheet('oso', 'images/oso.png', 17.5, 31, 6);
     this.game.load.spritesheet('spritesGame', 'images/Sprites.png', 27, 35, 128);
 
