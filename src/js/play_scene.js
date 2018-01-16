@@ -16,7 +16,7 @@ var PlayScene = {
 		this.martillo.width *= 0.1;
 
 		//POPO--------------------------------------
-		this._popo = new entities.Popo(this.game, 400, 1200,this.martillo, 'spritesGame');
+		this._popo = new entities.Popo(this.game, 400, 1200,this.martillo, 'popoMartillo','saltoPopo');
 		this._popo.height *= 3;
 		this._popo.width *= 3;
 		this.game.world.addChild(this._popo);
@@ -58,10 +58,10 @@ var PlayScene = {
 		//this.game.debug.bodyInfo(this.detector, 32, 32);
 
 		//this.game.debug.bodyInfo(this.map.debugMap, 32, 32);
-		//this.game.debug.body(this._popo);
+		this.game.debug.body(this._popo);
 		this.game.debug.body(this.martillo);
-		//this.game.debug.body(this._oso);
-		//this.game.debug.body(this._yeti);
+		this.game.debug.body(this._oso);
+		this.game.debug.body(this._yeti);
 	},
 	collision: function(){
 		//COLISION CON EL MAPA---------------------------------------  		
