@@ -26,12 +26,18 @@ var PreloaderScene = {
     // TODO: load here the assets for the game
     this.game.load.image('logo', 'images/phaser.png');
     this.game.load.image('popo', 'images/popo.PNG');
-    this.game.load.image('oso', 'images/oso.png');
-    this.game.load.image('yeti', 'images/yeti.png');
-    this.game.load.image('m', 'images/martillo.png');
     this.game.load.image('button', 'images/start.png');
     
+
+    this.game.load.spritesheet('saltoPopo', 'images/saltoPopo.png', 23.875, 36, 8);
+    this.game.load.spritesheet('popoMartillo', 'images/popoMartillo.png', 17.75, 20, 8);
+    this.game.load.spritesheet('popo', 'images/popo.png', 17, 20, 8);
+    this.game.load.spritesheet('pterodactilo', 'images/pterodactilo.png', 35, 30, 6);
+    this.game.load.spritesheet('yetiMuerto', 'images/yetiMuerte.png', 16, 15, 6);
+    this.game.load.spritesheet('yeti', 'images/yeti.png', 17.8333, 14, 6);
+    this.game.load.spritesheet('oso', 'images/oso.png', 17.5, 31, 6);
     this.game.load.spritesheet('spritesGame', 'images/Sprites.png', 27, 35, 128);
+
     this.game.load.tilemap('mapa', 'images/Mapa1.json', null, Phaser.Tilemap.TILED_JSON);
     
 

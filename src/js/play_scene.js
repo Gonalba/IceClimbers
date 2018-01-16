@@ -29,9 +29,9 @@ var PlayScene = {
 		this.detector.width *= 0.1;*/
 
 		//YETI-------------------------------------
-		this._yeti = new entities.Yeti(this.game,500,1000,'yeti');
-		this._yeti.height *= 0.5;
-		this._yeti.width *= 0.5;
+		this._yeti = new entities.Yeti(this.game,500,1000,'yeti','yetiMuerto');
+		this._yeti.height *= 5;
+		this._yeti.width *= 5;
 		this.game.world.addChild(this._yeti);
 		//this._yeti.addChild(this.detector);
 
@@ -41,8 +41,8 @@ var PlayScene = {
 
 		//OSO---------------------------------------
 		this._oso = new entities.Oso(this.game,10,100,'oso');
-		this._oso.height *= 0.5;
-		this._oso.width *= 0.5;
+		this._oso.height *= 4;
+		this._oso.width *= 4;
 		this.game.world.addChild(this._oso);
 
 		this.enemiesGroup = this.game.add.group();

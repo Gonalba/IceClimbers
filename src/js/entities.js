@@ -3,10 +3,6 @@
 //OBJETO-----------------------------------------------------
 function Objeto (game,x,y,graphic){
 	Phaser.Sprite.call(this, game, x, y, graphic);
-	this.MoveLeft = this.animations.add('MoveLeft',[0,1,2,3]);
-	this.MoveRight = this.animations.add('MoveRight',[4,5,6,7]);
-	this.JumpLeft = this.animations.add('JumpLeft',[10,8,9]);
-	this.JumpRight = this.animations.add('JumpRight',[13,15,14]);
 };
 
 Objeto.prototype = Object.create(Phaser.Sprite.prototype);
@@ -78,6 +74,11 @@ function Popo (game, x, y, martillo, graphic){
  	this.vidas = 4;
  	this._velocity = 5;
  	this.martillo = martillo;
+	
+	this.MoveLeftPopo = this.animations.add('MoveLeftPopo',[0,1,2,3]);
+	this.MoveRightPopo = this.animations.add('MoveRightPopo',[4,5,6,7]);
+	this.JumpLeftPopo = this.animations.add('JumpLeftPopo',[10,8,9]);
+	this.JumpRightPopo = this.animations.add('JumpRightPopo',[13,15,14]);
 };
 Popo.prototype = Object.create(Movable.prototype);
 Popo.prototype.constructor = Popo;
@@ -100,16 +101,16 @@ Popo.prototype.keyboardInput = function(){
 	if(this._cursors.down.isDown&&this.body.onFloor()){
 		this.atacando = true;
 		if(this._direction === -1){
-			this.play('JumpLeft', 10);				
+			this.play('JumpLeftPopo', 10);					
 			this.martillo.setPosIzq();
-  			this.JumpLeft.onComplete.add(this.martillo.setPosInit,this.martillo);
-  			this.JumpLeft.onComplete.add(this.atacandoOff,this);
+  			this.JumpLeftPopo.onComplete.add(this.martillo.setPosInit,this.martillo);
+  			this.JumpLeftPopo.onComplete.add(this.atacandoOff,this);
 		}
 		else if(this._direction === 1){
-			this.play('JumpRight', 10);
+			this.play('JumpRightPopo', 10);
 			this.martillo.setPosDer();
-  			this.JumpRight.onComplete.add(this.martillo.setPosInit,this.martillo);
-  			this.JumpRight.onComplete.add(this.atacandoOff,this);
+  			this.JumpRightPopo.onComplete.add(this.martillo.setPosInit,this.martillo);
+  			this.JumpRightPopo.onComplete.add(this.atacandoOff,this);
 		}
 	}
 	//SALTO-------------------------------------
@@ -118,12 +119,12 @@ Popo.prototype.keyboardInput = function(){
 	 		this.jump();
 			this.martillo.setPosJump();
 			if(this._direction === -1){
-				this.play('JumpLeft', 10);
-  				this.JumpLeft.onComplete.add(this.martillo.setPosInit,this.martillo);
+				this.play('JumpLeftPopo', 10);
+  				this.JumpLeftPopo.onComplete.add(this.martillo.setPosInit,this.martillo);
 			}
 			else if(this._direction === 1){
-				this.play('JumpRight', 10);
-  				this.JumpRight.onComplete.add(this.martillo.setPosInit,this.martillo);			
+				this.play('JumpRightPopo', 10);
+  				this.JumpRightPopo.onComplete.add(this.martillo.setPosInit,this.martillo);			
 			}
 		}
   	}
@@ -134,7 +135,7 @@ Popo.prototype.keyboardInput = function(){
 			this._direction = -1;
 			this.move();
 			if(this.body.onFloor()){
-				this.play('MoveLeft',20);					
+				this.play('MoveLeftPopo',20);					
 			}
 		}
 	}
@@ -144,7 +145,7 @@ Popo.prototype.keyboardInput = function(){
   			this._direction = 1
 	 			this.move();
 	 			if(this.body.onFloor()){
-				this.play('MoveRight',20);
+					this.play('MoveRightPopo',20);
 			}
   		}
 	}else{
@@ -189,28 +190,44 @@ Popo.prototype.atacandoOff = function(){
 };
 
 //YETI--------------------------------------------------------------------------------------
-function Yeti(game, x, y,  graphic){
+function Yeti(game, x, y,  graphic,muerto){
 	Movable.call(this, game, x, y, graphic);
+	this.MoveLeftYeti = this.animations.add('MoveRightYeti',[0,1,2]);
+	this.MoveRightYeti = this.animations.add('MoveLeftYeti',[3,4,5]);
+	this.muerto = game.add.sprite(0,0,muerto);
+	this.MuertoYeti = this.muerto.animations.add('MuertoYeti',[0,1]);
 };
 Yeti.prototype = Object.create(Movable.prototype);
 Yeti.prototype.constructor = Yeti;
 
 Yeti.prototype.update = function(){
 	this.move();
+	if(this._direction == 1)
+		this.play('MoveRightYeti',15);
+	else if (this._direction == -1)
+		this.play('MoveLeftYeti',15);
 };
 
-Yeti.prototype.morir = function (){};
+Yeti.prototype.morir = function (){
+	this.play('MuertoYeti',15);
+};
 
 
 //OSO--------------------------------------------------------------------------------------
 function Oso(game, x, y, graphic){
 	Movable.call(this, game, x, y, graphic);
+	this.MoveLeftOso = this.animations.add('MoveRightOso',[0,1,2]);
+	this.MoveRightOso = this.animations.add('MoveLeftOso',[3,4,5]);
 };
 Oso.prototype = Object.create(Movable.prototype);
 Oso.prototype.constructor = Yeti;
 
 Oso.prototype.update = function(){
 	this.move();
+	if(this._direction == 1)
+		this.play('MoveRightOso',15);
+	else if (this._direction == -1)
+		this.play('MoveLeftOso',15);
 };
 
 Oso.prototype.morir = function (){};
