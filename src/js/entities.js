@@ -26,9 +26,13 @@ Movable.prototype.constructor = Movable;
 Movable.prototype.move = function(){
 	//USO this.x EN VEZ DE this.body.velocity.x PORQUE CON EL SEGUNDO SE MUEVE CON ACELERACION
 	this.x += this._velocity * this._direction;
-	
-	//TOROIDE
-	if(this.x > this.game.width - this.width-1)
+//Toroide	
+	/*if(this.x > this.game.width - this.width-30)
+		this.x = 2;
+	else if(this.x < 1)
+		this.x = this.game.width - this.width-30;
+/*lado a lado*/
+	if(this.x > this.game.width - this.width -30)
 		this._direction = -1;
 	else if(this.x < 1)
 		this._direction = 1;
@@ -60,6 +64,7 @@ Martillo.prototype.setPosJump = function(){
 	this.x = 7;
 	this.y = -10;
 }
+
 //POPO-----------------------------------------------------------------------------------
 // EN EL MÉTODO UPDATE SE IMPLEMENTA LA LÓGICA DEL MOVIMIENTO
 // EN FUNCION DE LAS TECLAS QUE SE PULSEN
@@ -151,12 +156,9 @@ Popo.prototype.keyboardInput = function(){
 	
 };
 //METODO DE SALTO
-	//falta implementar que ataque cuando salte
 Popo.prototype.jump = function(){
 	this.body.velocity.y = this._jumpPower;
 };
-
-//metodo pierde vida
 //metodo morir
 Popo.prototype.morir = function (){
 	if (this.vivo){
@@ -187,7 +189,7 @@ Popo.prototype.atacandoOff = function(){
 };
 
 //YETI--------------------------------------------------------------------------------------
-function Yeti(game, x, y, graphic){
+function Yeti(game, x, y,  graphic){
 	Movable.call(this, game, x, y, graphic);
 };
 Yeti.prototype = Object.create(Movable.prototype);

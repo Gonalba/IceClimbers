@@ -3,8 +3,12 @@ var entities = require('./entities.js');
 
 
 var PlayScene = {
+
+		
 	//no se si funciona asi	
 	create: function () {
+		this.tileH = 40;
+		this.tileW = 70;
 
 		//MARTILLO---------------------------------
 		this.martillo = new entities.Martillo(this.game, 1000, 10,'logo');
@@ -12,17 +16,28 @@ var PlayScene = {
 		this.martillo.width *= 0.1;
 
 		//POPO--------------------------------------
-		this._popo = new entities.Popo(this.game, 400, 2000,this.martillo, 'spritesGame');
+		this._popo = new entities.Popo(this.game, 400, 1200,this.martillo, 'spritesGame');
 		this._popo.height *= 3;
 		this._popo.width *= 3;
 		this.game.world.addChild(this._popo);
 		this._popo.addChild(this.martillo);
 
+		
+		//DETECTOR YETI-----------------------------------------
+		/*this.detector = new entities.Detector(this.game, 20, 100, 100, 100, 'logo');//this._yeti.height, this._yeti.width, 'logo');
+		this.detector.height *= 0.1;
+		this.detector.width *= 0.1;*/
+
 		//YETI-------------------------------------
-		this._yeti = new entities.Yeti(this.game,20,100,'yeti');
+		this._yeti = new entities.Yeti(this.game,500,1000,'yeti');
 		this._yeti.height *= 0.5;
 		this._yeti.width *= 0.5;
 		this.game.world.addChild(this._yeti);
+		//this._yeti.addChild(this.detector);
+
+
+		
+
 
 		//OSO---------------------------------------
 		this._oso = new entities.Oso(this.game,10,100,'oso');
@@ -40,7 +55,7 @@ var PlayScene = {
 		this.collision();
 	},
 	render : function(){
-		this.game.debug.bodyInfo(this.martillo, 32, 32);
+		//this.game.debug.bodyInfo(this.detector, 32, 32);
 
 		//this.game.debug.bodyInfo(this.map.debugMap, 32, 32);
 		//this.game.debug.body(this._popo);
@@ -49,8 +64,7 @@ var PlayScene = {
 		//this.game.debug.body(this._yeti);
 	},
 	collision: function(){
-		//COLISION CON EL MAPA----------------------------------------
-//SI CAMBIAS DE MAPA
+		//COLISION CON EL MAPA---------------------------------------  		
 		this.game.physics.arcade.collide(this._popo, this.groundLayer);
 		this.game.physics.arcade.collide(this.enemiesGroup, this.groundLayer);
 
@@ -59,32 +73,24 @@ var PlayScene = {
 
 		this.game.physics.arcade.collide(this._popo, this.bonusLayer);
 		this.game.physics.arcade.collide(this.enemiesGroup, this.bonusLayer);
-//Para que sólo aparezcan los hielitos
-		 /*
-		this.game.physics.arcade.collide(this._popo, this.groundLayer);
-		this.game.physics.arcade.collide(this.enemiesGroup, this.groundLayer);
-  		 */
 
-//Para que aparezcan hielitos y bonus
-  		/*
-		this.game.physics.arcade.collide(this._popo, this.groundLayer);
-		this.game.physics.arcade.collide(this.enemiesGroup, this.groundLayer);
 
-		this.game.physics.arcade.collide(this._popo, this.bonusLayer);
-		this.game.physics.arcade.collide(this.enemiesGroup, this.bonusLayer);
-  		*/
-//Y YA
+		//ROMPE SUELO SUPERIOR-------------------------------------------------------
+		if(this.game.physics.arcade.overlap(this.martillo, this.groundLayer)){
+			//this.game.debug.text('Popo: ' + this._popo.x + this.martillo.x + ", " + this._popo.y + this.martillo.y, 0, 500);
 
-		this.game.physics.arcade.overlap(this.martillo, this.groundLayer,this.destruyeTile);
+			this.varX = Math.trunc((this._popo.x + this.martillo.x)/this.tileW);
+			this.varY= Math.trunc((this._popo.y + this.martillo.y)/this.tileH);
+			this.map.removeTile(this.varX, this.varY, this.groundLayer);
+			//this.game.debug.text('Tile: ' + this.varX + ", " + this.varY, 0, 600);
+		}
 
-		//COLISION ENEMIGOS------------------------------------------------------------
+		//COLISION CON ENEMIGOS------------------------------------------------------------
 		this.game.physics.arcade.collide(this.martillo, this.enemiesGroup, this.mataEnemigo);
 		if(this._popo.overlap(this.enemiesGroup)){
 			this._popo.morir();
 		}
-		//this.map.setTileIndexCallback(1, this.destruyeTile, this.martillo);
-		//this.game.physics.arcade.collide(this._popo, this.tiles);
-		
+		this.hueco();
 	},
 	configure: function(){
 		//Start the Arcade Physics system
@@ -92,11 +98,10 @@ var PlayScene = {
 		this.game.physics.startSystem(Phaser.Physics.ARCADE);
 		this.game.physics.arcade.gravity.y = 600;  
 		this.cursors = this.game.input.keyboard.createCursorKeys();
+
 		//MARTILLO------------------------
 		this.game.physics.arcade.enable(this.martillo);
-		//this.martillo.body.allowGravity = false;
-		//this.martillo.body.immovible = true;
-		this.martillo.body.gravity.y = -600;
+		this.martillo.body.allowGravity = false;
 
 		//POPO----------------------------
 		this.game.physics.arcade.enable(this._popo);        
@@ -112,9 +117,7 @@ var PlayScene = {
 		//MAPA------------------------------
 		this.map = this.game.add.tilemap('mapa');
 		this.map.addTilesetImage('mapaTiles','tiles');
-
-//SI CAMBIAS DE MAPA
-		
+  		
 		this.groundLayer = this.map.createLayer('Pisos');
 		this.cloudLayer = this.map.createLayer('Nubes');
 		this.bonusLayer = this.map.createLayer('Bonus');
@@ -122,43 +125,39 @@ var PlayScene = {
 		this.map.setCollisionBetween(0, 5000, true, 'Pisos');
      	this.map.setCollisionBetween(0, 5000, true, 'Nubes');
      	this.map.setCollisionBetween(0, 5000, true, 'Bonus');
-
-
-  //Para que sólo aparezcan los hielitos
-		 /*
-		this.groundLayer = this.map.createLayer('Pisos');
-
-	Esto:
-		this.map.setCollisionBetween(0, 5000, true, 'Pisos');
-	O esto:
-		this.map.setCollisionBetween(0,100);//Que es lo que estab antes
-  		 */
-
-  //Para que aparezcan hielitos y bonus
-  		/*
-		this.groundLayer = this.map.createLayer('Pisos');
-		this.bonusLayer = this.map.createLayer('Bonus');
-
-		this.map.setCollisionBetween(0, 5000, true, 'Pisos');
-     	this.map.setCollisionBetween(0, 5000, true, 'Bonus');
-  		*/
-//Y YA
-
+  		
  		this.groundLayer.resizeWorld();
-
- 		//this.tiles = this.game.add.group();
-		//this.game.physics.arcade.enable(this.tiles);
-		//this.map.createFromObjects('Capa de Patrones 1', 1, 'patron', this.tiles);
 	},
 
 	mataEnemigo: function(martillo, enemy){
 		enemy.destroy();
 	},
-	destruyeTile: function(martillo, tile){ 
-		//tile.kill();
-	    tile.alpha = 0.5; //BAJA LA TRANSPARENCIA, PARA IR PROBANDO
-    	//layer.dirty = true;
-   	},
+	hueco: function(){
+		if(this._yeti._direction == 1){//Si va a la derecha
+			//this.game.debug.text('Yeti: ' + this._yeti.x + this._yeti.width + ", " + this._yeti.y + this._yeti.height, 0, 500);
+			this.varX = Math.trunc((this._yeti.x + this._yeti.width)/this.tileW);
+			this.varY= Math.trunc((this._yeti.y + this._yeti.height)/this.tileH);
+			if(this.map.getTile(this.varX, this.varY) === null){
+				this.map.putTile(7, this.varX, this.varY, this.groundLayer);
+				this.game.debug.text('Sí', 0, 600);
+			}
+		}
+		else{
+			//this.game.debug.text('Yeti: ' + this._yeti.x + ", " + this._yeti.y + this._yeti.height, 0, 500);
+			this.varX = Math.trunc((this._yeti.x)/this.tileW);
+			this.varY= Math.trunc((this._yeti.y + this._yeti.height)/this.tileH);
+			if(this.map.getTile(this.varX, this.varY) === null){
+				this.map.putTile(7, this.varX, this.varY, this.groundLayer);
+				this.game.debug.text('Sí', 0, 600);
+			}
+		}
+		this.game.debug.text('Tile: ' + this.varX + ", " + this.varY, 0, 550);
+
+		
+
+		
+
+	},
 };
 
 module.exports = PlayScene;

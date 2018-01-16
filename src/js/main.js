@@ -32,17 +32,8 @@ var PreloaderScene = {
     this.game.load.image('button', 'images/start.png');
     
     this.game.load.spritesheet('spritesGame', 'images/Sprites.png', 27, 35, 128);
-
-//SI CAMBIAS DE MAPA 
     this.game.load.tilemap('mapa', 'images/Mapa1.json', null, Phaser.Tilemap.TILED_JSON);
-
-/*Para que sólo aparezcan los hielitos
-    this.game.load.tilemap('mapa', 'images/Mapa1_SBN.json', null, Phaser.Tilemap.TILED_JSON);*/
-
-/*Para que aparezcan hielitos y bonus
-    this.game.load.tilemap('mapa', 'images/Mapa1_SN.json', null, Phaser.Tilemap.TILED_JSON);*/
     
-//Y YA
 
     this.game.load.image('tiles', 'images/TileSet.png');
 
