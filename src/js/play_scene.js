@@ -16,7 +16,7 @@ var PlayScene = {
 		this.martillo.width *= 0.1;
 
 		//POPO--------------------------------------
-		this._popo = new entities.Popo(this.game, 400, 1200,this.martillo, 'popoMartillo','saltoPopo');
+		this._popo = new entities.Popo(this.game, 400, 1200,this.martillo, 'popoMartillo');
 		this._popo.height *= 3;
 		this._popo.width *= 3;
 		this.game.world.addChild(this._popo);

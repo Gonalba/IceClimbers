@@ -74,16 +74,18 @@ function Popo (game, x, y, martillo, graphic,salto){
  	this.vidas = 4;
  	this._velocity = 3;
  	this.martillo = martillo;
+	this.hInit = this.height*3;
+	this.wInit = this.width*3;
+	
 	
 	this.MoveLeftPopo = this.animations.add('MoveRightPopo',[0,1,2,3]);
 	this.MoveRightPopo = this.animations.add('MoveLeftPopo',[4,5,6,7]);
-	this.saltoAnim = game.add.sprite(0,0,salto);
-	this.JumpLeftPopo = this.saltoAnim.animations.add('JumpLeftPopo',[4,7,6,5]);
-	this.JumpRightPopo = this.saltoAnim.animations.add('JumpRightPopo',[3,0,1,2]);
 
-	this.AtaqueLeftPopo = this.saltoAnim.animations.add('JumpLeftPopo',[7,6,5]);
-	this.AtaqueRightPopo = this.saltoAnim.animations.add('JumpRightPopo',[0,1,2]);
-	self = this;
+	this.JumpRightPopo = this.animations.add('JumpRightPopo',[11,8,9,10]);
+	this.JumpLeftPopo = this.animations.add('JumpLeftPopo',[12,15,14,13]);
+
+	this.AtaqueRightPopo = this.animations.add('AtaqueRightPopo',[8,9,10]);
+	this.AtaqueLeftPopo = this.animations.add('AtaqueLeftPopo',[15,14,13]);
 };
 Popo.prototype = Object.create(Movable.prototype);
 Popo.prototype.constructor = Popo;
@@ -102,17 +104,32 @@ Popo.prototype.update = function(){
 
 //EN ESTE METODO SE CAPTURAN LAS TECLAS QUE SE PULSAN Y SE REALIZA LA FUNCION CORRESPONDIENTE
 Popo.prototype.keyboardInput = function(){
-	
+	if(this.body.onFloor()){
+			this.height = this.hInit;
+			this.width = this.wInit;
+		}
+
 	if(this._cursors.down.isDown&&this.body.onFloor()){
 		this.atacando = true;
 		if(this._direction === -1){
-			this.saltoAnim.play('AtaqueLeftPopo', 10);					
+			
+			if(!this.AtaqueRightPopo.isPlaying){
+				this.y -= 12.8;
+				this.height *= 1.35;
+				this.width *= 1.35;
+			}
+			this.play('AtaqueLeftPopo', 10);	
 			this.martillo.setPosIzq();
   			this.AtaqueLeftPopo.onComplete.add(this.martillo.setPosInit,this.martillo);
   			this.AtaqueLeftPopo.onComplete.add(this.atacandoOff,this);
 		}
 		else if(this._direction === 1){
-			this.saltoAnim.play('AtaqueRightPopo', 10);
+			if(!this.AtaqueLeftPopo.isPlaying){
+				this.y -= 12.8;
+				this.height *= 1.35;
+				this.width *= 1.35;
+			}
+			this.play('AtaqueRightPopo', 10);
 			this.martillo.setPosDer();
   			this.AtaqueRightPopo.onComplete.add(this.martillo.setPosInit,this.martillo);
   			this.AtaqueRightPopo.onComplete.add(this.atacandoOff,this);
@@ -124,11 +141,15 @@ Popo.prototype.keyboardInput = function(){
 	 		this.jump();
 			this.martillo.setPosJump();
 			if(this._direction === -1){
-				this.saltoAnim.play('JumpLeftPopo', 10);
+				this.play('JumpLeftPopo', 10);
+				this.height *= 1.35;
+				this.width *= 1.35;
   				this.JumpLeftPopo.onComplete.add(this.martillo.setPosInit,this.martillo);
 			}
 			else if(this._direction === 1){
-				this.saltoAnim.play('JumpRightPopo', 10);
+				this.play('JumpRightPopo', 10);
+				this.height *= 1.35;
+				this.width *= 1.35;
   				this.JumpRightPopo.onComplete.add(this.martillo.setPosInit,this.martillo);			
 			}
 		}
@@ -154,12 +175,18 @@ Popo.prototype.keyboardInput = function(){
 			}
   		}
 	}else{
-		if(this._direction === 1&&this.body.onFloor()&&!this.atacando)
+		if(this._direction === 1&&this.body.onFloor()&&!this.atacando){
 			this.frame = 0;
+		}
 		else if(this._direction === -1&&this.body.onFloor()&&!this.atacando)
 			this.frame = 7;
-	}
+
+		if(this.body.onFloor()){
+			this.height = this.hInit;
+			this.width = this.wInit;
+		}
 	
+	}
 };
 //METODO DE SALTO
 Popo.prototype.jump = function(){
@@ -199,8 +226,8 @@ function Yeti(game, x, y,  graphic,muerto){
 	Movable.call(this, game, x, y, graphic);
 	this.MoveLeftYeti = this.animations.add('MoveRightYeti',[0,1,2]);
 	this.MoveRightYeti = this.animations.add('MoveLeftYeti',[3,4,5]);
-	this.muerto = game.add.sprite(0,0,muerto);
-	this.MuertoYeti = this.muerto.animations.add('MuertoYeti',[0,1]);
+	//this.muerto = game.add.sprite(0,0,muerto);
+	//this.MuertoYeti = this.muerto.animations.add('MuertoYeti',[0,1]);
 };
 Yeti.prototype = Object.create(Movable.prototype);
 Yeti.prototype.constructor = Yeti;
@@ -214,7 +241,7 @@ Yeti.prototype.update = function(){
 };
 
 Yeti.prototype.morir = function (){
-	this.play('MuertoYeti',15);
+	//this.play('MuertoYeti',15);
 };
 
 
