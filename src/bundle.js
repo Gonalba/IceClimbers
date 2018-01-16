@@ -474,10 +474,10 @@ var PlayScene = {
 		//this.game.debug.bodyInfo(this.detector, 32, 32);
 
 		//this.game.debug.bodyInfo(this.map.debugMap, 32, 32);
-		this.game.debug.body(this._popo);
+		/*this.game.debug.body(this._popo);
 		this.game.debug.body(this.martillo);
 		this.game.debug.body(this._oso);
-		this.game.debug.body(this._yeti);
+		this.game.debug.body(this._yeti);*/
 	},
 	collision: function(){
 		//COLISION CON EL MAPA---------------------------------------  		
