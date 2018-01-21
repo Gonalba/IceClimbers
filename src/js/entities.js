@@ -13,6 +13,7 @@ Objeto.prototype.constructor = Objeto;
 function Movable (game, x, y, graphic){
  	this._velocity = 1;
  	this._direction = 1;
+ 	this.paused = false;
  	Objeto.call(this, game, x, y, graphic);
   
 };
@@ -33,6 +34,19 @@ Movable.prototype.move = function(){
 	else if(this.x < 1)
 		this._direction = 1;
 };
+Movable.prototype.pause = function(){
+	if(!this.paused){
+		this._velocity = 0;
+		this._direction = 0;
+		this.paused = true;
+	}
+	else{
+		this._velocity = 1;
+		this._direction = 1;
+		this.paused = false;
+	}
+};
+
 
 
 //MARTILLO-------------------------------------------------------------------------------
@@ -105,6 +119,7 @@ Popo.prototype.update = function(){
 
 //EN ESTE METODO SE CAPTURAN LAS TECLAS QUE SE PULSAN Y SE REALIZA LA FUNCION CORRESPONDIENTE
 Popo.prototype.keyboardInput = function(){
+	if(!this.paused){
 	if(this.body.onFloor()){
 			this.height = this.hInit;
 			this.width = this.wInit;
@@ -143,14 +158,14 @@ Popo.prototype.keyboardInput = function(){
 			this.martillo.setPosJump();
 			if(this._direction === -1){
 				this.play('JumpLeftPopo', 10);
-				this.height *= 1.35;
-				this.width *= 1.35;
+				this.height *= 1;
+				this.width *= 1;
   				this.JumpLeftPopo.onComplete.add(this.martillo.setPosInit,this.martillo);
 			}
 			else if(this._direction === 1){
 				this.play('JumpRightPopo', 10);
-				this.height *= 1.35;
-				this.width *= 1.35;
+				this.height *= 1;
+				this.width *= 1;
   				this.JumpRightPopo.onComplete.add(this.martillo.setPosInit,this.martillo);			
 			}
 		}
@@ -188,6 +203,7 @@ Popo.prototype.keyboardInput = function(){
 		}
 	
 	}
+}
 };
 //METODO DE SALTO
 Popo.prototype.jump = function(){

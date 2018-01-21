@@ -2,18 +2,15 @@
 var scene;
 var Creditos = {
 	create: function () {
-		
-		var buttonMenu = this.game.add.button(this.game.world.centerX, 
-                                               this.game.world.centerY - 100, 
-                                               'button', 
-                                               this.actionOnClick, 
-                                               this, 2, 1, 0);
-        buttonMenu.anchor.set(0.5);
-        var textMenu = this.game.add.text(0, 0, "Menu Principal");
-        textMenu.font = 'Sniglet';
-        textMenu.anchor.set(0.5);
-        buttonMenu.addChild(textMenu);
+		this.escKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+    this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.ESC);
+
+    this.menu = this.game.add.sprite(25, 25, 'menuBTN');//this.game.world.centerX - 265, this.game.world.centerY-260,'icestart');
+    this.menu.scale.setTo(0.30, 0.3);
 	},
+  update: function(){
+    this.escKey.onDown.add(this.actionOnClick, this);      
+  },
 
 	actionOnClick: function(){
 		scene = 'menu_principal';

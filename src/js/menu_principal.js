@@ -1,47 +1,59 @@
 'use strict';
-var scene;
-var MenuLevel = {
+var cursors 
+var pos1 = {'x': 280, 'y': 327};
+var pos2 = {'x': 250, 'y': 427 };
+var MenuPcpal = {
 	create: function () {
+    cursors = this.game.input.keyboard.createCursorKeys();
+    this.enterKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+    this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.ENTER);
 
-		var imagen = this.game.add.sprite(this.game.world.centerX-182.5, this.game.world.centerY-260,'icestart');
+    
+		this.imagen = this.game.add.sprite(125, 25,'icestart');
+    this.imagen.scale.setTo(1.5, 1.5);
 
-		var buttonPlay = this.game.add.button(this.game.world.centerX, 
-                                               this.game.world.centerY, 
-                                               'button', 
-                                               this.actionOnClickPlay, 
-                                               this, 2, 1, 0);
-        buttonPlay.anchor.set(0.5);
-        var textPlay = this.game.add.text(0, 0, "Play");
-        textPlay.font = 'Sniglet';
-        textPlay.anchor.set(0.5);
-        buttonPlay.addChild(textPlay);
+    this.martillo = this.game.add.sprite(pos1.x, pos1.y, 'martilloMenu');
+    this.martillo.scale.setTo(0.4, 0.4);
+		this.buttonPlay = this.game.add.sprite(300, 325, 'playBTN');
+    this.buttonPlay.scale.setTo(0.5, 0.5);
 
-        var buttonCreditos = this.game.add.button(this.game.world.centerX, 
-                                               this.game.world.centerY + 200, 
-                                               'button', 
-                                               this.actionOnClickCreditos, 
-                                               this, 2, 1, 0);
-        buttonCreditos.anchor.set(0.5);
-        var textCreditos = this.game.add.text(0, 0, "Creditos");
-        textCreditos.font = 'Sniglet';
-        textCreditos.anchor.set(0.5);
-        buttonCreditos.addChild(textCreditos);
+    this.buttonCreditos = this.game.add.sprite(300, 425, 'creditosBTN');
+    this.buttonCreditos.scale.setTo(0.5, 0.5);   
 
 	},
+
+  update: function(){
+    cursors.up.onDown.add(this.mueveMartillo, this);
+    cursors.down.onDown.add(this.mueveMartillo, this);
+    if(this.enterKey.isDown){
+      if(this.martillo.x === pos1.x){
+        this.actionOnClickPlay();
+      }
+      else{
+       this.actionOnClickCreditos();
+      }
+    }
+
+  },
+  mueveMartillo: function(){
+    if(this.martillo.x === pos1.x){
+        this.martillo.x = pos2.x;
+        this.martillo.y = pos2.y;
+      }
+       else{
+          this.martillo.x = pos1.x;
+          this.martillo.y = pos1.y;
+      }
+  },
 	
 	actionOnClickPlay: function(){
-		scene = 'play';
-        this.initState();
-    },
+		this.game.state.start('play');
+  },
 
     actionOnClickCreditos: function(){
-		scene = 'creditos';
-        this.initState();
-    },
+    this.game.state.start('creditos');    
+},
 
-	initState: function(){
-		this.game.state.start(scene);
-	}
-}
+};
 
-module.exports = MenuLevel;
+module.exports = MenuPcpal;

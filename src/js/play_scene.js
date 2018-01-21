@@ -1,12 +1,14 @@
 'use strict';
 var entities = require('./entities.js');
 
-
+var scene;
 var PlayScene = {
 
 		
 	//no se si funciona asi	
 	create: function () {
+
+
 		this.tileH = 40;
 		this.tileW = 70;
 
@@ -22,46 +24,68 @@ var PlayScene = {
 		this.game.world.addChild(this._popo);
 		this._popo.addChild(this.martillo);
 
-		
-		//DETECTOR YETI-----------------------------------------
-		/*this.detector = new entities.Detector(this.game, 20, 100, 100, 100, 'logo');//this._yeti.height, this._yeti.width, 'logo');
-		this.detector.height *= 0.1;
-		this.detector.width *= 0.1;*/
-
 		//YETI-------------------------------------
 		this._yeti = new entities.Yeti(this.game,500,1000,'yeti','yetiMuerto');
 		this._yeti.height *= 5;
 		this._yeti.width *= 5;
 		this.game.world.addChild(this._yeti);
-		//this._yeti.addChild(this.detector);
-
-
-		
-
-
 		//OSO---------------------------------------
 		this._oso = new entities.Oso(this.game,10,100,'oso');
 		this._oso.height *= 4;
 		this._oso.width *= 4;
 		this.game.world.addChild(this._oso);
 
+		//GRUPO ENEMIGOS------------------------
 		this.enemiesGroup = this.game.add.group();
 		this.enemiesGroup.add(this._yeti);
 		this.enemiesGroup.add(this._oso);
 
+		this.menu = this.game.add.sprite(295, 400, 'menuBTN');//this.game.world.centerX - 265, this.game.world.centerY-260,'icestart');
+        this.menu.scale.setTo(0.5, 0.5);
+        this.menu.fixedToCamera = true;
+        this.resume = this.game.add.sprite(75, 300, 'resumeBTN');//this.game.world.centerX - 265, this.game.world.centerY-260,'icestart');
+        this.resume.scale.setTo(0.5, 0.5);
+        this.resume.fixedToCamera = true;
+        this.reset = this.game.add.sprite(500, 300, 'resetBTN');//this.game.world.centerX - 265, this.game.world.centerY-260,'icestart');
+        this.reset.scale.setTo(0.5, 0.5);
+        this.reset.fixedToCamera = true;
+		//MAPA------------------------------
+		this.map = this.game.add.tilemap('mapa');
+		this.map.addTilesetImage('mapaTiles','tiles');
+
+		//PAUSA--------------------------------
+		this.escKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+    	this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.ESC);
+    	this.selecKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+    	this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.ENTER);
+    	this.resetKey = this.game.input.keyboard.addKey(Phaser.Keyboard.R);
+    	this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.R);
+
+    	this.paused = false;
+    	
+
+        this.menu.alpha = this.resume.alpha = this.reset.alpha = 0;
+
+
 		this.configure();	       
 	},
 	update: function(){		
+		if(!this.paused)		
+    		this.escKey.onDown.add(this.pause, this);
+    	else if(this.paused){
+    		this.escKey.onDown.add(this.goMenu, this);
+    		this.selecKey.onDown.add(this.pause, this);
+    		this.resetKey.onDown.add(this.resetGame, this);
+    	} 
+
 		this.collision();
 	},
 	render : function(){
-		//this.game.debug.bodyInfo(this.detector, 32, 32);
-
-		//this.game.debug.bodyInfo(this.map.debugMap, 32, 32);
-		/*this.game.debug.body(this._popo);
+		this.game.debug.bodyInfo(this._popo, 32, 32);
+		this.game.debug.body(this._popo);
 		this.game.debug.body(this.martillo);
 		this.game.debug.body(this._oso);
-		this.game.debug.body(this._yeti);*/
+		this.game.debug.body(this._yeti);
 	},
 	collision: function(){
 		//COLISION CON EL MAPA---------------------------------------  		
@@ -87,7 +111,7 @@ var PlayScene = {
 
 		//COLISION CON ENEMIGOS------------------------------------------------------------
 		this.game.physics.arcade.collide(this.martillo, this.enemiesGroup, this.mataEnemigo);
-		if(this._popo.overlap(this.enemiesGroup)){
+		if(this.game.physics.arcade.collide(this._popo, this.enemiesGroup, this._popo.morir)){
 			this._popo.morir();
 		}
 		this.hueco();
@@ -114,10 +138,8 @@ var PlayScene = {
      		 obj.body.collideWorldBounds = true;
     		});
 
-		//MAPA------------------------------
-		this.map = this.game.add.tilemap('mapa');
-		this.map.addTilesetImage('mapaTiles','tiles');
-  		
+		
+  		//MAPA----------------------------
 		this.groundLayer = this.map.createLayer('Pisos');
 		this.cloudLayer = this.map.createLayer('Nubes');
 		this.bonusLayer = this.map.createLayer('Bonus');
@@ -151,12 +173,30 @@ var PlayScene = {
 				this.game.debug.text('Sí', 0, 600);
 			}
 		}
-		this.game.debug.text('Tile: ' + this.varX + ", " + this.varY, 0, 550);
+	},
+	pause: function(){
+		if(!this.paused){
+			this._popo.pause();
+			this._oso.pause();
+			this._yeti.pause();
+			this.paused = true;
+			this.menu.alpha = this.resume.alpha = this.reset.alpha = 1;
+		}
+		else if(this.paused){
+			this._popo.pause();
+			this._oso.pause();
+			this._yeti.pause();
+			this.paused = false;
+			this.menu.alpha = this.resume.alpha = this.reset.alpha = 0;
+		}
 
-		
 
-		
-
+	},
+	goMenu: function(){
+		this.game.state.start('menu_principal');
+	},
+	resetGame: function(){
+		this.game.state.start('play');
 	},
 };
 
