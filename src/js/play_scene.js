@@ -60,28 +60,35 @@ var PlayScene = {
     	this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.ENTER);
     	this.resetKey = this.game.input.keyboard.addKey(Phaser.Keyboard.R);
     	this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.R);
+        
+        this.menu.alpha = this.resume.alpha = this.reset.alpha = 0;
 
-    	this.paused = false;
+    	this.paused = 0;
     	
 
-        this.menu.alpha = this.resume.alpha = this.reset.alpha = 0;
 
 
 		this.configure();	       
 	},
 	update: function(){		
-		if(!this.paused)		
+		if(this.paused === 0)		
     		this.escKey.onDown.add(this.pause, this);
-    	else if(this.paused){
+		else if(this.paused === 10){
     		this.escKey.onDown.add(this.goMenu, this);
     		this.selecKey.onDown.add(this.pause, this);
     		this.resetKey.onDown.add(this.resetGame, this);
     	} 
+    	this.game.debug.text(this.paused, 0, 500);
+    	this.game.debug.text(this._popo.body.onFloor(), 0, 300);
+
+    	 this.setCamera();
 
 		this.collision();
 	},
 	render : function(){
 		this.game.debug.bodyInfo(this._popo, 32, 32);
+		this.game.debug.text('x: ' + this.game.camera.x +', y: '+this.game.camera.y, 0, 500);
+
 		this.game.debug.body(this._popo);
 		this.game.debug.body(this.martillo);
 		this.game.debug.body(this._oso);
@@ -130,7 +137,7 @@ var PlayScene = {
 		//POPO----------------------------
 		this.game.physics.arcade.enable(this._popo);        
 		this._popo.body.collideWorldBounds = true;
-		this.game.camera.follow(this._popo);
+		//this.game.camera.follow(this._popo);
 
 		//ENEMIGOS------------------------
 		this.game.physics.arcade.enable(this.enemiesGroup);
@@ -149,6 +156,8 @@ var PlayScene = {
      	this.map.setCollisionBetween(0, 5000, true, 'Bonus');
   		
  		this.groundLayer.resizeWorld();
+		this.camera.setPosition(0, 1000)
+
 	},
 
 	mataEnemigo: function(martillo, enemy){
@@ -156,37 +165,33 @@ var PlayScene = {
 	},
 	hueco: function(){
 		if(this._yeti._direction == 1){//Si va a la derecha
-			//this.game.debug.text('Yeti: ' + this._yeti.x + this._yeti.width + ", " + this._yeti.y + this._yeti.height, 0, 500);
 			this.varX = Math.trunc((this._yeti.x + this._yeti.width)/this.tileW);
 			this.varY= Math.trunc((this._yeti.y + this._yeti.height)/this.tileH);
 			if(this.map.getTile(this.varX, this.varY) === null){
 				this.map.putTile(7, this.varX, this.varY, this.groundLayer);
-				this.game.debug.text('Sí', 0, 600);
 			}
 		}
 		else{
-			//this.game.debug.text('Yeti: ' + this._yeti.x + ", " + this._yeti.y + this._yeti.height, 0, 500);
 			this.varX = Math.trunc((this._yeti.x)/this.tileW);
 			this.varY= Math.trunc((this._yeti.y + this._yeti.height)/this.tileH);
 			if(this.map.getTile(this.varX, this.varY) === null){
 				this.map.putTile(7, this.varX, this.varY, this.groundLayer);
-				this.game.debug.text('Sí', 0, 600);
 			}
 		}
 	},
 	pause: function(){
-		if(!this.paused){
+		if(this.paused === 0){
 			this._popo.pause();
 			this._oso.pause();
 			this._yeti.pause();
-			this.paused = true;
+			this.paused = 10;
 			this.menu.alpha = this.resume.alpha = this.reset.alpha = 1;
 		}
-		else if(this.paused){
+		else if(this.paused === 10){
 			this._popo.pause();
 			this._oso.pause();
 			this._yeti.pause();
-			this.paused = false;
+			this.paused = 0;
 			this.menu.alpha = this.resume.alpha = this.reset.alpha = 0;
 		}
 
@@ -197,6 +202,11 @@ var PlayScene = {
 	},
 	resetGame: function(){
 		this.game.state.start('play');
+	},
+	setCamera: function(){
+		if(this._popo.y <= (this.game.camera.y + this.game.camera.width/2) && this.game.physics.arcade.collide(this._popo, this.groundLayer)){
+    		this.game.camera.y -= 75;
+    	}
 	},
 };
 
