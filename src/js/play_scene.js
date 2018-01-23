@@ -60,10 +60,12 @@ var PlayScene = {
     	this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.ENTER);
     	this.resetKey = this.game.input.keyboard.addKey(Phaser.Keyboard.R);
     	this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.R);
-        
+        this.exitKey = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
+    	this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.S);
+
         this.menu.alpha = this.resume.alpha = this.reset.alpha = 0;
 
-    	this.paused = 0;
+    	this.paused = false;
     	
 
 
@@ -71,11 +73,10 @@ var PlayScene = {
 		this.configure();	       
 	},
 	update: function(){		
-		if(this.paused === 0)		
+		if(!this.paused)		
     		this.escKey.onDown.add(this.pause, this);
-		else if(this.paused === 10){
-    		this.escKey.onDown.add(this.goMenu, this);
-    		this.selecKey.onDown.add(this.pause, this);
+		else if(this.paused){
+    		this.exitKey.onDown.add(this.goMenu, this);
     		this.resetKey.onDown.add(this.resetGame, this);
     	} 
     	this.game.debug.text(this.paused, 0, 500);
@@ -85,9 +86,10 @@ var PlayScene = {
 
 		this.collision();
 	},
+
 	render : function(){
 		this.game.debug.bodyInfo(this._popo, 32, 32);
-		this.game.debug.text('x: ' + this.game.camera.x +', y: '+this.game.camera.y, 0, 500);
+		this.game.debug.text('x: ' + this.game.camera.x +', y: '+this.game.camera.y, 0, 400);
 
 		this.game.debug.body(this._popo);
 		this.game.debug.body(this.martillo);
@@ -180,27 +182,29 @@ var PlayScene = {
 		}
 	},
 	pause: function(){
-		if(this.paused === 0){
+		if(!this.paused){
 			this._popo.pause();
 			this._oso.pause();
 			this._yeti.pause();
-			this.paused = 10;
+			this.paused = true;
 			this.menu.alpha = this.resume.alpha = this.reset.alpha = 1;
 		}
-		else if(this.paused === 10){
+		else if(this.paused){
 			this._popo.pause();
 			this._oso.pause();
 			this._yeti.pause();
-			this.paused = 0;
+			this.paused = false;
 			this.menu.alpha = this.resume.alpha = this.reset.alpha = 0;
 		}
 
 
 	},
 	goMenu: function(){
+		if(this.paused)
 		this.game.state.start('menu_principal');
 	},
 	resetGame: function(){
+		if(this.paused)
 		this.game.state.start('play');
 	},
 	setCamera: function(){

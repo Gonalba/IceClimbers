@@ -36,13 +36,15 @@ Movable.prototype.move = function(){
 };
 Movable.prototype.pause = function(){
 	if(!this.paused){
+		this._velAux = this._velocity;
+		this._dirAux = this._direction;
 		this._velocity = 0;
 		this._direction = 0;
 		this.paused = true;
 	}
 	else{
-		this._velocity = 1;
-		this._direction = 1;
+		this._velocity = this._velAux;
+		this._direction = this._dirAux;
 		this.paused = false;
 	}
 };
