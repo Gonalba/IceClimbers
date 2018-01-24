@@ -123,8 +123,8 @@ var PlayScene = {
 		if(this.game.physics.arcade.collide(this._popo, this.enemiesGroup, this._popo.morir)){
 			this._popo.morir();
 		}
-		
-		this.hueco();
+		if(!this._yeti.muerto)
+			this.hueco();
 	},
 	configure: function(){
 		//Start the Arcade Physics system
@@ -164,7 +164,8 @@ var PlayScene = {
 	},
 
 	mataEnemigo: function(martillo, enemy){
-		enemy.destroy();
+		enemy.morir();
+
 	},
 	hueco: function(){
 		if(this._yeti._direction == 1){//Si va a la derecha

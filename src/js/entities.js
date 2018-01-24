@@ -103,6 +103,10 @@ function Popo (game, x, y, martillo, graphic,salto){
 
 	this.AtaqueRightPopo = this.animations.add('AtaqueRightPopo',[12,13,27]);
 	this.AtaqueLeftPopo = this.animations.add('AtaqueLeftPopo',[1,0,14]);
+
+	this.MuertePopo = this.animations.add('MuertePopo',[47,48,49,50]);
+
+	this.muerto = false;
 };
 Popo.prototype = Object.create(Movable.prototype);
 Popo.prototype.constructor = Popo;
@@ -205,7 +209,7 @@ Popo.prototype.morir = function (){
 //método para volver a crear a popo
 Popo.prototype.resetPopo = function(){
 	if(!this.vivo){
-		if( this.game.time.totalElapsedSeconds() >= this.tiempo + 2)
+		if(this.game.time.totalElapsedSeconds() >= this.tiempo + 2)
 		{
 			this.reset(this.xInit, this.yInit+50);
 			this.vivo = true;
@@ -226,24 +230,31 @@ function Yeti(game, x, y,  graphic,muerto){
 	Movable.call(this, game, x, y, graphic);
 	this.MoveLeftYeti = this.animations.add('MoveRightYeti',[144,145,146]);
 	this.MoveRightYeti = this.animations.add('MoveLeftYeti',[143,142,141]);
-	//this.muerto = game.add.sprite(0,0,muerto);
-	//this.MuertoYeti = this.muerto.animations.add('MuertoYeti',[0,1]);
+	this.MuertoYeti = this.animations.add('MuertoYeti',[140,147]);
+	this.muerto = false;
 };
 Yeti.prototype = Object.create(Movable.prototype);
 Yeti.prototype.constructor = Yeti;
 
 Yeti.prototype.update = function(){
-	//ajusto el collider a el tamaño del yeti
-	this.body.setSize(18,18,5,3);
+	if(!this.muerto){
+		//ajusto el collider a el tamaño del yeti
+		this.body.setSize(18,18,5,3);
+		if(this._direction == 1)
+			this.play('MoveRightYeti',15);
+		else if (this._direction == -1)
+			this.play('MoveLeftYeti',15);
+	}else
+		this.play('MuertoYeti',5);
+
 	this.move();
-	if(this._direction == 1)
-		this.play('MoveRightYeti',15);
-	else if (this._direction == -1)
-		this.play('MoveLeftYeti',15);
 };
 
 Yeti.prototype.morir = function (){
-	//this.play('MuertoYeti',15);
+	this.muerto = true;
+	this._direction = - this._direction;
+	this._velocity = this._velocity + 3;
+	this.body.enable = false;
 };
 
 
