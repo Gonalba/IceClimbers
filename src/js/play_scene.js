@@ -18,16 +18,16 @@ var PlayScene = {
 		this.martillo.width *= 0.1;
 
 		//POPO--------------------------------------
-		this._popo = new entities.Popo(this.game, 400, 1200,this.martillo, 'popoMartillo');
+		this._popo = new entities.Popo(this.game, 400, 1200,this.martillo, 'personajes');
 		this._popo.height *= 3;
 		this._popo.width *= 3;
 		this.game.world.addChild(this._popo);
 		this._popo.addChild(this.martillo);
 
 		//YETI-------------------------------------
-		this._yeti = new entities.Yeti(this.game,500,1000,'yeti','yetiMuerto');
-		this._yeti.height *= 5;
-		this._yeti.width *= 5;
+		this._yeti = new entities.Yeti(this.game,100,1000,'personajes');
+		this._yeti.height *= 3;
+		this._yeti.width *= 3;
 		this.game.world.addChild(this._yeti);
 		//OSO---------------------------------------
 		this._oso = new entities.Oso(this.game,10,100,'oso');
@@ -78,11 +78,8 @@ var PlayScene = {
 		else if(this.paused){
     		this.exitKey.onDown.add(this.goMenu, this);
     		this.resetKey.onDown.add(this.resetGame, this);
-    	} 
-    	this.game.debug.text(this.paused, 0, 500);
-    	this.game.debug.text(this._popo.body.onFloor(), 0, 300);
-
-    	 this.setCamera();
+    	}
+    	this.setCamera();
 
 		this.collision();
 	},
@@ -95,6 +92,9 @@ var PlayScene = {
 		this.game.debug.body(this.martillo);
 		this.game.debug.body(this._oso);
 		this.game.debug.body(this._yeti);
+
+		this.game.debug.text(this.paused, 0, 500);
+    	this.game.debug.text(this._popo.body.onFloor(), 0, 300);
 	},
 	collision: function(){
 		//COLISION CON EL MAPA---------------------------------------  		
@@ -123,6 +123,7 @@ var PlayScene = {
 		if(this.game.physics.arcade.collide(this._popo, this.enemiesGroup, this._popo.morir)){
 			this._popo.morir();
 		}
+		
 		this.hueco();
 	},
 	configure: function(){

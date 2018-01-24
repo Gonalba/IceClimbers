@@ -65,16 +65,16 @@ Martillo.prototype.setPosInit = function(){
 	this.y = this.yInit;
 };
 Martillo.prototype.setPosIzq = function(){
-	this.x = -10;
+	this.x = -5;
 	this.y = 10;
 }
 Martillo.prototype.setPosDer = function(){
-	this.x = 25;
+	this.x = 20;
 	this.y = 10;
 }
 Martillo.prototype.setPosJump = function(){
 	this.x = 7;
-	this.y = -10;
+	this.y = -5;
 }
 
 //POPO-----------------------------------------------------------------------------------
@@ -83,7 +83,7 @@ Martillo.prototype.setPosJump = function(){
 function Popo (game, x, y, martillo, graphic,salto){
 	Movable.call(this, game, x, y, graphic);
 	this._cursors = game.input.keyboard.createCursorKeys();
-	this._jumpPower = -550;
+	this._jumpPower = -500;
  	this.atacando = false;
  	this.tiempo;
  	this.vivo = true;
@@ -95,19 +95,20 @@ function Popo (game, x, y, martillo, graphic,salto){
 	this.xInit = x;
  	this.yInit = y;
 	
-	this.MoveLeftPopo = this.animations.add('MoveRightPopo',[0,1,2,3]);
-	this.MoveRightPopo = this.animations.add('MoveLeftPopo',[4,5,6,7]);
+	this.MoveLeftPopo = this.animations.add('MoveRightPopo',[7,8,9,10]);
+	this.MoveRightPopo = this.animations.add('MoveLeftPopo',[6,5,4,3]);
 
-	this.JumpRightPopo = this.animations.add('JumpRightPopo',[11,8,9,10]);
-	this.JumpLeftPopo = this.animations.add('JumpLeftPopo',[12,15,14,13]);
+	this.JumpRightPopo = this.animations.add('JumpRightPopo',[11,12]);
+	this.JumpLeftPopo = this.animations.add('JumpLeftPopo',[2,1]);
 
-	this.AtaqueRightPopo = this.animations.add('AtaqueRightPopo',[8,9,10]);
-	this.AtaqueLeftPopo = this.animations.add('AtaqueLeftPopo',[15,14,13]);
+	this.AtaqueRightPopo = this.animations.add('AtaqueRightPopo',[12,13,27]);
+	this.AtaqueLeftPopo = this.animations.add('AtaqueLeftPopo',[1,0,14]);
 };
 Popo.prototype = Object.create(Movable.prototype);
 Popo.prototype.constructor = Popo;
 
 Popo.prototype.update = function(){
+	this.body.setSize(12,22,9,3);
 	if(this.vivo){
 		this.keyboardInput();
 	}
@@ -122,32 +123,18 @@ Popo.prototype.update = function(){
 //EN ESTE METODO SE CAPTURAN LAS TECLAS QUE SE PULSAN Y SE REALIZA LA FUNCION CORRESPONDIENTE
 Popo.prototype.keyboardInput = function(){
 	if(!this.paused){
-	if(this.body.onFloor()){
-			this.height = this.hInit;
-			this.width = this.wInit;
-		}
+	
 
 	if(this._cursors.down.isDown&&this.body.onFloor()){
 		this.atacando = true;
 		if(this._direction === -1){
-			
-			if(!this.AtaqueRightPopo.isPlaying){
-				this.y -= 12.8;
-				this.height *= 1.35;
-				this.width *= 1.35;
-			}
-			this.play('AtaqueLeftPopo', 10);	
+			this.play('AtaqueLeftPopo', 7);	
 			this.martillo.setPosIzq();
   			this.AtaqueLeftPopo.onComplete.add(this.martillo.setPosInit,this.martillo);
   			this.AtaqueLeftPopo.onComplete.add(this.atacandoOff,this);
 		}
 		else if(this._direction === 1){
-			if(!this.AtaqueLeftPopo.isPlaying){
-				this.y -= 12.8;
-				this.height *= 1.35;
-				this.width *= 1.35;
-			}
-			this.play('AtaqueRightPopo', 10);
+			this.play('AtaqueRightPopo', 7);
 			this.martillo.setPosDer();
   			this.AtaqueRightPopo.onComplete.add(this.martillo.setPosInit,this.martillo);
   			this.AtaqueRightPopo.onComplete.add(this.atacandoOff,this);
@@ -159,15 +146,15 @@ Popo.prototype.keyboardInput = function(){
 	 		this.jump();
 			this.martillo.setPosJump();
 			if(this._direction === -1){
-				this.play('JumpLeftPopo', 10);
-				this.height *= 1;
-				this.width *= 1;
+				this.play('JumpLeftPopo', 2);
+				//this.height *= 1;
+				//this.width *= 1;
   				this.JumpLeftPopo.onComplete.add(this.martillo.setPosInit,this.martillo);
 			}
 			else if(this._direction === 1){
-				this.play('JumpRightPopo', 10);
-				this.height *= 1;
-				this.width *= 1;
+				this.play('JumpRightPopo', 2);
+				//this.height *= 1;
+				//this.width *= 1;
   				this.JumpRightPopo.onComplete.add(this.martillo.setPosInit,this.martillo);			
 			}
 		}
@@ -193,17 +180,10 @@ Popo.prototype.keyboardInput = function(){
 			}
   		}
 	}else{
-		if(this._direction === 1&&this.body.onFloor()&&!this.atacando){
-			this.frame = 0;
-		}
-		else if(this._direction === -1&&this.body.onFloor()&&!this.atacando)
+		if(this._direction === 1&&this.body.onFloor()&&!this.atacando)
 			this.frame = 7;
-
-		if(this.body.onFloor()){
-			this.height = this.hInit;
-			this.width = this.wInit;
-		}
-	
+		else if(this._direction === -1&&this.body.onFloor()&&!this.atacando)
+			this.frame = 6;	
 	}
 }
 };
@@ -240,11 +220,12 @@ Popo.prototype.atacandoOff = function(){
 	this.atacando = false;
 };
 
+
 //YETI--------------------------------------------------------------------------------------
 function Yeti(game, x, y,  graphic,muerto){
 	Movable.call(this, game, x, y, graphic);
-	this.MoveLeftYeti = this.animations.add('MoveRightYeti',[0,1,2]);
-	this.MoveRightYeti = this.animations.add('MoveLeftYeti',[3,4,5]);
+	this.MoveLeftYeti = this.animations.add('MoveRightYeti',[144,145,146]);
+	this.MoveRightYeti = this.animations.add('MoveLeftYeti',[143,142,141]);
 	//this.muerto = game.add.sprite(0,0,muerto);
 	//this.MuertoYeti = this.muerto.animations.add('MuertoYeti',[0,1]);
 };
@@ -252,6 +233,8 @@ Yeti.prototype = Object.create(Movable.prototype);
 Yeti.prototype.constructor = Yeti;
 
 Yeti.prototype.update = function(){
+	//ajusto el collider a el tamaño del yeti
+	this.body.setSize(18,18,5,3);
 	this.move();
 	if(this._direction == 1)
 		this.play('MoveRightYeti',15);
@@ -269,6 +252,7 @@ function Oso(game, x, y, graphic){
 	Movable.call(this, game, x, y, graphic);
 	this.MoveLeftOso = this.animations.add('MoveRightOso',[0,1,2]);
 	this.MoveRightOso = this.animations.add('MoveLeftOso',[3,4,5]);
+	this._velocity = 5;
 };
 Oso.prototype = Object.create(Movable.prototype);
 Oso.prototype.constructor = Yeti;
@@ -276,9 +260,9 @@ Oso.prototype.constructor = Yeti;
 Oso.prototype.update = function(){
 	this.move();
 	if(this._direction == 1)
-		this.play('MoveRightOso',15);
+		this.play('MoveRightOso',10);
 	else if (this._direction == -1)
-		this.play('MoveLeftOso',15);
+		this.play('MoveLeftOso',10);
 };
 
 Oso.prototype.morir = function (){};
