@@ -7,8 +7,6 @@ var PlayScene = {
 		
 	//no se si funciona asi	
 	create: function () {
-
-
 		this.tileH = 40;
 		this.tileW = 70;
 
@@ -53,6 +51,17 @@ var PlayScene = {
 		this.map = this.game.add.tilemap('mapa');
 		this.map.addTilesetImage('mapaTiles','tiles');
 
+		//VIDAS------------------------------------
+		this.vidas = new Array (3);
+		for (this.i = 0; this.i < 3; this.i++){
+			this.vida =  this.game.add.sprite (50 + this.i*30, 50, 'vidasPopo');
+	        this.vida.scale.setTo(3, 3);
+
+			this.vidas[this.i] = this.vida;
+			this.vidas[this.i].fixedToCamera = true;
+		}
+		this.i = 0;
+
 		//PAUSA--------------------------------
 		this.escKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
     	this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.ESC);
@@ -66,6 +75,7 @@ var PlayScene = {
         this.menu.alpha = this.resume.alpha = this.reset.alpha = 0;
 
     	this.paused = false;
+    	this.gameover = false;
     	
 
 
@@ -79,6 +89,9 @@ var PlayScene = {
     		this.exitKey.onDown.add(this.goMenu, this);
     		this.resetKey.onDown.add(this.resetGame, this);
     	} 
+    	if(this.gameover){
+		    this.exitKey.onDown.add(this.goMenu, this);
+    	}
     	this.game.debug.text(this.paused, 0, 500);
     	this.game.debug.text(this._popo.body.onFloor(), 0, 300);
 
@@ -89,7 +102,7 @@ var PlayScene = {
 
 	render : function(){
 		this.game.debug.bodyInfo(this._popo, 32, 32);
-		this.game.debug.text('x: ' + this.game.camera.x +', y: '+this.game.camera.y, 0, 400);
+		this.game.debug.text(this.i, 0, 400);
 
 		this.game.debug.body(this._popo);
 		this.game.debug.body(this.martillo);
@@ -121,7 +134,16 @@ var PlayScene = {
 		//COLISION CON ENEMIGOS------------------------------------------------------------
 		this.game.physics.arcade.collide(this.martillo, this.enemiesGroup, this.mataEnemigo);
 		if(this.game.physics.arcade.collide(this._popo, this.enemiesGroup, this._popo.morir)){
+			if(this.i < 1 && this._popo.muere){
 			this._popo.morir();
+			this.vidas[this.i].destroy();
+			this.i++;
+			}
+			else{
+				this.gameOver();
+				//this.game.debug.text('Game Over', 100, 500);
+
+			}
 		}
 		this.hueco();
 	},
@@ -165,7 +187,7 @@ var PlayScene = {
 	mataEnemigo: function(martillo, enemy){
 		enemy.destroy();
 	},
-	hueco: function(){
+	hueco: function(){ //Para que la foca detecte si hay un hueco a su lado
 		if(this._yeti._direction == 1){//Si va a la derecha
 			this.varX = Math.trunc((this._yeti.x + this._yeti.width)/this.tileW);
 			this.varY= Math.trunc((this._yeti.y + this._yeti.height)/this.tileH);
@@ -180,6 +202,17 @@ var PlayScene = {
 				this.map.putTile(7, this.varX, this.varY, this.groundLayer);
 			}
 		}
+	},
+	gameOver: function(){
+    	this.gameover = true;
+		this._popo.pause();
+		this.imagen = this.game.add.sprite(150, 200,'icestart');
+		this.imagen.fixedToCamera = true;
+    	this.imagen.scale.setTo(1.5, 1.5);
+
+    	//this.imagen.y += 100;
+
+		//this.game.state.start('gameOver');
 	},
 	pause: function(){
 		if(!this.paused){
@@ -200,11 +233,11 @@ var PlayScene = {
 
 	},
 	goMenu: function(){
-		if(this.paused)
+		//if(this.paused )
 		this.game.state.start('menu_principal');
 	},
 	resetGame: function(){
-		if(this.paused)
+		//if(this.paused)
 		this.game.state.start('play');
 	},
 	setCamera: function(){
@@ -212,6 +245,7 @@ var PlayScene = {
     		this.game.camera.y -= 75;
     	}
 	},
+	
 };
 
 module.exports = PlayScene;

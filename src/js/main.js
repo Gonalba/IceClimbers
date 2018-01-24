@@ -3,6 +3,7 @@
 var PlayScene = require('./play_scene.js');
 var MenuPrincipal = require('./menu_principal.js');
 var Creditos = require('./creditos.js');
+var GameOver = require('./game_over.js');
 //var unique = require ('unique');
 
 
@@ -37,7 +38,7 @@ var PreloaderScene = {
     this.game.load.image('resumeBTN', 'images/resume.png');
     this.game.load.image('resetBTN', 'images/reset.png');
 
-
+    this.game.load.image('vidasPopo', 'images/vida.png');
 
     this.game.load.spritesheet('saltoPopo', 'images/SaltoPopo.png', 23, 36, 8);
     this.game.load.spritesheet('popoMartillo', 'images/PopoMartillo.png', 23, 27, 16);
@@ -69,6 +70,7 @@ window.onload = function () {
   game.state.add('play', PlayScene);
   game.state.add('menu_principal', MenuPrincipal);
   game.state.add('creditos', Creditos);
+  game.state.add('gameOver', GameOver);
 
 
   game.state.start('boot');

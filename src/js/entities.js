@@ -94,6 +94,7 @@ function Popo (game, x, y, martillo, graphic,salto){
 	this.wInit = this.width*3;
 	this.xInit = x;
  	this.yInit = y;
+ 	this.muere = true;
 	
 	this.MoveLeftPopo = this.animations.add('MoveRightPopo',[0,1,2,3]);
 	this.MoveRightPopo = this.animations.add('MoveLeftPopo',[4,5,6,7]);
@@ -128,6 +129,8 @@ Popo.prototype.keyboardInput = function(){
 		}
 
 	if(this._cursors.down.isDown&&this.body.onFloor()){
+		this.muere = true;
+		this.alpha = 1;
 		this.atacando = true;
 		if(this._direction === -1){
 			
@@ -155,6 +158,8 @@ Popo.prototype.keyboardInput = function(){
 	}
 	//SALTO-------------------------------------
   	else if (this._cursors.up.isDown&&this.body.onFloor()){
+  		this.muere = true;
+		this.alpha = 1;
   		if(!this.atacando){
 	 		this.jump();
 			this.martillo.setPosJump();
@@ -174,6 +179,8 @@ Popo.prototype.keyboardInput = function(){
   	}
 	//TECLAS MOVIMIENTO-------------------------
 	else if (this._cursors.left.isDown){
+		this.muere = true;
+		this.alpha = 1;
 		if(!this.atacando){
 			//this.martillo.setPosInit();
 			this._direction = -1;
@@ -184,6 +191,8 @@ Popo.prototype.keyboardInput = function(){
 		}
 	}
 	else if (this._cursors.right.isDown){
+		this.muere = true;
+		this.alpha = 1;
   		if(!this.atacando){
   			//this.martillo.setPosInit();
   			this._direction = 1
@@ -227,7 +236,9 @@ Popo.prototype.resetPopo = function(){
 	if(!this.vivo){
 		if( this.game.time.totalElapsedSeconds() >= this.tiempo + 2)
 		{
-			this.reset(this.xInit, this.yInit+50);
+		 	this.muere = false;
+		 	this.alpha = 0.3;
+			this.reset(this.body.x +50, this.body.y);
 			this.vivo = true;
 
 		}
