@@ -74,7 +74,7 @@ Martillo.prototype.setPosDer = function(){
 	this.y = 10;
 }
 Martillo.prototype.setPosJump = function(){
-	this.x = 7;
+	this.x = 10;
 	this.y = -5;
 }
 
@@ -119,7 +119,7 @@ Popo.prototype.update = function(){
 	else{
 		if(this.vidas > 0){
 			this.alpha -= 0.02;
-			//this.resetPopo();
+			this.resetPopo();
 		}
 	}
 	this.game.debug.text('Vidas: ' + this.vidas, 0, 600);
@@ -209,7 +209,7 @@ Popo.prototype.morir = function (){
 		this.vidas--;
 		this.play('MuertePopo',3);
 		this.MuertePopo.onComplete.add(this.kill,this);
-		this.MuertePopo.onComplete.add(this.resetPopo,this);
+		//this.MuertePopo.onComplete.add(this.resetPopo,this);
 		//this.kill();
 		//this.body.enable = false;
 		this.tiempo = this.game.time.totalElapsedSeconds();
@@ -219,14 +219,13 @@ Popo.prototype.morir = function (){
 //método para volver a crear a popo
 Popo.prototype.resetPopo = function(){
 	if(!this.vivo){
-		//if(this.game.time.totalElapsedSeconds() >= this.tiempo + 5)
-		//{
+		if(this.game.time.totalElapsedSeconds() >= this.tiempo + 3)
+		{
 		 	this.muere = false;
 		 	this.alpha = 0.3;
 			this.reset(this.body.x, this.body.y);
 			this.vivo = true;
-
-		//}
+		}
 	}
 };
 Popo.prototype.killMartillo = function(){
