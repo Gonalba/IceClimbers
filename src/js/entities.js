@@ -49,6 +49,15 @@ Movable.prototype.pause = function(){
 		this.paused = false;
 	}
 };
+Movable.prototype.goBack = function(){
+	this._direction = -this._direction;
+};
+Movable.prototype.numeroRandom = function(max, min){
+	return (Math.random() * (max - min) + min);
+};
+Movable.prototype.enSuelo = function(obj){
+	return(obj.body.onFloor());
+};
 
 
 
@@ -77,7 +86,7 @@ Martillo.prototype.setPosDer = function(){
 Martillo.prototype.setPosJump = function(){
 	this.x = 10;
 	this.y = -5;
-}
+};
 
 //POPO-----------------------------------------------------------------------------------
 // EN EL MÉTODO UPDATE SE IMPLEMENTA LA LÓGICA DEL MOVIMIENTO
@@ -216,9 +225,6 @@ Popo.prototype.morir = function (){
 		this.vidas--;
 		this.play('MuertePopo',3);
 		this.tiempo = this.game.time.totalElapsedSeconds();
-		//this.MuertePopo.onComplete.add(this.resetPopo,this);
-		//this.kill();
-		//this.body.enable = false;
 	}
 	
 };
@@ -240,9 +246,7 @@ Popo.prototype.killMartillo = function(){
 Popo.prototype.atacandoOff = function(){
 	this.atacando = false;
 };
-Popo.prototype.enSuelo = function(obj){
-	return(obj.body.onFloor());
-};
+
 
 
 //YETI--------------------------------------------------------------------------------------
@@ -271,6 +275,8 @@ Yeti.prototype.update = function(){
 		if(this.alpha <=0)
 			this.destroy();
 	}
+	this.suelo = this.body.onFloor();
+
 
 };
 
@@ -280,9 +286,7 @@ Yeti.prototype.morir = function (){
 	this._velocity = this._velocity + 3;
 	this.body.enable = false;
 };
-Yeti.prototype.goBack = function(){
-	this._direction = -this._direction;
-}
+
 
 
 //OSO--------------------------------------------------------------------------------------
@@ -291,21 +295,45 @@ function Oso(game, x, y, graphic){
 	this.MoveLeftOso = this.animations.add('MoveRightOso',[0,1,2]);
 	this.MoveRightOso = this.animations.add('MoveLeftOso',[3,4,5]);
 	this._velocity = 5;
+	this.velAux = this._velocity;
+	this.tiempoIni = 0;
+	this.tiempo=0;
+	this.saltado = false;
+	this.tiempoSalto = this.numeroRandom(3, 1);
 };
 Oso.prototype = Object.create(Movable.prototype);
 Oso.prototype.constructor = Yeti;
 
 Oso.prototype.update = function(){
+	this.tiempo = this.game.time.totalElapsedSeconds();
+
 	if(!this.muerto){
 		this.move();
 		if(this._direction == 1)
-			this.play('MoveRightOso',10);
+			this.play('MoveRightOso', 10);
 		else if (this._direction == -1)
-			this.play('MoveLeftOso',10);
-	}else if(this.alpha > 0){
+			this.play('MoveLeftOso', 10);
+	}
+	else if(this.alpha > 0){
 		this.alpha -= 0.01;
-	}else if (this.alpha <= 0)
+	}
+	else if (this.alpha <= 0)
 		this.destroy();
+
+	if(this.tiempo > this.tiempoIni + this.tiempoSalto && !this.saltado){
+			this._velocity = 0;
+		this._direction = 0;
+			if(this.tiempo > this.tiempoIni + this.tiempoSalto + 2 && !this.saltado){
+			this.game.debug.text('Tiempo total: ' + this.tiempo + ' T ini: ' + this.tiempoIni + ' T salto: ' + this.tiempoSalto, 0, 400);
+
+	
+		this.jump();
+	}
+}
+};
+Oso.prototype.jump = function(){
+	this.body.velocity.y = -100;
+	//this.saltado = true;
 };
 
 Oso.prototype.morir = function (){
@@ -319,19 +347,11 @@ function Pajaro(game, x, y, graphic, camara){
 	this.camara = camara;
 	this.tiempoIni = 0;
 	this.tiempo = 0;
-	this.sumTiempo = this.numeroRandom(31, 15); //Tiempo que va a estar en pantalla
+	this.sumTiempo = this.numeroRandom(46, 15); //Tiempo que va a estar en pantalla
 	this.changeMove();	
 	Movable.call(this, game, x, y, graphic);
-	this.timeToCambio = 0;	//this.MoveLeftOso = this.animations.add('MoveRightOso',[0,1,2]);
-	//this.MoveRightOso = this.animations.add('MoveLeftOso',[3,4,5]);
-	
+	this.timeToCambio = 0;
 };
-/*
-Nº ALEATORIOS:
-function getRandomArbitrary(min, max) {
-  return Math.random() * (max - min) + min;
-}
-*/
 
 Pajaro.prototype = Object.create(Movable.prototype);
 Pajaro.prototype.constructor = Pajaro;
@@ -340,6 +360,7 @@ Pajaro.prototype.move = function(){
 	this.x += this.velX * this.dirX;
 	this.y += this.velY * this.dirY;
 };
+
 Pajaro.prototype.changeMove = function(){
 	this.velX = Math.trunc(this.numeroRandom(3, 1));
 	this.velY = Math.trunc(this.numeroRandom(3, 1));
@@ -351,40 +372,35 @@ Pajaro.prototype.changeMove = function(){
 	if(this.dirY < 1){
 		this.dirY -= 1;
 	}
-}
-Pajaro.prototype.update = function(){
-		this.tiempo = this.game.time.totalElapsedSeconds();
-
-	this.game.debug.text('Pájaro: VelX: ' + this.velX + ' VelY: '+ this.velY, 0, 200);
-	this.game.debug.text( 'DirX: ' + this.dirX + ' DirY: ' + this.dirY, 0, 300);
-	this.game.debug.text( this.tiempo > this.tiempo + this.timeToCambio, 0, 450);
-	this.game.debug.text( this.tiempo, 0, 500);
-	this.game.debug.text( this.timeToCambio, 200, 500);
-	if(!this.muerto && this.tiempo < this.tiempoIni + this.sumTiempo){
-		this.move();
-	}
-	else{
-		this.kill();
-	}
-	if(this.tiempo > this.timeToCambio){
-		this.timeToCambio = this.tiempo + this.numeroRandom(1.5, 0);
-		this.changeMove();
-	}
-	if(this.y < this.camara.y){ 
-		this.dirY = 1;
-	}
-	if(this.y > this.camara.y + this.camara.height){
-		this.dirY = -1;
-	}
-	if(this.x < this.camara.x || this.x > this.camara.x + this.camara.width-30){
-		this.dirX = -this.dirX;
-	}
-
 };
 
-Pajaro.prototype.numeroRandom = function(max, min){
-	return (Math.random() * (max - min) + min);
-}
+Pajaro.prototype.update = function(){
+	this.tiempo = this.game.time.totalElapsedSeconds();
+	if(!this.muerto ){
+		this.move();
+
+		if (this.tiempo < this.tiempoIni + this.sumTiempo){ //Si aún está en el tiempo que va a estar en pantalla
+			if(this.tiempo > this.timeToCambio){
+				this.timeToCambio = this.tiempo + this.numeroRandom(1.5, 0);
+				this.changeMove();
+			}
+			if(this.y < this.camara.y){ 
+				this.dirY = 1;
+			}
+			if(this.y > this.camara.y + this.camara.height){
+				this.dirY = -1;
+			}
+			if(this.x < this.camara.x || this.x > this.camara.x + this.camara.width-30){
+				this.dirX = -this.dirX;
+			}
+		}
+		else{ //Si se acaba el tiempo sigue en la dirección que tiene hasta que desaparece de la pantalla
+			if(this.y < this.camara.y || this.y > this.camara.y + this.camara.height ||this.x < this.camara.x || this.x > this.camara.x + this.camara.width){
+				this.destroy();			
+			}	
+		}
+	}
+};
 
 Pajaro.prototype.morir = function (){
 	this.muerto = true;

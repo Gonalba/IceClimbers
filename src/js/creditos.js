@@ -5,7 +5,7 @@ var Creditos = {
 		this.escKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
     this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.ESC);
 
-    this.menu = this.game.add.sprite(25, 25, 'menuBTN');//this.game.world.centerX - 265, this.game.world.centerY-260,'icestart');
+    this.menu = this.game.add.sprite(25, 25, 'menuBTN');
     this.menu.scale.setTo(0.30, 0.3);
 	},
   update: function(){
