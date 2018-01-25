@@ -314,10 +314,89 @@ Oso.prototype.morir = function (){
 	this.body.enable = false;
 };
 
+
+function Pajaro(game, x, y, graphic, camara){
+	this.camara = camara;
+	this.tiempoIni = 0;
+	this.tiempo = 0;
+	this.sumTiempo = this.numeroRandom(31, 15); //Tiempo que va a estar en pantalla
+	this.changeMove();	
+	Movable.call(this, game, x, y, graphic);
+	this.timeToCambio = 0;	//this.MoveLeftOso = this.animations.add('MoveRightOso',[0,1,2]);
+	//this.MoveRightOso = this.animations.add('MoveLeftOso',[3,4,5]);
+	
+};
+/*
+Nº ALEATORIOS:
+function getRandomArbitrary(min, max) {
+  return Math.random() * (max - min) + min;
+}
+*/
+
+Pajaro.prototype = Object.create(Movable.prototype);
+Pajaro.prototype.constructor = Pajaro;
+
+Pajaro.prototype.move = function(){
+	this.x += this.velX * this.dirX;
+	this.y += this.velY * this.dirY;
+};
+Pajaro.prototype.changeMove = function(){
+	this.velX = Math.trunc(this.numeroRandom(3, 1));
+	this.velY = Math.trunc(this.numeroRandom(3, 1));
+	this.dirX = this.numeroRandom(2, 0);
+	this.dirY = this.numeroRandom(2, 0);
+	if(this.dirX < 1){
+		this.dirX -= 1;
+	}
+	if(this.dirY < 1){
+		this.dirY -= 1;
+	}
+}
+Pajaro.prototype.update = function(){
+		this.tiempo = this.game.time.totalElapsedSeconds();
+
+	this.game.debug.text('Pájaro: VelX: ' + this.velX + ' VelY: '+ this.velY, 0, 200);
+	this.game.debug.text( 'DirX: ' + this.dirX + ' DirY: ' + this.dirY, 0, 300);
+	this.game.debug.text( this.tiempo > this.tiempo + this.timeToCambio, 0, 450);
+	this.game.debug.text( this.tiempo, 0, 500);
+	this.game.debug.text( this.timeToCambio, 200, 500);
+	if(!this.muerto && this.tiempo < this.tiempoIni + this.sumTiempo){
+		this.move();
+	}
+	else{
+		this.kill();
+	}
+	if(this.tiempo > this.timeToCambio){
+		this.timeToCambio = this.tiempo + this.numeroRandom(1.5, 0);
+		this.changeMove();
+	}
+	if(this.y < this.camara.y){ 
+		this.dirY = 1;
+	}
+	if(this.y > this.camara.y + this.camara.height){
+		this.dirY = -1;
+	}
+	if(this.x < this.camara.x || this.x > this.camara.x + this.camara.width-30){
+		this.dirX = -this.dirX;
+	}
+
+};
+
+Pajaro.prototype.numeroRandom = function(max, min){
+	return (Math.random() * (max - min) + min);
+}
+
+Pajaro.prototype.morir = function (){
+	this.muerto = true;
+	this._direction = 0;
+	this.body.enable = false;
+};
+
 module.exports = {
 	Objeto: Objeto,
 	Popo: Popo,
 	Yeti: Yeti,
 	Oso: Oso,
-	Martillo: Martillo
+	Martillo: Martillo,
+	Pajaro: Pajaro
 };

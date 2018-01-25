@@ -4,9 +4,7 @@ var entities = require('./entities.js');
 var scene;
 var PlayScene = {
 
-		
-	//no se si funciona asi	
-	create: function () {
+		create: function () {
 		this.tileH = 40;
 		this.tileW = 70;
 
@@ -27,6 +25,11 @@ var PlayScene = {
 		this._yeti.height *= 3;
 		this._yeti.width *= 3;
 		this.game.world.addChild(this._yeti);
+		//PÁJARO-------------------------------------
+		this._bird = new entities.Pajaro(this.game,100,1050,'pajaro', this.game.camera);
+		this._bird.height *= 3;
+		this._bird.width *= 3;
+		this.game.world.addChild(this._bird);
 		//OSO---------------------------------------
 		this._oso = new entities.Oso(this.game,10,100,'oso');
 		this._oso.height *= 4;
@@ -37,6 +40,7 @@ var PlayScene = {
 		this.enemiesGroup = this.game.add.group();
 		this.enemiesGroup.add(this._yeti);
 		this.enemiesGroup.add(this._oso);
+		this.enemiesGroup.add(this._bird);
 
 		this.menu = this.game.add.sprite(295, 400, 'menuBTN');//this.game.world.centerX - 265, this.game.world.centerY-260,'icestart');
         this.menu.scale.setTo(0.5, 0.5);
@@ -59,16 +63,26 @@ var PlayScene = {
     	this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.S);
 
         this.menu.alpha = this.resume.alpha = this.reset.alpha = 0;
+		
 		//MAPA------------------------------
 		this.map = this.game.add.tilemap('mapa');
 		this.map.addTilesetImage('mapaTiles','tiles');
 
 
-		//BERENJENAS
+		//BERENJENAS---------------------------------------
 		this.berenjena = this.game.add.sprite (200, 1000, 'berenjena');
 	    this.berenjena.scale.setTo(3, 3);
 
-
+	    /*this.izq = new Phaser.Rectangle(0, 0, 10, this.game.camera.height);
+		this.der = new Phaser.Rectangle(this.game.camera.width -10, 0, 10, this.game.camera.height);
+		this.up = new Phaser.Rectangle(0, 0, this.game.camera.width, 10);
+		this.down = new Phaser.Rectangle(0, this.game.camera.height -10, this.game.camera.width, 10);
+		this.bordesCamara = this.game.add.group();
+		this.bordesCamara.add(this.izq);
+		this.bordesCamara.add(this.der);
+		this.bordesCamara.add(this.up);
+		this.bordesCamara.add(this.down);
+*/
 		//VIDAS------------------------------------
 		this.vidas = new Array (3);
 		for (this.i = 0; this.i < 3; this.i++){
@@ -78,18 +92,13 @@ var PlayScene = {
 			this.vidas[this.i] = this.vida;
 			this.vidas[this.i].fixedToCamera = true;
 		}
-		this.i = 0;
+
+		this.i = 0;//Contador para las vidas
 
 		this.puntos = 0;
 
     	this.paused = false;
-    	this.gameover = false;
-    	this.mueveCamara = false;
-
-    	this.auxY = 0;
-    	
-
-
+    	this.gameover = false;	
 
 		this.configure();	       
 	},
@@ -104,13 +113,8 @@ var PlayScene = {
 		    this.exitKey.onDown.add(this.goMenu, this);
     	}
     	this.game.debug.text(this.puntos, 0, 500);
+
     	this.setCamera();
-
-    	
-    	/*this.game.debug.text('Se debería mover la cámara? ' + (this.mueveCamara = true && this._popo.y < this.game.camera.y + this.game.camera.height/2), 110, 300);
-    	this.game.debug.text('Popo: ' + this._popo.y, 110, 600);
-    	this.game.debug.text('Camara: ' + (this.game.camera.y + this.game.camera.height/2), 210, 600);*/
-
 		this.collision();
 	},
 
@@ -121,6 +125,7 @@ var PlayScene = {
 		this.game.debug.body(this.martillo);
 		this.game.debug.body(this._oso);
 		this.game.debug.body(this._yeti);
+		this.game.debug.body(this._bird);
 	},
 	collision: function(){
 		//COLISION CON EL MAPA---------------------------------------  		
@@ -132,13 +137,6 @@ var PlayScene = {
 
 		this.game.physics.arcade.collide(this._popo, this.bonusLayer);
 		this.game.physics.arcade.collide(this.enemiesGroup, this.bonusLayer);
-
-		if(this.game.physics.arcade.overlap(this._popo, this.berenjena)){
-			this.puntos += 20;
-			this.berenjena.destroy();
-		}
-
-
 
 		//ROMPE SUELO SUPERIOR-------------------------------------------------------
 		if(this.game.physics.arcade.overlap(this.martillo, this.groundLayer)){
@@ -157,6 +155,8 @@ var PlayScene = {
 		if(this.game.physics.arcade.collide(this.martillo, this.enemiesGroup, this.mataEnemigo)){
 			this.puntos += 50;
 		}
+
+		//MUERTE POPO, VIDAS Y FIN JUEGO-------------------------------------------
 		if(this.game.physics.arcade.collide(this._popo, this.enemiesGroup, this._popo.morir)){
 			if(this._popo.muere && this.i < 3 ){
 				this._popo.morir();
@@ -168,12 +168,18 @@ var PlayScene = {
 				this.gameOver();
 			}
 		}
+
+		//COLISIÓN CON LOS BONUS--------------------------------------------------
+		if(this.game.physics.arcade.overlap(this._popo, this.berenjena)){
+			this.puntos += 20;
+			this.berenjena.destroy();
+		}
+
+		//DETECCIÓN DE HUECOS POR EL YETI---------------------------------------
 		if(!this._yeti.muerto)
 			this.hueco();
 	},
-	configure: function(){
-		//Start the Arcade Physics system
-		//this.game.world.setBounds(0,0, 2560 , 800);
+	configure: function(){ //configura las físicas de los elementos del juego
 		this.game.physics.startSystem(Phaser.Physics.ARCADE);
 		this.game.physics.arcade.gravity.y = 600;  
 		this.cursors = this.game.input.keyboard.createCursorKeys();
@@ -185,14 +191,25 @@ var PlayScene = {
 		//POPO----------------------------
 		this.game.physics.arcade.enable(this._popo);        
 		this._popo.body.collideWorldBounds = true;
-		//this.game.camera.follow(this._popo);
+		
+		this.game.physics.arcade.enable(this._bird);        
+		this._bird.body.collideWorldBounds = true;
 
 		//ENEMIGOS------------------------
 		this.game.physics.arcade.enable(this.enemiesGroup);
 		this.enemiesGroup.forEach(function(obj){
      		 obj.body.collideWorldBounds = true;
     		});
+		this._bird.body.allowGravity = false;
 
+		/*this.game.physics.arcade.enable(this.bordesCamara);
+		this.bordesCamara.forEach(function(obj){
+     		 //obj.body.collideWorldBounds = true;
+     		obj.fixedToCamera = true;
+
+
+    		});*/
+		//BONUS BERENJENA-------------------------
 		this.game.physics.arcade.enable(this.berenjena);
 		this.berenjena.body.allowGravity = false;
 
@@ -216,29 +233,26 @@ var PlayScene = {
 	},
 
 	hueco: function(){ //Para que la foca detecte si hay un hueco a su lado
-		if(this._yeti._direction == 1){//Si va a la derecha
+		if(this._yeti._direction == 1){//Si va hacia la derecha
 			this.varX = Math.trunc((this._yeti.x + this._yeti.width)/this.tileW);
 			this.varY= Math.trunc((this._yeti.y + this._yeti.height)/this.tileH);
 		
 
 		}
-		else{
+		else{//Hacia la izqd
 			this.varX = Math.trunc((this._yeti.x)/this.tileW);
-			this.varY= Math.trunc((this._yeti.y + this._yeti.height)/this.tileH);
-			/*if(this.map.getTile(this.varX, this.varY) === null){
-				this.map.putTile(7, this.varX, this.varY, this.groundLayer);
-			}*/
+			this.varY= Math.trunc((this._yeti.y + this._yeti.height)/this.tileH)
 		}
-			if(this.map.getTile(this.varX, this.varY) === null){
-				if (!this.detectado ){
-					this.detectado = true;
-					this._yeti.goBack();
-				}
-				else{
-					this.detectado = false;
-					this.map.putTile(7, this.varX, this.varY, this.groundLayer);
-				}
+		if(this.map.getTile(this.varX, this.varY) === null){ //Si encuentra un hueco en el suelo
+			if (!this.detectado ){ //Si dicho hueco aún no había sido detectado cambia la dirección del yeti y pone "detectado" a true
+				this.detectado = true;
+				this._yeti.goBack();
 			}
+			else{	//Si el hueco sí había sido detectado -> "detectado" lo pone a false y crea un tile nuevo en el hueco que corresponde.
+				this.detectado = false;
+				this.map.putTile(7, this.varX, this.varY, this.groundLayer);
+			}
+		}
 	},
 
 	gameOver: function(){
@@ -273,26 +287,16 @@ var PlayScene = {
 		this.game.state.start('menu_principal');
 	},
 
-	resetGame: function(){
+	resetGame: function(){ //Reinicia la partida
 		if(this.paused)
 		this.game.state.start('play');
 	},
 
-	setCamera: function(){
-		/*this.game.debug.text('Popo más arriba? ' + (this._popo.y <= (this.game.camera.y + this.game.camera.height/2)), 300, 500);
-	    this.game.debug.text('Popo en suelo: ' + this._popo.suelo, 100, 400);
-		if(this._popo.y <= (this.game.camera.y + this.game.camera.height/2) && this._popo.suelo){//this.game.physics.arcade.collide(this._popo, this.groundLayer)){
-			this.auxY = this.game.camera.y;
-    		this.mueveCamara = true;
-    	}
-    	else{
-    		this.mueveCamara = false;
-    	}*/
-    	if(this._popo.suelo === true && this._popo.y < this.game.camera.y + this.game.camera.height/2){ //&& this.auxY - 75 >= this.game.camera.y){// && this.auxY != 0 && this.auxY - 75 >= this.game.camera.y){
+	setCamera: function(){//La cámara se va recolocando según Popo va ascendiendo por la montaña -> cuando está por encima de la mitad de la cámara y se encuentra apoyado en el suelo
+    	if(this._popo.suelo === true && this._popo.y < this.game.camera.y + this.game.camera.height/2){ 
     		this.game.camera.y -=10 ;
     	}
 	},
-	
 };
 
 module.exports = PlayScene;
