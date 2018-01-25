@@ -38,6 +38,9 @@ var PreloaderScene = {
     this.game.load.image('resetBTN', 'images/reset.png');
 
   //Imagenes personajes
+    this.game.load.image('berenjena', 'images/berenjena.png');
+
+
     this.game.load.spritesheet('oso', 'images/SpritesJson/oso.png', 17.5, 31, 6);
     this.game.load.spritesheet('personajes', 'images/SpritesJson/Personajes.png', 29.571428571428, 27.076923076923, 200);
     this.game.load.image('vidasPopo', 'images/vida.png');

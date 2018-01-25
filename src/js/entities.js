@@ -97,6 +97,7 @@ function Popo (game, x, y, martillo, graphic,salto){
 	this.xInit = x;
  	this.yInit = y;
  	this.muere = true;
+ 	this.suelo;
 	
 	this.MoveLeftPopo = this.animations.add('MoveRightPopo',[7,8,9,10]);
 	this.MoveRightPopo = this.animations.add('MoveLeftPopo',[6,5,4,3]);
@@ -126,6 +127,7 @@ Popo.prototype.update = function(){
 			this.MuertePopo.onComplete.add(this.kill, this);
 		}
 	}
+	this.suelo = this.body.onFloor();
 };
 
 //EN ESTE METODO SE CAPTURAN LAS TECLAS QUE SE PULSAN Y SE REALIZA LA FUNCION CORRESPONDIENTE
@@ -208,12 +210,12 @@ Popo.prototype.jump = function(){
 //metodo morir
 Popo.prototype.morir = function (){
 	if (this.vivo){
-	 	this.muere = false;
+		this.martillo.setPosInits;
+		this.muere = false;
 		this.vivo = false;
 		this.vidas--;
 		this.play('MuertePopo',3);
 		this.tiempo = this.game.time.totalElapsedSeconds();
-		this.martillo.setPosInit;
 		//this.MuertePopo.onComplete.add(this.resetPopo,this);
 		//this.kill();
 		//this.body.enable = false;
@@ -237,6 +239,9 @@ Popo.prototype.killMartillo = function(){
 };
 Popo.prototype.atacandoOff = function(){
 	this.atacando = false;
+};
+Popo.prototype.enSuelo = function(obj){
+	return(obj.body.onFloor());
 };
 
 
@@ -307,6 +312,7 @@ Oso.prototype.morir = function (){
 };
 
 module.exports = {
+	Objeto: Objeto,
 	Popo: Popo,
 	Yeti: Yeti,
 	Oso: Oso,

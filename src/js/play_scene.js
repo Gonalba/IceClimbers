@@ -47,9 +47,27 @@ var PlayScene = {
         this.reset = this.game.add.sprite(500, 300, 'resetBTN');//this.game.world.centerX - 265, this.game.world.centerY-260,'icestart');
         this.reset.scale.setTo(0.5, 0.5);
         this.reset.fixedToCamera = true;
+
+        //PAUSA--------------------------------
+		this.escKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+    	this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.ESC);
+    	this.selecKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+    	this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.ENTER);
+    	this.resetKey = this.game.input.keyboard.addKey(Phaser.Keyboard.R);
+    	this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.R);
+        this.exitKey = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
+    	this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.S);
+
+        this.menu.alpha = this.resume.alpha = this.reset.alpha = 0;
 		//MAPA------------------------------
 		this.map = this.game.add.tilemap('mapa');
 		this.map.addTilesetImage('mapaTiles','tiles');
+
+
+		//BERENJENAS
+		this.berenjena = this.game.add.sprite (200, 1000, 'berenjena');
+	    this.berenjena.scale.setTo(3, 3);
+
 
 		//VIDAS------------------------------------
 		this.vidas = new Array (3);
@@ -62,20 +80,13 @@ var PlayScene = {
 		}
 		this.i = 0;
 
-		//PAUSA--------------------------------
-		this.escKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
-    	this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.ESC);
-    	this.selecKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
-    	this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.ENTER);
-    	this.resetKey = this.game.input.keyboard.addKey(Phaser.Keyboard.R);
-    	this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.R);
-        this.exitKey = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
-    	this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.S);
-
-        this.menu.alpha = this.resume.alpha = this.reset.alpha = 0;
+		this.puntos = 0;
 
     	this.paused = false;
     	this.gameover = false;
+    	this.mueveCamara = false;
+
+    	this.auxY = 0;
     	
 
 
@@ -92,17 +103,19 @@ var PlayScene = {
     	if(this.gameover){
 		    this.exitKey.onDown.add(this.goMenu, this);
     	}
-    	this.game.debug.text(this._popo.muere, 100, 500);
-    	//this.game.debug.text(this._popo.body.onFloor(), 0, 300);
-
+    	this.game.debug.text(this.puntos, 0, 500);
     	this.setCamera();
+
+    	
+    	/*this.game.debug.text('Se debería mover la cámara? ' + (this.mueveCamara = true && this._popo.y < this.game.camera.y + this.game.camera.height/2), 110, 300);
+    	this.game.debug.text('Popo: ' + this._popo.y, 110, 600);
+    	this.game.debug.text('Camara: ' + (this.game.camera.y + this.game.camera.height/2), 210, 600);*/
 
 		this.collision();
 	},
 
 	render : function(){
 		this.game.debug.bodyInfo(this._popo, 32, 32);
-		this.game.debug.text(this.i, 0, 400);
 
 		this.game.debug.body(this._popo);
 		this.game.debug.body(this.martillo);
@@ -120,6 +133,12 @@ var PlayScene = {
 		this.game.physics.arcade.collide(this._popo, this.bonusLayer);
 		this.game.physics.arcade.collide(this.enemiesGroup, this.bonusLayer);
 
+		if(this.game.physics.arcade.overlap(this._popo, this.berenjena)){
+			this.puntos += 20;
+			this.berenjena.destroy();
+		}
+
+
 
 		//ROMPE SUELO SUPERIOR-------------------------------------------------------
 		if(this.game.physics.arcade.overlap(this.martillo, this.groundLayer)){
@@ -127,12 +146,17 @@ var PlayScene = {
 
 			this.varX = Math.trunc((this._popo.x + this.martillo.x)/this.tileW);
 			this.varY= Math.trunc((this._popo.y + this.martillo.y)/this.tileH);
-			this.map.removeTile(this.varX, this.varY, this.groundLayer);
+			
+			if(this.map.removeTile(this.varX, this.varY, this.groundLayer)){
+				this.puntos+=10;
+			}
 			//this.game.debug.text('Tile: ' + this.varX + ", " + this.varY, 0, 600);
 		}
 
 		//COLISION CON ENEMIGOS------------------------------------------------------------
-		this.game.physics.arcade.collide(this.martillo, this.enemiesGroup, this.mataEnemigo);
+		if(this.game.physics.arcade.collide(this.martillo, this.enemiesGroup, this.mataEnemigo)){
+			this.puntos += 50;
+		}
 		if(this.game.physics.arcade.collide(this._popo, this.enemiesGroup, this._popo.morir)){
 			if(this._popo.muere && this.i < 3 ){
 				this._popo.morir();
@@ -169,7 +193,10 @@ var PlayScene = {
      		 obj.body.collideWorldBounds = true;
     		});
 
-		
+		this.game.physics.arcade.enable(this.berenjena);
+		this.berenjena.body.allowGravity = false;
+
+
   		//MAPA----------------------------
 		this.groundLayer = this.map.createLayer('Pisos');
 		this.cloudLayer = this.map.createLayer('Nubes');
@@ -185,8 +212,9 @@ var PlayScene = {
 	},
 
 	mataEnemigo: function(martillo, enemy){
-		enemy.morir();
+		enemy.morir();	
 	},
+
 	hueco: function(){ //Para que la foca detecte si hay un hueco a su lado
 		if(this._yeti._direction == 1){//Si va a la derecha
 			this.varX = Math.trunc((this._yeti.x + this._yeti.width)/this.tileW);
@@ -203,17 +231,15 @@ var PlayScene = {
 			}
 		}
 	},
+
 	gameOver: function(){
     	this.gameover = true;
 		this._popo.pause();
 		this.imagen = this.game.add.sprite(150, 200,'icestart');
 		this.imagen.fixedToCamera = true;
     	this.imagen.scale.setTo(1.5, 1.5);
-
-    	//this.imagen.y += 100;
-
-		//this.game.state.start('gameOver');
 	},
+
 	pause: function(){
 		if(!this.paused){
 			this._popo.pause();
@@ -232,17 +258,29 @@ var PlayScene = {
 
 
 	},
+
 	goMenu: function(){
 		if(this.paused||this.gameover)
 		this.game.state.start('menu_principal');
 	},
+
 	resetGame: function(){
 		if(this.paused)
 		this.game.state.start('play');
 	},
+
 	setCamera: function(){
-		if(this._popo.y <= (this.game.camera.y + this.game.camera.width/2) && this.game.physics.arcade.collide(this._popo, this.groundLayer)){
-    		this.game.camera.y -= 75;
+		/*this.game.debug.text('Popo más arriba? ' + (this._popo.y <= (this.game.camera.y + this.game.camera.height/2)), 300, 500);
+	    this.game.debug.text('Popo en suelo: ' + this._popo.suelo, 100, 400);
+		if(this._popo.y <= (this.game.camera.y + this.game.camera.height/2) && this._popo.suelo){//this.game.physics.arcade.collide(this._popo, this.groundLayer)){
+			this.auxY = this.game.camera.y;
+    		this.mueveCamara = true;
+    	}
+    	else{
+    		this.mueveCamara = false;
+    	}*/
+    	if(this._popo.suelo === true && this._popo.y < this.game.camera.y + this.game.camera.height/2){ //&& this.auxY - 75 >= this.game.camera.y){// && this.auxY != 0 && this.auxY - 75 >= this.game.camera.y){
+    		this.game.camera.y -=10 ;
     	}
 	},
 	
