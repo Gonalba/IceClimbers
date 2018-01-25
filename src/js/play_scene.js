@@ -12,8 +12,8 @@ var PlayScene = {
 
 		//MARTILLO---------------------------------
 		this.martillo = new entities.Martillo(this.game, 1000, 10,'logo');
-		this.martillo.height *= 0.1;
-		this.martillo.width *= 0.1;
+		this.martillo.height *= 0.08;
+		this.martillo.width *= 0.07;
 
 		//POPO--------------------------------------
 		this._popo = new entities.Popo(this.game, 400, 1200,this.martillo, 'personajes');

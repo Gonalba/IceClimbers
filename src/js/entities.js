@@ -66,7 +66,7 @@ Martillo.prototype.setPosInit = function(){
 	this.y = this.yInit;
 };
 Martillo.prototype.setPosIzq = function(){
-	this.x = -5;
+	this.x = 0;
 	this.y = 10;
 }
 Martillo.prototype.setPosDer = function(){
@@ -106,7 +106,7 @@ function Popo (game, x, y, martillo, graphic,salto){
 	this.AtaqueRightPopo = this.animations.add('AtaqueRightPopo',[12,13,27]);
 	this.AtaqueLeftPopo = this.animations.add('AtaqueLeftPopo',[1,0,14]);
 
-	this.MuertePopo = this.animations.add('MuertePopo',[47,48,49,50]);
+	this.MuertePopo = this.animations.add('MuertePopo',[33,34,35,36]);
 };
 Popo.prototype = Object.create(Movable.prototype);
 Popo.prototype.constructor = Popo;
@@ -118,7 +118,8 @@ Popo.prototype.update = function(){
 	}
 	else{
 		if(this.vidas > 0){
-			this.resetPopo();
+			this.alpha -= 0.02;
+			//this.resetPopo();
 		}
 	}
 	this.game.debug.text('Vidas: ' + this.vidas, 0, 600);
@@ -172,7 +173,6 @@ Popo.prototype.keyboardInput = function(){
 		this.muere = true;
 		this.alpha = 1;
 		if(!this.atacando){
-			//this.martillo.setPosInit();
 			this._direction = -1;
 			this.move();
 			if(this.body.onFloor()){
@@ -207,23 +207,26 @@ Popo.prototype.morir = function (){
 	if (this.vivo){
 		this.vivo = false;
 		this.vidas--;
-		this.kill();
+		this.play('MuertePopo',3);
+		this.MuertePopo.onComplete.add(this.kill,this);
+		this.MuertePopo.onComplete.add(this.resetPopo,this);
+		//this.kill();
 		//this.body.enable = false;
-		this.tiempo =  this.game.time.totalElapsedSeconds();
+		this.tiempo = this.game.time.totalElapsedSeconds();
 	}
 	
 };
 //método para volver a crear a popo
 Popo.prototype.resetPopo = function(){
 	if(!this.vivo){
-		if(this.game.time.totalElapsedSeconds() >= this.tiempo + 2)
-		{
+		//if(this.game.time.totalElapsedSeconds() >= this.tiempo + 5)
+		//{
 		 	this.muere = false;
 		 	this.alpha = 0.3;
-			this.reset(this.body.x +50, this.body.y);
+			this.reset(this.body.x, this.body.y);
 			this.vivo = true;
 
-		}
+		//}
 	}
 };
 Popo.prototype.killMartillo = function(){
@@ -246,16 +249,21 @@ Yeti.prototype.constructor = Yeti;
 
 Yeti.prototype.update = function(){
 	if(!this.muerto){
+		this.move();
 		//ajusto el collider a el tamaño del yeti
 		this.body.setSize(18,18,5,3);
 		if(this._direction == 1)
 			this.play('MoveRightYeti',15);
 		else if (this._direction == -1)
 			this.play('MoveLeftYeti',15);
-	}else
+	}else{
+		this.move();
+		this.alpha -= 0.01;
 		this.play('MuertoYeti',5);
+		if(this.alpha <=0)
+			this.destroy();
+	}
 
-	this.move();
 };
 
 Yeti.prototype.morir = function (){
