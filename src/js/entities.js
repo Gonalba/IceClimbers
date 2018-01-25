@@ -58,6 +58,7 @@ function Martillo (game, x, y, graphic){
  	Objeto.call(this, game, x, y, graphic);
  	this.xInit = x;
  	this.yInit = y;
+ 	this.alpha = 0;
 };
 Martillo.prototype = Object.create(Objeto.prototype);
 Martillo.prototype.constructor = Martillo;
