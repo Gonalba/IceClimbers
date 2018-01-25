@@ -280,6 +280,9 @@ Yeti.prototype.morir = function (){
 	this._velocity = this._velocity + 3;
 	this.body.enable = false;
 };
+Yeti.prototype.goBack = function(){
+	this._direction = -this._direction;
+}
 
 
 //OSO--------------------------------------------------------------------------------------

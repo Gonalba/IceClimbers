@@ -23,7 +23,7 @@ var PlayScene = {
 		this._popo.addChild(this.martillo);
 
 		//YETI-------------------------------------
-		this._yeti = new entities.Yeti(this.game,100,1000,'personajes');
+		this._yeti = new entities.Yeti(this.game,100,1050,'personajes');
 		this._yeti.height *= 3;
 		this._yeti.width *= 3;
 		this.game.world.addChild(this._yeti);
@@ -219,17 +219,26 @@ var PlayScene = {
 		if(this._yeti._direction == 1){//Si va a la derecha
 			this.varX = Math.trunc((this._yeti.x + this._yeti.width)/this.tileW);
 			this.varY= Math.trunc((this._yeti.y + this._yeti.height)/this.tileH);
-			if(this.map.getTile(this.varX, this.varY) === null){
-				this.map.putTile(7, this.varX, this.varY, this.groundLayer);
-			}
+		
+
 		}
 		else{
 			this.varX = Math.trunc((this._yeti.x)/this.tileW);
 			this.varY= Math.trunc((this._yeti.y + this._yeti.height)/this.tileH);
-			if(this.map.getTile(this.varX, this.varY) === null){
+			/*if(this.map.getTile(this.varX, this.varY) === null){
 				this.map.putTile(7, this.varX, this.varY, this.groundLayer);
-			}
+			}*/
 		}
+			if(this.map.getTile(this.varX, this.varY) === null){
+				if (!this.detectado ){
+					this.detectado = true;
+					this._yeti.goBack();
+				}
+				else{
+					this.detectado = false;
+					this.map.putTile(7, this.varX, this.varY, this.groundLayer);
+				}
+			}
 	},
 
 	gameOver: function(){
