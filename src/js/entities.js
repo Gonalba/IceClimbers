@@ -14,6 +14,7 @@ function Movable (game, x, y, graphic){
  	this._velocity = 1;
  	this._direction = 1;
  	this.paused = false;
+ 	this.muerto = false;
  	Objeto.call(this, game, x, y, graphic);
   
 };
@@ -94,6 +95,7 @@ function Popo (game, x, y, martillo, graphic,salto){
 	this.wInit = this.width*3;
 	this.xInit = x;
  	this.yInit = y;
+ 	this.muere = true;
 	
 	this.MoveLeftPopo = this.animations.add('MoveRightPopo',[7,8,9,10]);
 	this.MoveRightPopo = this.animations.add('MoveLeftPopo',[6,5,4,3]);
@@ -105,8 +107,6 @@ function Popo (game, x, y, martillo, graphic,salto){
 	this.AtaqueLeftPopo = this.animations.add('AtaqueLeftPopo',[1,0,14]);
 
 	this.MuertePopo = this.animations.add('MuertePopo',[47,48,49,50]);
-
-	this.muerto = false;
 };
 Popo.prototype = Object.create(Movable.prototype);
 Popo.prototype.constructor = Popo;
@@ -130,6 +130,8 @@ Popo.prototype.keyboardInput = function(){
 	
 
 	if(this._cursors.down.isDown&&this.body.onFloor()){
+		this.muere = true;
+		this.alpha = 1;
 		this.atacando = true;
 		if(this._direction === -1){
 			this.play('AtaqueLeftPopo', 7);	
@@ -146,6 +148,8 @@ Popo.prototype.keyboardInput = function(){
 	}
 	//SALTO-------------------------------------
   	else if (this._cursors.up.isDown&&this.body.onFloor()){
+  		this.muere = true;
+		this.alpha = 1;
   		if(!this.atacando){
 	 		this.jump();
 			this.martillo.setPosJump();
@@ -165,6 +169,8 @@ Popo.prototype.keyboardInput = function(){
   	}
 	//TECLAS MOVIMIENTO-------------------------
 	else if (this._cursors.left.isDown){
+		this.muere = true;
+		this.alpha = 1;
 		if(!this.atacando){
 			//this.martillo.setPosInit();
 			this._direction = -1;
@@ -175,12 +181,13 @@ Popo.prototype.keyboardInput = function(){
 		}
 	}
 	else if (this._cursors.right.isDown){
+		this.muere = true;
+		this.alpha = 1;
   		if(!this.atacando){
-  			//this.martillo.setPosInit();
   			this._direction = 1
-	 			this.move();
-	 			if(this.body.onFloor()){
-					this.play('MoveRightPopo',20);
+ 			this.move();
+ 			if(this.body.onFloor()){
+				this.play('MoveRightPopo',20);
 			}
   		}
 	}else{
@@ -211,7 +218,9 @@ Popo.prototype.resetPopo = function(){
 	if(!this.vivo){
 		if(this.game.time.totalElapsedSeconds() >= this.tiempo + 2)
 		{
-			this.reset(this.xInit, this.yInit+50);
+		 	this.muere = false;
+		 	this.alpha = 0.3;
+			this.reset(this.body.x +50, this.body.y);
 			this.vivo = true;
 
 		}
@@ -231,7 +240,6 @@ function Yeti(game, x, y,  graphic,muerto){
 	this.MoveLeftYeti = this.animations.add('MoveRightYeti',[144,145,146]);
 	this.MoveRightYeti = this.animations.add('MoveLeftYeti',[143,142,141]);
 	this.MuertoYeti = this.animations.add('MuertoYeti',[140,147]);
-	this.muerto = false;
 };
 Yeti.prototype = Object.create(Movable.prototype);
 Yeti.prototype.constructor = Yeti;
@@ -269,14 +277,23 @@ Oso.prototype = Object.create(Movable.prototype);
 Oso.prototype.constructor = Yeti;
 
 Oso.prototype.update = function(){
-	this.move();
-	if(this._direction == 1)
-		this.play('MoveRightOso',10);
-	else if (this._direction == -1)
-		this.play('MoveLeftOso',10);
+	if(!this.muerto){
+		this.move();
+		if(this._direction == 1)
+			this.play('MoveRightOso',10);
+		else if (this._direction == -1)
+			this.play('MoveLeftOso',10);
+	}else if(this.alpha > 0){
+		this.alpha -= 0.01;
+	}else if (this.alpha <= 0)
+		this.destroy();
 };
 
-Oso.prototype.morir = function (){};
+Oso.prototype.morir = function (){
+	this.muerto = true;
+	this._direction = 0;
+	this.body.enable = false;
+};
 
 module.exports = {
 	Popo: Popo,
