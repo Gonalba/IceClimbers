@@ -92,8 +92,8 @@ var PlayScene = {
     	if(this.gameover){
 		    this.exitKey.onDown.add(this.goMenu, this);
     	}
-    	this.game.debug.text(this.paused, 0, 500);
-    	this.game.debug.text(this._popo.body.onFloor(), 0, 300);
+    	this.game.debug.text(this._popo.muere, 100, 500);
+    	//this.game.debug.text(this._popo.body.onFloor(), 0, 300);
 
     	this.setCamera();
 
@@ -134,12 +134,13 @@ var PlayScene = {
 		//COLISION CON ENEMIGOS------------------------------------------------------------
 		this.game.physics.arcade.collide(this.martillo, this.enemiesGroup, this.mataEnemigo);
 		if(this.game.physics.arcade.collide(this._popo, this.enemiesGroup, this._popo.morir)){
-			if(this.i < 3 && this._popo.muere){
+			if(this._popo.muere && this.i < 3 ){
 				this._popo.morir();
 				this.vidas[this.i].destroy();
 				this.i++;
 			}
-			else if(this.i > 3){
+			else if(this.i >= 3){
+				this._popo.morir();
 				this.gameOver();
 			}
 		}

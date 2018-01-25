@@ -119,11 +119,13 @@ Popo.prototype.update = function(){
 	}
 	else{
 		if(this.vidas > 0){
-			this.alpha -= 0.02;
-			this.resetPopo();
+			this.MuertePopo.onComplete.add(this.resetPopo, this);
+
+		}
+		else{
+			this.MuertePopo.onComplete.add(this.kill, this);
 		}
 	}
-	this.game.debug.text('Vidas: ' + this.vidas, 0, 600);
 };
 
 //EN ESTE METODO SE CAPTURAN LAS TECLAS QUE SE PULSAN Y SE REALIZA LA FUNCION CORRESPONDIENTE
@@ -206,14 +208,15 @@ Popo.prototype.jump = function(){
 //metodo morir
 Popo.prototype.morir = function (){
 	if (this.vivo){
+	 	this.muere = false;
 		this.vivo = false;
 		this.vidas--;
 		this.play('MuertePopo',3);
-		this.MuertePopo.onComplete.add(this.kill,this);
+		this.tiempo = this.game.time.totalElapsedSeconds();
+		this.martillo.setPosInit;
 		//this.MuertePopo.onComplete.add(this.resetPopo,this);
 		//this.kill();
 		//this.body.enable = false;
-		this.tiempo = this.game.time.totalElapsedSeconds();
 	}
 	
 };
@@ -221,12 +224,12 @@ Popo.prototype.morir = function (){
 Popo.prototype.resetPopo = function(){
 	if(!this.vivo){
 		if(this.game.time.totalElapsedSeconds() >= this.tiempo + 3)
-		{
-		 	this.muere = false;
+			this.kill();
+			this.vivo = true;
 		 	this.alpha = 0.3;
 			this.reset(this.body.x, this.body.y);
-			this.vivo = true;
-		}
+			
+		
 	}
 };
 Popo.prototype.killMartillo = function(){
