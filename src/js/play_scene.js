@@ -16,6 +16,11 @@ var PlayScene = {
 
 		this.tileH = 40;
 		this.tileW = this.world.width/11;
+		//PTERODÁCTILO------------------------------	
+		this.pterodactilo = new entities.Pterodactilo(this.game, 100, 50,'personajesPt');
+		this.pterodactilo.height *= 3;
+		this.pterodactilo.width *= 3;
+		this.game.world.addChild(this.pterodactilo);
 
 		//MARTILLO---------------------------------
 		this.martillo = new entities.Martillo(this.game, 1000, 10,'logo');
@@ -106,6 +111,7 @@ var PlayScene = {
     	this.paused = false;
     	this.gameover = false;	
     	this.playSound = true;
+    	this.win = false;
 
 		this.configure();	       
 	},
@@ -144,6 +150,7 @@ var PlayScene = {
 		this.game.debug.body(this._oso);
 		this.game.debug.body(this._yeti);
 		this.game.debug.body(this._bird);
+		this.game.debug.body(this.pterodactilo);
 	},
 	collision: function(){
 		//COLISION CON EL MAPA---------------------------------------  		
@@ -200,10 +207,31 @@ var PlayScene = {
 
 		//DETECCIÓN DE HUECOS POR EL YETI---------------------------------------
 		if(!this._yeti.muerto)
+<<<<<<< HEAD
 			this.huecoYeti();
 		if(!this._oso.muerto)
 			this.huecoOso();
+=======
+			this.hueco();
+
+		if (this.game.physics.arcade.overlap(this._popo, this.pterodactilo)){
+			if(!this.win){
+				this.time = this.game.time.totalElapsedSeconds();
+				this.win = true;
+			}
+
+			this._popo.body.gravity = false;
+			this._popo.x = this.pterodactilo.x;
+			this._popo.y = this.pterodactilo.y -20;
+			//this.pterodactilo.addChild(this._popo);
+			if(this.game.time.totalElapsedSeconds() >= this.time + 5){
+				this.game.sound.stopAll();
+				this.game.state.start('gameOver');
+			}
+		}
+>>>>>>> d7716cb338395abd65f93ed7fc913e7fa85933b8
 	},
+
 	configure: function(){ //configura las físicas de los elementos del juego
 		this.game.physics.startSystem(Phaser.Physics.ARCADE);
 		this.game.physics.arcade.gravity.y = 600;  
@@ -231,7 +259,8 @@ var PlayScene = {
 		this.game.physics.arcade.enable(this.berenjena);
 		this.berenjena.body.allowGravity = false;
 
-
+		this.game.physics.arcade.enable(this.pterodactilo);
+		this.pterodactilo.body.allowGravity = false;
   		//MAPA----------------------------
 		this.groundLayer = this.map.createLayer('Pisos');
 		this.cloudLayer = this.map.createLayer('Nubes');
@@ -311,15 +340,13 @@ var PlayScene = {
 	pause: function(){
 		if(!this.paused){
 			this._popo.pause();
-			this._oso.pause();
-			this._yeti.pause();
+			this.enemiesGroup.callAll('pause');
 			this.paused = true;
 			this.menu.alpha = this.resume.alpha = this.reset.alpha = 1;
 		}
 		else if(this.paused||this.gameover){
 			this._popo.pause();
-			this._oso.pause();
-			this._yeti.pause();
+			this.enemiesGroup.callAll('pause');
 			this.paused = false;
 			this.menu.alpha = this.resume.alpha = this.reset.alpha = 0;
 		}
