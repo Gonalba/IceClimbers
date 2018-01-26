@@ -60,9 +60,25 @@ Movable.prototype.numeroRandom = function(max, min){
 Movable.prototype.enSuelo = function(obj){
 	return(obj.body.onFloor());
 };
+//PTERODACTILO-----------------------------------------------------------------------
+function Pterodactilo (game,x,y,graphic){
+	Movable.call(this, game, x, y, graphic);
+	this.MovIzqPt = this.animations.add('MovIzqPt',[80,81,82]);
+	this.MovDerPt = this.animations.add('MovDerPt',[83,84,85]);
+	this._velocity = 5;
+};
+Pterodactilo.prototype = Object.create(Movable.prototype);
+Pterodactilo.prototype.constructor = Pterodactilo;
 
+Pterodactilo.prototype.update = function(){
+	this.body.setSize(35,15,3,5);
+	this.move();
+	if(this._direction < 0)
+		this.play('MovIzqPt',10);
+	else if (this._direction > 0)
+		this.play('MovDerPt',10);
 
-
+};
 //MARTILLO-------------------------------------------------------------------------------
 //PREGUNTAR A CARLOS COMO IMPLEMENTAR EL ATAQUE DEL MARTILLO
 function Martillo (game, x, y, graphic){
@@ -455,5 +471,5 @@ module.exports = {
 	Oso: Oso,
 	Martillo: Martillo,
 	Pajaro: Pajaro,
-	Movable: Movable
+	Pterodactilo: Pterodactilo,
 };
