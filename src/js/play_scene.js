@@ -5,10 +5,13 @@ var scene;
 var PlayScene = {
 
 	create: function () {
+		this.game.sound.stopAll();
 		//AUDIO--------------------------------------
 		this.himalayaMelody = this.game.add.audio('himalayaMelody',0.3,true);
 		this.himalayaMelody.play();
 		this.puntosSound = this.game.add.audio('puntosSound');
+
+		this.bonusSound = this.game.add.sound('bonusSound',0.3,true);
 
 
 		this.tileH = 40;
@@ -32,7 +35,7 @@ var PlayScene = {
 		this._yeti.width *= 3;
 		this.game.world.addChild(this._yeti);
 		//PÁJARO-------------------------------------
-		this._bird = new entities.Pajaro(this.game,100,2050,'pajaro', this.game.camera);
+		this._bird = new entities.Pajaro(this.game,100,2050,'personajesPajaro', this.game.camera);
 		this._bird.height *= 3;
 		this._bird.width *= 3;
 		this.game.world.addChild(this._bird);
@@ -95,6 +98,7 @@ var PlayScene = {
 
     	this.paused = false;
     	this.gameover = false;	
+    	this.playSound = true;
 
 		this.configure();	       
 	},
@@ -110,12 +114,22 @@ var PlayScene = {
     	}
     	this.game.debug.text(this.puntos, 0, 500);
 
+    	if(this.game.camera.y <= 660&&this.playSound){
+    		this.playSound = false;
+    		this.himalayaMelody.fadeOut(1000);
+    		if(this.himalayaMelody.onFadeComplete){
+    			this.bonusSound.fadeIn(5000,true);
+    		}
+    	}
+    	if(this.bonusSound.onFadeComplete)
+    		this.bonusSound.volume = 0.3;
+
     	this.setCamera();
 		this.collision();
 	},
 
 	render : function(){
-		this.game.debug.bodyInfo(this._popo, 32, 32);
+		this.game.debug.text(this.game.camera.y, 32, 32);
 
 		this.game.debug.body(this._popo);
 		this.game.debug.body(this.martillo);
@@ -138,10 +152,11 @@ var PlayScene = {
 		if(this.game.physics.arcade.overlap(this.martillo, this.groundLayer)){
 			this.game.debug.text('Popo: ' + (this._popo.x + this.martillo.x) + ", " + (this._popo.y + this.martillo.y), 0, 400);
 
-			this.varX = Math.trunc((this._popo.x + this.martillo.x)/this.tileW);
-			this.varY= Math.trunc((this._popo.y + this.martillo.y)/this.tileH);
+			this.varX = Math.trunc((this._popo.x + this.martillo.x+20)/this.tileW);
+			this.varY = Math.trunc((this._popo.y + this.martillo.y)/this.tileH);
 			
 			if(this.map.removeTile(this.varX, this.varY, this.groundLayer)){
+				this._popo.body.velocity.y = 0;
 				this.puntosSound.play();
 				this.puntos+=10;
 			}
@@ -278,7 +293,7 @@ var PlayScene = {
 
 	goMenu: function(){
 		if(this.paused||this.gameover){
-			this.himalayaMelody.stop();
+			this.game.sound.stopAll();
 			this.game.state.start('menu_principal');
 		}
 	},

@@ -44,6 +44,7 @@ var PreloaderScene = {
 
     this.game.load.spritesheet('oso', 'images/SpritesJson/oso.png', 17.5, 31, 6);
     this.game.load.spritesheet('personajes', 'images/SpritesJson/Personajes.png', 29.571428571428, 27.076923076923, 200);
+    this.game.load.spritesheet('personajesPajaro', 'images/SpritesJson/Personajes.png', 29, 26, 200);
     this.game.load.image('vidasPopo', 'images/vida.png');
     
   //Mapa
@@ -59,9 +60,12 @@ var PreloaderScene = {
   	this.game.load.audio('popoMuerteSound','Sounds/SonidosWeb/muertePopo.wav');
   	this.game.load.audio('puntosSound','Sounds/SonidosWeb/puntos.wav');
   	this.game.load.audio('marcadorSound','Sounds/melodias/marcador.wav');
+  	this.game.load.audio('bonusSound','Sounds/melodias/Bonus.ogg');
+
+  	this.game.load.onLoadComplete.add(this.loadComplete, this);
   },
 
-  create: function () {
+  loadComplete: function () {
     this.game.state.start('menu_principal');
   }
 };

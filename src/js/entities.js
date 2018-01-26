@@ -362,6 +362,9 @@ function Pajaro(game, x, y, graphic, camara){
 	this.changeMove();	
 	Movable.call(this, game, x, y, graphic);
 	this.timeToCambio = 0;
+	this.MovIzqBird = this.animations.add('MovIzqBird',[99,100]);
+	this.MovDerBird = this.animations.add('MovDerBird',[101,102]);
+	this.MuerteBird = this.animations.add('MuerteBird',[98,103]);
 };
 
 Pajaro.prototype = Object.create(Movable.prototype);
@@ -370,6 +373,10 @@ Pajaro.prototype.constructor = Pajaro;
 Pajaro.prototype.move = function(){
 	this.x += this.velX * this.dirX;
 	this.y += this.velY * this.dirY;
+	if(this.dirX > 0)
+		this.play('MovDerBird',10);
+	else if(this.dirX < 0)
+		this.play('MovIzqBird',10);
 };
 
 Pajaro.prototype.changeMove = function(){
@@ -386,6 +393,7 @@ Pajaro.prototype.changeMove = function(){
 };
 
 Pajaro.prototype.update = function(){
+	this.body.setSize(16,16,7,5);
 	this.tiempo = this.game.time.totalElapsedSeconds();
 	if(!this.muerto ){
 		this.move();
@@ -409,6 +417,12 @@ Pajaro.prototype.update = function(){
 				this.destroy();			
 			}	
 		}
+
+	}else{
+		this.alpha -= 0.01;
+		this.play('MuerteBird',10);
+		if(this.alpha <= 0)
+			this.destroy();
 	}
 };
 
@@ -425,5 +439,6 @@ module.exports = {
 	Yeti: Yeti,
 	Oso: Oso,
 	Martillo: Martillo,
-	Pajaro: Pajaro
+	Pajaro: Pajaro,
+	Movable: Movable
 };

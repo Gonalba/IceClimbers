@@ -7,6 +7,7 @@ var MenuPcpal = {
     this.game.sound.stopAll();
     this.menuMelody = this.game.add.audio('menuMelody',0.3,true);
     this.menuMelody.play();
+   // this.menuMelody.fadeIn(10000);
     this.marcadorSound = this.game.add.sound('marcadorSound');
 
     cursors = this.game.input.keyboard.createCursorKeys();
@@ -53,7 +54,7 @@ mueveMartillo: function(){
   },
 	
 	actionOnClickPlay: function(){
-    this.menuMelody.stop();
+    
 		this.game.state.start('play');
   },
 
