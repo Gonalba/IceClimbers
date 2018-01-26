@@ -12,7 +12,7 @@ var PlayScene = {
 
 
 		this.tileH = 40;
-		this.tileW = 70;
+		this.tileW = this.world.width/11;
 
 		//MARTILLO---------------------------------
 		this.martillo = new entities.Martillo(this.game, 1000, 10,'logo');
@@ -20,24 +20,24 @@ var PlayScene = {
 		this.martillo.width *= 0.07;
 
 		//POPO--------------------------------------
-		this._popo = new entities.Popo(this.game, 400, 1200,this.martillo, 'personajes');
+		this._popo = new entities.Popo(this.game, 400, 2500,this.martillo, 'personajes');
 		this._popo.height *= 3;
 		this._popo.width *= 3;
 		this.game.world.addChild(this._popo);
 		this._popo.addChild(this.martillo);
 
 		//YETI-------------------------------------
-		this._yeti = new entities.Yeti(this.game,100,1050,'personajes');
+		this._yeti = new entities.Yeti(this.game,100,2050,'personajes');
 		this._yeti.height *= 3;
 		this._yeti.width *= 3;
 		this.game.world.addChild(this._yeti);
 		//PÁJARO-------------------------------------
-		this._bird = new entities.Pajaro(this.game,100,1050,'pajaro', this.game.camera);
+		this._bird = new entities.Pajaro(this.game,100,2050,'pajaro', this.game.camera);
 		this._bird.height *= 3;
 		this._bird.width *= 3;
 		this.game.world.addChild(this._bird);
 		//OSO---------------------------------------
-		this._oso = new entities.Oso(this.game,10,100,'oso');
+		this._oso = new entities.Oso(this.game,10,1500,'oso');
 		this._oso.height *= 4;
 		this._oso.width *= 4;
 		this.game.world.addChild(this._oso);
@@ -72,23 +72,13 @@ var PlayScene = {
 		
 		//MAPA------------------------------
 		this.map = this.game.add.tilemap('mapa');
-		this.map.addTilesetImage('mapaTiles','tiles');
+		this.map.addTilesetImage('TileSet','tiles');
 
 
 		//BERENJENAS---------------------------------------
 		this.berenjena = this.game.add.sprite (200, 1000, 'berenjena');
 	    this.berenjena.scale.setTo(3, 3);
 
-	    /*this.izq = new Phaser.Rectangle(0, 0, 10, this.game.camera.height);
-		this.der = new Phaser.Rectangle(this.game.camera.width -10, 0, 10, this.game.camera.height);
-		this.up = new Phaser.Rectangle(0, 0, this.game.camera.width, 10);
-		this.down = new Phaser.Rectangle(0, this.game.camera.height -10, this.game.camera.width, 10);
-		this.bordesCamara = this.game.add.group();
-		this.bordesCamara.add(this.izq);
-		this.bordesCamara.add(this.der);
-		this.bordesCamara.add(this.up);
-		this.bordesCamara.add(this.down);
-*/
 		//VIDAS------------------------------------
 		this.vidas = new Array (3);
 		for (this.i = 0; this.i < 3; this.i++){
@@ -146,7 +136,7 @@ var PlayScene = {
 
 		//ROMPE SUELO SUPERIOR-------------------------------------------------------
 		if(this.game.physics.arcade.overlap(this.martillo, this.groundLayer)){
-			//this.game.debug.text('Popo: ' + this._popo.x + this.martillo.x + ", " + this._popo.y + this.martillo.y, 0, 500);
+			this.game.debug.text('Popo: ' + (this._popo.x + this.martillo.x) + ", " + (this._popo.y + this.martillo.y), 0, 400);
 
 			this.varX = Math.trunc((this._popo.x + this.martillo.x)/this.tileW);
 			this.varY= Math.trunc((this._popo.y + this.martillo.y)/this.tileH);
@@ -155,7 +145,7 @@ var PlayScene = {
 				this.puntosSound.play();
 				this.puntos+=10;
 			}
-			//this.game.debug.text('Tile: ' + this.varX + ", " + this.varY, 0, 600);
+			this.game.debug.text('Tile: ' + this.varX + ", " + this.varY, 0, 500);
 		}
 
 		//COLISION CON ENEMIGOS------------------------------------------------------------
@@ -173,6 +163,7 @@ var PlayScene = {
 			}
 			else if(this.i >= 3){
 				this._popo.morir();
+				this._popo.destroy();
 				this.gameOver();
 			}
 		}
@@ -211,13 +202,6 @@ var PlayScene = {
     		});
 		this._bird.body.allowGravity = false;
 
-		/*this.game.physics.arcade.enable(this.bordesCamara);
-		this.bordesCamara.forEach(function(obj){
-     		 //obj.body.collideWorldBounds = true;
-     		obj.fixedToCamera = true;
-
-
-    		});*/
 		//BONUS BERENJENA-------------------------
 		this.game.physics.arcade.enable(this.berenjena);
 		this.berenjena.body.allowGravity = false;
@@ -233,7 +217,8 @@ var PlayScene = {
      	this.map.setCollisionBetween(0, 5000, true, 'Bonus');
   		
  		this.groundLayer.resizeWorld();
-		this.camera.setPosition(0, 1000)
+
+		this.camera.setPosition(0, 2000)
 
 	},
 
@@ -241,12 +226,11 @@ var PlayScene = {
 		enemy.morir();	
 	},
 
-	hueco: function(){ //Para que la foca detecte si hay un hueco a su lado
+	hueco: function(){ //Para que el detecte si hay un hueco a su lado
+		if(this._yeti.suelo){
 		if(this._yeti._direction == 1){//Si va hacia la derecha
 			this.varX = Math.trunc((this._yeti.x + this._yeti.width)/this.tileW);
 			this.varY= Math.trunc((this._yeti.y + this._yeti.height)/this.tileH);
-		
-
 		}
 		else{//Hacia la izqd
 			this.varX = Math.trunc((this._yeti.x)/this.tileW);
@@ -262,6 +246,7 @@ var PlayScene = {
 				this.map.putTile(7, this.varX, this.varY, this.groundLayer);
 			}
 		}
+	}
 	},
 
 	gameOver: function(){
