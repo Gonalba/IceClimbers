@@ -170,7 +170,7 @@ var PlayScene = {
 		}
 
 		//MUERTE POPO, VIDAS Y FIN JUEGO-------------------------------------------
-		if(this.game.physics.arcade.collide(this._popo, this.enemiesGroup, this._popo.morir)){
+		if(this.game.physics.arcade.collide(this._popo, this.enemiesGroup) || this._popo.y >= this.game.camera.y + this.game.camera.height){
 			if(this._popo.muere && this.i < 3 ){
 				this._popo.morir();
 				this.vidas[this.i].destroy();

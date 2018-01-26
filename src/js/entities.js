@@ -108,6 +108,8 @@ function Popo (game, x, y, martillo, graphic,salto){
 	this.xInit = x;
  	this.yInit = y;
  	this.muere = true;
+ 	this.posX;
+	this.posY;
  	this.suelo;
 	
 	//ANIMACIONES
@@ -130,9 +132,13 @@ Popo.prototype = Object.create(Movable.prototype);
 Popo.prototype.constructor = Popo;
 
 Popo.prototype.update = function(){
+
 	this.body.setSize(12,22,9,3);
 	if(this.vivo){
+		this.savePosition();
+
 		this.keyboardInput();
+
 	}
 	else{
 		if(this.vidas > 0){
@@ -212,7 +218,8 @@ Popo.prototype.keyboardInput = function(){
 				this.play('MoveRightPopo',20);
 			}
   		}
-	}else{
+	}
+	else{
 		if(this._direction === 1&&this.body.onFloor()&&!this.atacando)
 			this.frame = 7;
 		else if(this._direction === -1&&this.body.onFloor()&&!this.atacando)
@@ -244,7 +251,9 @@ Popo.prototype.resetPopo = function(){
 			this.kill();
 			this.vivo = true;
 		 	this.alpha = 0.3;
-			this.reset(this.body.x, this.body.y);
+			this.reset(this.posX- this._direction*20, this.posY);
+			this.game.debug.text('Posición: ' + (this.posX- this._direction*20) + ', ' + this.posY , 0, 500);
+
 			
 		
 	}
@@ -254,6 +263,12 @@ Popo.prototype.killMartillo = function(){
 };
 Popo.prototype.atacandoOff = function(){
 	this.atacando = false;
+};
+Popo.prototype.savePosition = function(){
+	if(this.body.onFloor()){
+		this.posX = this.x;
+		this.posY = this.y;
+	}
 };
 
 
@@ -334,7 +349,7 @@ Oso.prototype.update = function(){
 			this._velocity = 0;
 		this._direction = 0;
 			if(this.tiempo > this.tiempoIni + this.tiempoSalto + 2 && !this.saltado){
-			this.game.debug.text('Tiempo total: ' + this.tiempo + ' T ini: ' + this.tiempoIni + ' T salto: ' + this.tiempoSalto, 0, 400);
+			//this.game.debug.text('Tiempo total: ' + this.tiempo + ' T ini: ' + this.tiempoIni + ' T salto: ' + this.tiempoSalto, 0, 400);
 
 	
 		this.jump();
