@@ -51,12 +51,6 @@ Movable.prototype.pause = function(){
 		this.paused = false;
 	}
 };
-Movable.prototype.goBack = function(){
-	this._direction = -this._direction;
-};
-Movable.prototype.numeroRandom = function(max, min){
-	return (Math.random() * (max - min) + min);
-};
 Movable.prototype.enSuelo = function(obj){
 	return(obj.body.onFloor());
 };
@@ -136,7 +130,6 @@ Popo.prototype.update = function(){
 	this.body.setSize(12,22,9,3);
 	if(this.vivo){
 		this.savePosition();
-
 		this.keyboardInput();
 
 	}
@@ -271,16 +264,30 @@ Popo.prototype.savePosition = function(){
 	}
 };
 
+//ENEMIGOS---------------------------------------------------------------------------------
+function Enemy(game, x, y,  graphic){
+	Movable.call(this, game, x, y, graphic);
+	this.game.debug.text(this.map, 0, 100);
 
+};
+Enemy.prototype = Object.create(Movable.prototype);
+Enemy.prototype.constructor = Enemy;
+
+Enemy.prototype.goBack = function(){
+	this._direction = -this._direction;
+};
+Enemy.prototype.numeroRandom = function(max, min){
+	return (Math.random() * (max - min) + min);
+};
 
 //YETI--------------------------------------------------------------------------------------
-function Yeti(game, x, y,  graphic,muerto){
-	Movable.call(this, game, x, y, graphic);
+function Yeti(game, x, y,  graphic){
+	Enemy.call(this, game, x, y, graphic);
 	this.MoveLeftYeti = this.animations.add('MoveRightYeti',[144,145,146]);
 	this.MoveRightYeti = this.animations.add('MoveLeftYeti',[143,142,141]);
 	this.MuertoYeti = this.animations.add('MuertoYeti',[140,147]);
 };
-Yeti.prototype = Object.create(Movable.prototype);
+Yeti.prototype = Object.create(Enemy.prototype);
 Yeti.prototype.constructor = Yeti;
 
 Yeti.prototype.update = function(){
@@ -315,23 +322,25 @@ Yeti.prototype.morir = function (){
 
 
 //OSO--------------------------------------------------------------------------------------
-function Oso(game, x, y, graphic){
-	Movable.call(this, game, x, y, graphic);
+function Oso(game, x, y, graphic, mapa){
+	Enemy.call(this, game, x, y, graphic);
 	this.MoveLeftOso = this.animations.add('MoveRightOso',[0,1,2]);
 	this.MoveRightOso = this.animations.add('MoveLeftOso',[3,4,5]);
 	this._velocity = 5;
 	this.velAux = this._velocity;
+	this.dirAux = this._direction;
 	this.tiempoIni = 0;
 	this.tiempo=0;
-	this.saltado = false;
-	this.tiempoSalto = this.numeroRandom(3, 1);
+	this.saltando = false;
+	this.map = mapa;
+	this.tiempoSalto = this.numeroRandom(3, 1.500);
 };
-Oso.prototype = Object.create(Movable.prototype);
-Oso.prototype.constructor = Yeti;
+Oso.prototype = Object.create(Enemy.prototype);
+Oso.prototype.constructor = Oso;
 
 Oso.prototype.update = function(){
 	this.tiempo = this.game.time.totalElapsedSeconds();
-
+	
 	if(!this.muerto){
 		this.move();
 		if(this._direction == 1)
@@ -344,21 +353,46 @@ Oso.prototype.update = function(){
 	}
 	else if (this.alpha <= 0)
 		this.destroy();
+	if(this.saltando){
+		this._velocity = 0;
+		this._direction = 0;
+		this.jump();
+//		this.body.velocity.y = 0;
+
+		if(this.body.onFloor()){
+			this.saltando = false;
+			this._velocity = this.velAux;
+			this._direction = this.dirAux;
+		}
+	}
+	else{
+		this.movement();
+	}
+
+	};
+	Oso.prototype.movement = function(){
+		if(this.tiempo > this.tiempoIni + this.tiempoSalto && !this.saltado)
+			this.saltando = true;
+	}
+Oso.prototype.saltar = function(){
 
 	if(this.tiempo > this.tiempoIni + this.tiempoSalto && !this.saltado){
-			this._velocity = 0;
+		this._velocity = 0;
 		this._direction = 0;
-			if(this.tiempo > this.tiempoIni + this.tiempoSalto + 2 && !this.saltado){
-			//this.game.debug.text('Tiempo total: ' + this.tiempo + ' T ini: ' + this.tiempoIni + ' T salto: ' + this.tiempoSalto, 0, 400);
+			if(this.tiempo > this.tiempoIni + this.tiempoSalto + 0.5){
+				this.jump();
+				this.saltado = true;
 
-	
-		this.jump();
+			}
+		
+	else if(this.tiempo > this.tiempoIni + this.tiempoSalto + 0.5 && this.saltado){
+		this.body.velocity.y = 0;
+		this._velocity = this.velAux;
+		this._direction = this.dirAux;
 	}
-}
-};
+	}},
 Oso.prototype.jump = function(){
-	this.body.velocity.y = -100;
-	//this.saltado = true;
+	this.body.velocity.y = -200;
 };
 
 Oso.prototype.morir = function (){
@@ -375,14 +409,14 @@ function Pajaro(game, x, y, graphic, camara){
 	this.tiempo = 0;
 	this.sumTiempo = this.numeroRandom(46, 15); //Tiempo que va a estar en pantalla
 	this.changeMove();	
-	Movable.call(this, game, x, y, graphic);
+	Enemy.call(this, game, x, y, graphic);
 	this.timeToCambio = 0;
 	this.MovIzqBird = this.animations.add('MovIzqBird',[99,100]);
 	this.MovDerBird = this.animations.add('MovDerBird',[101,102]);
 	this.MuerteBird = this.animations.add('MuerteBird',[98,103]);
 };
 
-Pajaro.prototype = Object.create(Movable.prototype);
+Pajaro.prototype = Object.create(Enemy.prototype);
 Pajaro.prototype.constructor = Pajaro;
 
 Pajaro.prototype.move = function(){

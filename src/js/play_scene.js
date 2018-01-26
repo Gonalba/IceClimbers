@@ -40,8 +40,8 @@ var PlayScene = {
 		this._bird.width *= 3;
 		this.game.world.addChild(this._bird);
 		//OSO---------------------------------------
-		this._oso = new entities.Oso(this.game,10,1500,'oso');
-		this._oso.height *= 4;
+		this._oso = new entities.Oso(this.game,10,2200,'oso');
+		this._oso.height *= 2;
 		this._oso.width *= 4;
 		this.game.world.addChild(this._oso);
 
@@ -95,6 +95,13 @@ var PlayScene = {
 		this.i = 0;//Contador para las vidas
 
 		this.puntos = 0;
+		this.textPtos = this.game.add.text(400, 50, "Score: " + this.puntos, {
+        font: "25px Pixeled",
+        fill: "#ffffff",
+        align: "center"
+    });
+    //this.game.add.bitmapText(10, 10, 'carrier_command','Score: ',34);
+		this.textPtos.fixedToCamera = true;
 
     	this.paused = false;
     	this.gameover = false;	
@@ -126,6 +133,7 @@ var PlayScene = {
 
     	this.setCamera();
 		this.collision();
+		this.ptosUdate();
 	},
 
 	render : function(){
@@ -150,7 +158,7 @@ var PlayScene = {
 
 		//ROMPE SUELO SUPERIOR-------------------------------------------------------
 		if(this.game.physics.arcade.overlap(this.martillo, this.groundLayer)){
-			this.game.debug.text('Popo: ' + (this._popo.x + this.martillo.x) + ", " + (this._popo.y + this.martillo.y), 0, 400);
+			//this.game.debug.text('Popo: ' + (this._popo.x + this.martillo.x) + ", " + (this._popo.y + this.martillo.y), 0, 400);
 
 			this.varX = Math.trunc((this._popo.x + this.martillo.x+20)/this.tileW);
 			this.varY = Math.trunc((this._popo.y + this.martillo.y)/this.tileH);
@@ -160,7 +168,7 @@ var PlayScene = {
 				this.puntosSound.play();
 				this.puntos+=10;
 			}
-			this.game.debug.text('Tile: ' + this.varX + ", " + this.varY, 0, 500);
+			//this.game.debug.text('Tile: ' + this.varX + ", " + this.varY, 0, 500);
 		}
 
 		//COLISION CON ENEMIGOS------------------------------------------------------------
@@ -192,7 +200,9 @@ var PlayScene = {
 
 		//DETECCIÓN DE HUECOS POR EL YETI---------------------------------------
 		if(!this._yeti.muerto)
-			this.hueco();
+			this.huecoYeti();
+		if(!this._oso.muerto)
+			this.huecoOso();
 	},
 	configure: function(){ //configura las físicas de los elementos del juego
 		this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -237,11 +247,14 @@ var PlayScene = {
 
 	},
 
+	ptosUdate: function(){
+		this.textPtos.setText("Score: " + this.puntos);
+	},
 	mataEnemigo: function(martillo, enemy){
 		enemy.morir();	
 	},
 
-	hueco: function(){ //Para que el detecte si hay un hueco a su lado
+	huecoYeti: function(){ //Para que el detecte si hay un hueco a su lado
 		if(this._yeti.suelo){
 		if(this._yeti._direction == 1){//Si va hacia la derecha
 			this.varX = Math.trunc((this._yeti.x + this._yeti.width)/this.tileW);
@@ -249,17 +262,40 @@ var PlayScene = {
 		}
 		else{//Hacia la izqd
 			this.varX = Math.trunc((this._yeti.x)/this.tileW);
-			this.varY= Math.trunc((this._yeti.y + this._yeti.height)/this.tileH)
+			this.varY= Math.trunc((this._yeti.y + this._yeti.height)/this.tileH);
 		}
 		if(this.map.getTile(this.varX, this.varY) === null){ //Si encuentra un hueco en el suelo
-			if (!this.detectado ){ //Si dicho hueco aún no había sido detectado cambia la dirección del yeti y pone "detectado" a true
-				this.detectado = true;
-				this._yeti.goBack();
+
+			if (!this.detectado){ //Si dicho hueco aún no había sido detectado cambia la dirección del yeti y pone "detectado" a true
+					this.detectado = true;
+					this.auxD = this._yeti._direction;
+					this._yeti.goBack();				
 			}
 			else{	//Si el hueco sí había sido detectado -> "detectado" lo pone a false y crea un tile nuevo en el hueco que corresponde.
-				this.detectado = false;
-				this.map.putTile(7, this.varX, this.varY, this.groundLayer);
+				if (this._yeti._direction === this.auxD){ //Si va en la dirección original en la que ha detectado el hueco significa que ha llegado al final y así que coloca el tile
+					this.detectado = false;
+					this.map.putTile(7, this.varX, this.varY, this.groundLayer);
+				}
+				else{//Si no se habrá quedado encerrado y muere
+					this._yeti.morir();
+				}
 			}
+		}
+	}
+	},
+	huecoOso: function(){
+		if(this._oso.suelo){
+
+		if(this._oso._direction == 1){//Si va hacia la derecha
+			this.varX = Math.trunc((this._oso.x + this.width)/this.tileW);
+			this.varY= Math.trunc((this.y + this.height)/this.tileH);
+		}
+		else{//Hacia la izqd
+			this.varX = Math.trunc((this._oso.x)/this.tileW);
+			this.varY= Math.trunc((this._oso.y + this.height)/this.tileH);
+		}
+		if(this.map.getTile(this.varX, this.varY) === null){ //Si encuentra un hueco en el suelo
+			this._oso.goBack();				
 		}
 	}
 	},

@@ -25,6 +25,8 @@ var PreloaderScene = {
     this.loadingBar.anchor.setTo(0, 0.5);
     this.load.setPreloadSprite(this.loadingBar);
 
+   // this.game.load.bitmapFont('carrier_command', 'images/carrier_command.png', 'font/carrier_command.xml');
+
     // TODO: load here the assets for the game
     this.game.load.image('logo', 'images/phaser.png');
 //Imágenes menú pcpal
