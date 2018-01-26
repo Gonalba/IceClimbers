@@ -4,7 +4,13 @@ var entities = require('./entities.js');
 var scene;
 var PlayScene = {
 
-		create: function () {
+	create: function () {
+		//AUDIO--------------------------------------
+		this.himalayaMelody = this.game.add.audio('himalayaMelody',0.3,true);
+		this.himalayaMelody.play();
+		this.puntosSound = this.game.add.audio('puntosSound');
+
+
 		this.tileH = 40;
 		this.tileW = 70;
 
@@ -146,6 +152,7 @@ var PlayScene = {
 			this.varY= Math.trunc((this._popo.y + this.martillo.y)/this.tileH);
 			
 			if(this.map.removeTile(this.varX, this.varY, this.groundLayer)){
+				this.puntosSound.play();
 				this.puntos+=10;
 			}
 			//this.game.debug.text('Tile: ' + this.varX + ", " + this.varY, 0, 600);
@@ -153,6 +160,7 @@ var PlayScene = {
 
 		//COLISION CON ENEMIGOS------------------------------------------------------------
 		if(this.game.physics.arcade.collide(this.martillo, this.enemiesGroup, this.mataEnemigo)){
+			this.puntosSound.play();
 			this.puntos += 50;
 		}
 
@@ -171,6 +179,7 @@ var PlayScene = {
 
 		//COLISIÓN CON LOS BONUS--------------------------------------------------
 		if(this.game.physics.arcade.overlap(this._popo, this.berenjena)){
+			this.puntosSound.play();
 			this.puntos += 20;
 			this.berenjena.destroy();
 		}
@@ -283,13 +292,17 @@ var PlayScene = {
 	},
 
 	goMenu: function(){
-		if(this.paused||this.gameover)
-		this.game.state.start('menu_principal');
+		if(this.paused||this.gameover){
+			this.himalayaMelody.stop();
+			this.game.state.start('menu_principal');
+		}
 	},
 
 	resetGame: function(){ //Reinicia la partida
-		if(this.paused)
-		this.game.state.start('play');
+		if(this.paused){
+			this.himalayaMelody.stop();
+			this.game.state.start('play');
+		}
 	},
 
 	setCamera: function(){//La cámara se va recolocando según Popo va ascendiendo por la montaña -> cuando está por encima de la mitad de la cámara y se encuentra apoyado en el suelo

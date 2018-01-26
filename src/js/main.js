@@ -50,6 +50,15 @@ var PreloaderScene = {
     this.game.load.tilemap('mapa', 'images/Mapa1.json', null, Phaser.Tilemap.TILED_JSON);
     this.game.load.image('tiles', 'images/TileSet.png');
 
+  //Sonidos
+  	this.game.load.audio('himalayaMelody',['Sounds/melodias/himalaya.mp3','Sounds/melodias/himalaya.ogg']);
+  	this.game.load.audio('menuMelody','Sounds/melodias/Menu1.ogg');
+  	this.game.load.audio('jumpSound','Sounds/SonidosWeb/jump.wav');
+  	this.game.load.audio('killEnemySound','Sounds/SonidosWeb/matarEnemigo.wav');
+  	this.game.load.audio('killBirdSound','Sounds/SonidosWeb/muertePajaro.wav');
+  	this.game.load.audio('popoMuerteSound','Sounds/SonidosWeb/muertePopo.wav');
+  	this.game.load.audio('puntosSound','Sounds/SonidosWeb/puntos.wav');
+  	this.game.load.audio('marcadorSound','Sounds/melodias/marcador.wav');
   },
 
   create: function () {

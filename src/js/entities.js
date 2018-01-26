@@ -16,7 +16,9 @@ function Movable (game, x, y, graphic){
  	this.paused = false;
  	this.muerto = false;
  	Objeto.call(this, game, x, y, graphic);
-  
+	this.killEnemySound = game.add.audio('killEnemySound');
+	this.killBirdSound = game.add.audio('killBirdSound');  
+
 };
 Movable.prototype = Object.create(Objeto.prototype);
 Movable.prototype.constructor = Movable;
@@ -99,16 +101,21 @@ function Popo (game, x, y, martillo, graphic,salto){
  	this.muere = true;
  	this.suelo;
 	
+	//ANIMACIONES
 	this.MoveLeftPopo = this.animations.add('MoveRightPopo',[7,8,9,10]);
 	this.MoveRightPopo = this.animations.add('MoveLeftPopo',[6,5,4,3]);
-
 	this.JumpRightPopo = this.animations.add('JumpRightPopo',[11,12]);
 	this.JumpLeftPopo = this.animations.add('JumpLeftPopo',[2,1]);
-
 	this.AtaqueRightPopo = this.animations.add('AtaqueRightPopo',[12,13,27]);
 	this.AtaqueLeftPopo = this.animations.add('AtaqueLeftPopo',[1,0,14]);
-
 	this.MuertePopo = this.animations.add('MuertePopo',[33,34,35,36]);
+	
+	//SONIDOS
+	this.jumpSound = game.add.audio('jumpSound');
+	this.popoMuerteSound = game.add.audio('popoMuerteSound');
+	this.jumpSound = game.add.audio('jumpSound');
+	this.jumpSound = game.add.audio('jumpSound');
+
 };
 Popo.prototype = Object.create(Movable.prototype);
 Popo.prototype.constructor = Popo;
@@ -154,6 +161,7 @@ Popo.prototype.keyboardInput = function(){
 	}
 	//SALTO-------------------------------------
   	else if (this._cursors.up.isDown&&this.body.onFloor()){
+  		this.jumpSound.play();
   		this.muere = true;
 		this.alpha = 1;
   		if(!this.atacando){
@@ -215,6 +223,7 @@ Popo.prototype.morir = function (){
 		this.vivo = false;
 		this.vidas--;
 		this.play('MuertePopo',3);
+		this.popoMuerteSound.play();
 		this.tiempo = this.game.time.totalElapsedSeconds();
 		//this.MuertePopo.onComplete.add(this.resetPopo,this);
 		//this.kill();
@@ -275,6 +284,7 @@ Yeti.prototype.update = function(){
 };
 
 Yeti.prototype.morir = function (){
+	this.killEnemySound.play();
 	this.muerto = true;
 	this._direction = - this._direction;
 	this._velocity = this._velocity + 3;
@@ -309,6 +319,7 @@ Oso.prototype.update = function(){
 };
 
 Oso.prototype.morir = function (){
+	this.killEnemySound.play();
 	this.muerto = true;
 	this._direction = 0;
 	this.body.enable = false;
@@ -364,6 +375,7 @@ Pajaro.prototype.update = function(){
 		this.move();
 	}
 	else{
+		//this.killBirdSound.play();
 		this.kill();
 	}
 	if(this.tiempo > this.timeToCambio){
@@ -387,6 +399,7 @@ Pajaro.prototype.numeroRandom = function(max, min){
 }
 
 Pajaro.prototype.morir = function (){
+	this.killBirdSound.play();
 	this.muerto = true;
 	this._direction = 0;
 	this.body.enable = false;

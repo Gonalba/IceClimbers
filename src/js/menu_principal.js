@@ -4,6 +4,11 @@ var pos1 = {'x': 280, 'y': 327};
 var pos2 = {'x': 250, 'y': 427 };
 var MenuPcpal = {
 	create: function () {
+    this.game.sound.stopAll();
+    this.menuMelody = this.game.add.audio('menuMelody',0.3,true);
+    this.menuMelody.play();
+    this.marcadorSound = this.game.add.sound('marcadorSound');
+
     cursors = this.game.input.keyboard.createCursorKeys();
     this.enterKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
     this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.ENTER);
@@ -36,6 +41,7 @@ update: function(){
 
 },
 mueveMartillo: function(){
+  this.marcadorSound.play();
     if(this.martillo.x === pos1.x){
         this.martillo.x = pos2.x;
         this.martillo.y = pos2.y;
@@ -47,11 +53,12 @@ mueveMartillo: function(){
   },
 	
 	actionOnClickPlay: function(){
+    this.menuMelody.stop();
 		this.game.state.start('play');
   },
 
     actionOnClickCreditos: function(){
-    this.game.state.start('creditos');    
+    this.game.state.start('creditos',this.menuMelody);    
 },
 
 };
