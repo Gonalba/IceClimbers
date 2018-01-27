@@ -17,7 +17,7 @@ var GameOver = {
 			this.buttonPlay = this.game.add.sprite(300, 325, 'playBTN');
 	    this.buttonPlay.scale.setTo(0.5, 0.5);
 
-	    this.menu = this.game.add.sprite(300, 425, 'menuBTN');
+	    this.menu = this.game.add.sprite(300, 425, 'menuBTNgo');
 	    this.menu.scale.setTo(0.5, 0.5);   
 
 	},

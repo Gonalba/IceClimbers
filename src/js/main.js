@@ -40,6 +40,7 @@ var PreloaderScene = {
     this.game.load.image('martilloMenu', 'images/martilloMenu.png');
   //Imágenes pausa juego
     this.game.load.image('menuBTN', 'images/MainMenu.png');
+    this.game.load.image('menuBTNgo', 'images/MainMenuGO.png');
     this.game.load.image('resumeBTN', 'images/resume.png');
     this.game.load.image('resetBTN', 'images/reset.png');
 
@@ -51,10 +52,19 @@ var PreloaderScene = {
     this.game.load.spritesheet('personajesPt', 'images/SpritesJson/Personajes.png', 38, 26, 200);
     this.game.load.image('vidasPopo', 'images/vida.png');
     
+  //Créditos
+    this.game.load.image('Gonzalo', 'images/Creditos/Gonzalo.png');
+    this.game.load.image('Celia', 'images/Creditos/Celia.png');
+    this.game.load.image('LogoGrupo', 'images/Creditos/LogoGrupo.png');
+    this.game.load.image('Asignatura', 'images/Creditos/Asignatura.png');
+    this.game.load.image('Nintendo', 'images/Creditos/Nintendo.png');
+    this.game.load.image('Uni', 'images/Creditos/Uni.png');
+
+
   //Mapa
-    this.game.load.tilemap('mapa', 'images/Mapa1.json', null, Phaser.Tilemap.TILED_JSON);
-    this.game.load.tilemap('mapa2', 'images/Mapa2.json', null, Phaser.Tilemap.TILED_JSON);
-    this.game.load.tilemap('mapa3', 'images/Mapa3.json', null, Phaser.Tilemap.TILED_JSON);
+    this.game.load.tilemap('mapa', 'Maps/Mapa1.json', null, Phaser.Tilemap.TILED_JSON);
+    this.game.load.tilemap('mapa2', 'Maps/Mapa2.json', null, Phaser.Tilemap.TILED_JSON);
+    this.game.load.tilemap('mapa3', 'Maps/Mapa3.json', null, Phaser.Tilemap.TILED_JSON);
     this.game.load.image('tiles', 'images/TileSet.png');
 
   //Sonidos
