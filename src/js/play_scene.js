@@ -347,7 +347,7 @@ var PlayScene = {
 			}
 			else{	//Si el hueco sí había sido detectado -> "detectado" lo pone a false y crea un tile nuevo en el hueco que corresponde.
 				if (obj._direction === obj.auxD){ //Si va en la dirección original en la que ha detectado el hueco significa que ha llegado al final y así que coloca el tile
-					self.detectado = false;
+					obj.detectado = false;
 					self.map.putTile(7, self.varX, self.varY, self.groundLayer);
 				}
 				else{//Si no se habrá quedado encerrado y muere

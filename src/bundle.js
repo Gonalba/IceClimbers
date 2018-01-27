@@ -3,11 +3,31 @@
 var scene;
 var Creditos = {
 	create: function () {
-		this.escKey = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
-    this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.S);
 
-    this.menu = this.game.add.sprite(25, 25, 'menuBTN');
+	this.escKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+    this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.ESC);
+
+    this.menu = this.game.add.sprite(500, 600, 'menuBTN');
     this.menu.scale.setTo(0.30, 0.3);
+
+	this.Gonzalo = this.game.add.sprite(75, 50, 'Gonzalo');
+	this.Gonzalo.scale.setTo(0.4, 0.4);
+
+	this.Celia = this.game.add.sprite(450, 50, 'Celia');
+	this.Celia.scale.setTo(0.4, 0.4);
+
+	this.Logo = this.game.add.sprite(275, 50, 'LogoGrupo');
+		this.Logo.scale.setTo(0.3, 0.3);
+
+	this.Asignatura = this.game.add.sprite(25, 450, 'Asignatura');
+	this.Asignatura.scale.setTo(0.3, 0.3);
+	this.Uni = this.game.add.sprite(420, 500, 'Uni');
+	this.Uni.scale.setTo(0.3, 0.3);
+
+	this.Nintendo = this.game.add.sprite(250, 250, 'Nintendo');
+	this.Nintendo.scale.setTo(0.3, 0.3);
+
+
 	},
   update: function(){
     this.escKey.onDown.add(this.actionOnClick, this);      
@@ -498,8 +518,8 @@ module.exports = {
 },{}],3:[function(require,module,exports){
 'use strict';
 var cursors 
-var pos1 = {'x': 280, 'y': 327};
-var pos2 = {'x': 250, 'y': 427 };
+var pos1 = {'x': 270, 'y': 327};
+var pos2 = {'x': 220, 'y': 427 };
 var scene;
 var GameOver = {
 	create: function () {
@@ -510,12 +530,14 @@ var GameOver = {
 	    this.enterKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 	    this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.ENTER);
 
+      this.GO = this.game.add.sprite(75, 75, 'GameOver');
+      this.GO.scale.setTo(0.7, 0.7);
 	    this.martillo = this.game.add.sprite(pos1.x, pos1.y, 'martilloMenu');
 	    this.martillo.scale.setTo(0.4, 0.4);
-			this.buttonPlay = this.game.add.sprite(300, 325, 'playBTN');
+			this.buttonPlay = this.game.add.sprite(pos1.x+15, pos1.y -2, 'playBTN');
 	    this.buttonPlay.scale.setTo(0.5, 0.5);
 
-	    this.menu = this.game.add.sprite(300, 425, 'menuBTN');
+	    this.menu = this.game.add.sprite(pos2.x+45, pos2.y -2, 'menuBTNgo');
 	    this.menu.scale.setTo(0.5, 0.5);   
 
 	},
@@ -1418,6 +1440,7 @@ var PreloaderScene = {
     this.game.load.image('martilloMenu', 'images/martilloMenu.png');
   //Imágenes pausa juego
     this.game.load.image('menuBTN', 'images/MainMenu.png');
+    this.game.load.image('menuBTNgo', 'images/MainMenuGO.png');
     this.game.load.image('resumeBTN', 'images/resume.png');
     this.game.load.image('resetBTN', 'images/reset.png');
 
@@ -1429,15 +1452,26 @@ var PreloaderScene = {
     this.game.load.spritesheet('personajesPt', 'images/SpritesJson/Personajes.png', 38, 26, 200);
     this.game.load.image('vidasPopo', 'images/vida.png');
     
+  //Créditos
+    this.game.load.image('Gonzalo', 'images/Creditos/Gonzalo.png');
+    this.game.load.image('Celia', 'images/Creditos/Celia.png');
+    this.game.load.image('LogoGrupo', 'images/Creditos/LogoGrupo.png');
+    this.game.load.image('Asignatura', 'images/Creditos/Asignatura.png');
+    this.game.load.image('Nintendo', 'images/Creditos/Nintendo.png');
+    this.game.load.image('Uni', 'images/Creditos/Uni.png');
+   
+    this.game.load.image('GameOver', 'images/GameOver.png');
+
+
   //Mapa
-    this.game.load.tilemap('mapa', 'images/Mapa1.json', null, Phaser.Tilemap.TILED_JSON);
-    this.game.load.tilemap('mapa2', 'images/Mapa2.json', null, Phaser.Tilemap.TILED_JSON);
-    this.game.load.tilemap('mapa3', 'images/Mapa3.json', null, Phaser.Tilemap.TILED_JSON);
+    this.game.load.tilemap('mapa', 'Maps/Mapa1.json', null, Phaser.Tilemap.TILED_JSON);
+    this.game.load.tilemap('mapa2', 'Maps/Mapa2.json', null, Phaser.Tilemap.TILED_JSON);
+    this.game.load.tilemap('mapa3', 'Maps/Mapa3.json', null, Phaser.Tilemap.TILED_JSON);
     this.game.load.image('tiles', 'images/TileSet.png');
 
   //Sonidos
   	this.game.load.audio('himalayaMelody',['Sounds/melodias/himalaya.mp3','Sounds/melodias/himalaya.ogg']);
-  	this.game.load.audio('menuMelody',['Sounds/melodias/Menu1.mp3','Sounds/melodias/Menu1.ogg']);
+  	this.game.load.audio('menuMelody','Sounds/melodias/Menu1.ogg');
   	this.game.load.audio('OnlyYouMelody','Sounds/melodias/OnlyYou.mp3');
   	this.game.load.audio('jumpSound','Sounds/SonidosWeb/jump.wav');
   	this.game.load.audio('killEnemySound','Sounds/SonidosWeb/matarEnemigo.wav');
@@ -1445,7 +1479,7 @@ var PreloaderScene = {
   	this.game.load.audio('popoMuerteSound','Sounds/SonidosWeb/muertePopo.wav');
   	this.game.load.audio('puntosSound','Sounds/SonidosWeb/puntos.wav');
   	this.game.load.audio('marcadorSound','Sounds/melodias/marcador.wav');
-  	this.game.load.audio('bonusSound',['Sounds/melodias/Menu2.mp3','Sounds/melodias/Bonus.ogg']);
+  	this.game.load.audio('bonusSound','Sounds/melodias/Bonus.ogg');
 
   	this.game.load.onLoadComplete.add(this.loadComplete, this);
   },
@@ -1890,7 +1924,7 @@ var PlayScene = {
 			}
 			else{	//Si el hueco sí había sido detectado -> "detectado" lo pone a false y crea un tile nuevo en el hueco que corresponde.
 				if (obj._direction === obj.auxD){ //Si va en la dirección original en la que ha detectado el hueco significa que ha llegado al final y así que coloca el tile
-					self.detectado = false;
+					obj.detectado = false;
 					self.map.putTile(7, self.varX, self.varY, self.groundLayer);
 				}
 				else{//Si no se habrá quedado encerrado y muere

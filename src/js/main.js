@@ -40,6 +40,7 @@ var PreloaderScene = {
     this.game.load.image('martilloMenu', 'images/martilloMenu.png');
   //Imágenes pausa juego
     this.game.load.image('menuBTN', 'images/MainMenu.png');
+    this.game.load.image('menuBTNgo', 'images/MainMenuGO.png');
     this.game.load.image('resumeBTN', 'images/resume.png');
     this.game.load.image('resetBTN', 'images/reset.png');
 
@@ -51,15 +52,26 @@ var PreloaderScene = {
     this.game.load.spritesheet('personajesPt', 'images/SpritesJson/Personajes.png', 38, 26, 200);
     this.game.load.image('vidasPopo', 'images/vida.png');
     
+  //Créditos
+    this.game.load.image('Gonzalo', 'images/Creditos/Gonzalo.png');
+    this.game.load.image('Celia', 'images/Creditos/Celia.png');
+    this.game.load.image('LogoGrupo', 'images/Creditos/LogoGrupo.png');
+    this.game.load.image('Asignatura', 'images/Creditos/Asignatura.png');
+    this.game.load.image('Nintendo', 'images/Creditos/Nintendo.png');
+    this.game.load.image('Uni', 'images/Creditos/Uni.png');
+   
+    this.game.load.image('GameOver', 'images/GameOver.png');
+
+
   //Mapa
-    this.game.load.tilemap('mapa', 'images/Mapa1.json', null, Phaser.Tilemap.TILED_JSON);
-    this.game.load.tilemap('mapa2', 'images/Mapa2.json', null, Phaser.Tilemap.TILED_JSON);
-    this.game.load.tilemap('mapa3', 'images/Mapa3.json', null, Phaser.Tilemap.TILED_JSON);
+    this.game.load.tilemap('mapa', 'Maps/Mapa1.json', null, Phaser.Tilemap.TILED_JSON);
+    this.game.load.tilemap('mapa2', 'Maps/Mapa2.json', null, Phaser.Tilemap.TILED_JSON);
+    this.game.load.tilemap('mapa3', 'Maps/Mapa3.json', null, Phaser.Tilemap.TILED_JSON);
     this.game.load.image('tiles', 'images/TileSet.png');
 
   //Sonidos
   	this.game.load.audio('himalayaMelody',['Sounds/melodias/himalaya.mp3','Sounds/melodias/himalaya.ogg']);
-  	this.game.load.audio('menuMelody',['Sounds/melodias/Menu1.mp3','Sounds/melodias/Menu1.ogg']);
+  	this.game.load.audio('menuMelody','Sounds/melodias/Menu1.ogg');
   	this.game.load.audio('OnlyYouMelody','Sounds/melodias/OnlyYou.mp3');
   	this.game.load.audio('jumpSound','Sounds/SonidosWeb/jump.wav');
   	this.game.load.audio('killEnemySound','Sounds/SonidosWeb/matarEnemigo.wav');
@@ -67,7 +79,7 @@ var PreloaderScene = {
   	this.game.load.audio('popoMuerteSound','Sounds/SonidosWeb/muertePopo.wav');
   	this.game.load.audio('puntosSound','Sounds/SonidosWeb/puntos.wav');
   	this.game.load.audio('marcadorSound','Sounds/melodias/marcador.wav');
-  	this.game.load.audio('bonusSound',['Sounds/melodias/Menu2.mp3','Sounds/melodias/Bonus.ogg']);
+  	this.game.load.audio('bonusSound','Sounds/melodias/Bonus.ogg');
 
   	this.game.load.onLoadComplete.add(this.loadComplete, this);
   },
