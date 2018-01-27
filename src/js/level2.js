@@ -90,7 +90,7 @@ var PlayScene = {
         this.menu.alpha = this.resume.alpha = this.reset.alpha = 0;
 		
 		//MAPA------------------------------
-		this.map = this.game.add.tilemap('mapa');
+		this.map = this.game.add.tilemap('mapa2');
 		this.map.addTilesetImage('TileSet','tiles');
 
 
@@ -148,7 +148,7 @@ var PlayScene = {
     		this.bonus = true;
     		this.playSound = false;
     		this.himalayaMelody.fadeOut(1000)
-    		//this._bird.paused();
+    		//this._bird.morir();
     		if(this.himalayaMelody.onFadeComplete){
     			this.bonusSound.fadeIn(5000,true);
     		}
@@ -248,7 +248,7 @@ var PlayScene = {
 			if(this.bonus){
 				this.game.state.start('level2');
 			}
-			else if(this._popo.muere && this.i < 3){
+			else if(this._popo.muere && this.i < 3 ){
 				this._popo.morir();
 				this.vidas[this.i].destroy();
 				this.i++;
@@ -288,7 +288,7 @@ var PlayScene = {
 			//this.pterodactilo.addChild(this._popo);
 			if(this.game.time.totalElapsedSeconds() >= this.time + 5){
 				this.game.sound.stopAll();
-				this.game.state.start('level2');
+				this.game.state.start('level3');
 			}
 		}
 	},
@@ -393,22 +393,6 @@ var PlayScene = {
 		}
 	}
 	})},
-	huecoOso: function(){
-		/*if(this._oso.suelo){
-
-			if(this._oso._direction == 1){//Si va hacia la derecha
-				this.varX = Math.trunc((this._oso.x + this.width)/this.tileW);
-				this.varY= Math.trunc((this.y + this.height)/this.tileH);
-			}
-			else{//Hacia la izqd
-				this.varX = Math.trunc((this._oso.x)/this.tileW);
-				this.varY= Math.trunc((this._oso.y + this.height)/this.tileH);
-			}
-			if(this.map.getTile(this.varX, this.varY) === null){ //Si encuentra un hueco en el suelo
-				this._oso.goBack();				
-			}
-		}*/
-	},
 
 	pause: function(){
 		if(!this.paused){
