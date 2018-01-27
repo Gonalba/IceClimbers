@@ -9,6 +9,7 @@ var PlayScene = {
 		//AUDIO--------------------------------------
 		this.himalayaMelody = this.game.add.audio('himalayaMelody',0.3,true);
 		this.himalayaMelody.play();
+		this.himalayaMelody.volume = 0.3;
 		this.puntosSound = this.game.add.audio('puntosSound');
 
 		this.bonusSound = this.game.add.sound('bonusSound',0.3,true);
@@ -45,15 +46,15 @@ var PlayScene = {
 		this._bird.width *= 3;
 		this.game.world.addChild(this._bird);
 		//OSO---------------------------------------
-		this._oso = new entities.Oso(this.game,10,2200,'oso');
+		/*this._oso = new entities.Oso(this.game,10,2200,'oso',this.game.camera);
 		this._oso.height *= 2;
 		this._oso.width *= 4;
-		this.game.world.addChild(this._oso);
+		this.game.world.addChild(this._oso);*/
 
 		//GRUPO ENEMIGOS------------------------
 		this.enemiesGroup = this.game.add.group();
 		this.enemiesGroup.add(this._yeti);
-		this.enemiesGroup.add(this._oso);
+		//this.enemiesGroup.add(this._oso);
 		this.enemiesGroup.add(this._bird);
 
 		this.menu = this.game.add.sprite(295, 400, 'menuBTN');//this.game.world.centerX - 265, this.game.world.centerY-260,'icestart');
@@ -112,6 +113,9 @@ var PlayScene = {
     	this.gameover = false;	
     	this.playSound = true;
     	this.win = false;
+    	this.bonus = false;
+    	this.tiempoAparicion = 10;
+    	this.timeReset = true;
 
 		this.configure();	       
 	},
@@ -128,6 +132,7 @@ var PlayScene = {
     	this.game.debug.text(this.puntos, 0, 500);
 
     	if(this.game.camera.y <= 660&&this.playSound){
+    		this.bonus = true;
     		this.playSound = false;
     		this.himalayaMelody.fadeOut(1000);
     		if(this.himalayaMelody.onFadeComplete){
@@ -140,14 +145,50 @@ var PlayScene = {
     	this.setCamera();
 		this.collision();
 		this.ptosUdate();
+
+		/*if(this.timeReset){
+			this.Xpopo = this._popo.x;
+			this.timeReset = false;
+			this.tiempo = this.game.time.totalElapsedSeconds();
+		}
+
+		if(this.game.time.totalElapsedSeconds() > this.tiempo + this.tiempoAparicion){
+			this.timeReset = true;
+			this.addOso();
+		}*/
+		if(this._popo.x != this.Xpopo){
+			this.Xpopo = this._popo.x;
+			this.timeReset = true;
+			this.tiempo = this.game.time.totalElapsedSeconds();
+		}
+
+		if(this._popo.x === this.Xpopo&&this.game.time.totalElapsedSeconds() > this.tiempo + this.tiempoAparicion&&!this.bonus&&this.timeReset){
+			this.timeReset = false;
+			this.addOso();
+		}
+		this.game.debug.text(this.timeReset, 0, 400);
+		this.game.debug.text(this.Xpopo, 0, 300);
+		this.game.debug.text(this._popo.pulsaTecla, 0, 200);
+		this.game.debug.text(this.bonus, 100, 200);
+
+
+
+	},
+	addOso : function(){
+		this._oso = new entities.Oso(this.game,10,this._popo.y-220,'oso',this.game.camera);
+		this._oso.height *= 2;
+		this._oso.width *= 4;
+		this.game.physics.arcade.enable(this._oso); 
+		this.game.world.addChild(this._oso);
+		this.enemiesGroup.add(this._oso);
 	},
 
 	render : function(){
-		this.game.debug.text(this.game.camera.y, 32, 32);
+		this.game.debug.bodyInfo(this._popo, 32, 32);
 
 		this.game.debug.body(this._popo);
 		this.game.debug.body(this.martillo);
-		this.game.debug.body(this._oso);
+		//this.game.debug.body(this._oso);
 		this.game.debug.body(this._yeti);
 		this.game.debug.body(this._bird);
 		this.game.debug.body(this.pterodactilo);
@@ -186,7 +227,10 @@ var PlayScene = {
 
 		//MUERTE POPO, VIDAS Y FIN JUEGO-------------------------------------------
 		if(this.game.physics.arcade.collide(this._popo, this.enemiesGroup) || this._popo.y >= this.game.camera.y + this.game.camera.height){
-			if(this._popo.muere && this.i < 3 ){
+			if(this.bonus){
+				this.gameOver();
+			}
+			else if(this._popo.muere && this.i < 3 ){
 				this._popo.morir();
 				this.vidas[this.i].destroy();
 				this.i++;
@@ -207,13 +251,7 @@ var PlayScene = {
 
 		//DETECCIÓN DE HUECOS POR EL YETI---------------------------------------
 		if(!this._yeti.muerto)
-<<<<<<< HEAD
 			this.huecoYeti();
-		if(!this._oso.muerto)
-			this.huecoOso();
-=======
-			this.hueco();
-
 		if (this.game.physics.arcade.overlap(this._popo, this.pterodactilo)){
 			if(!this.win){
 				this.time = this.game.time.totalElapsedSeconds();
@@ -222,14 +260,13 @@ var PlayScene = {
 
 			this._popo.body.gravity = false;
 			this._popo.x = this.pterodactilo.x;
-			this._popo.y = this.pterodactilo.y -20;
+			this._popo.y = this.pterodactilo.y - 20;
 			//this.pterodactilo.addChild(this._popo);
 			if(this.game.time.totalElapsedSeconds() >= this.time + 5){
 				this.game.sound.stopAll();
 				this.game.state.start('gameOver');
 			}
 		}
->>>>>>> d7716cb338395abd65f93ed7fc913e7fa85933b8
 	},
 
 	configure: function(){ //configura las físicas de los elementos del juego
@@ -313,20 +350,20 @@ var PlayScene = {
 	}
 	},
 	huecoOso: function(){
-		if(this._oso.suelo){
+		/*if(this._oso.suelo){
 
-		if(this._oso._direction == 1){//Si va hacia la derecha
-			this.varX = Math.trunc((this._oso.x + this.width)/this.tileW);
-			this.varY= Math.trunc((this.y + this.height)/this.tileH);
-		}
-		else{//Hacia la izqd
-			this.varX = Math.trunc((this._oso.x)/this.tileW);
-			this.varY= Math.trunc((this._oso.y + this.height)/this.tileH);
-		}
-		if(this.map.getTile(this.varX, this.varY) === null){ //Si encuentra un hueco en el suelo
-			this._oso.goBack();				
-		}
-	}
+			if(this._oso._direction == 1){//Si va hacia la derecha
+				this.varX = Math.trunc((this._oso.x + this.width)/this.tileW);
+				this.varY= Math.trunc((this.y + this.height)/this.tileH);
+			}
+			else{//Hacia la izqd
+				this.varX = Math.trunc((this._oso.x)/this.tileW);
+				this.varY= Math.trunc((this._oso.y + this.height)/this.tileH);
+			}
+			if(this.map.getTile(this.varX, this.varY) === null){ //Si encuentra un hueco en el suelo
+				this._oso.goBack();				
+			}
+		}*/
 	},
 
 	gameOver: function(){
@@ -368,10 +405,17 @@ var PlayScene = {
 		}
 	},
 
-	setCamera: function(){//La cámara se va recolocando según Popo va ascendiendo por la montaña -> cuando está por encima de la mitad de la cámara y se encuentra apoyado en el suelo
-    	if(this._popo.suelo === true && this._popo.y < this.game.camera.y + this.game.camera.height/2){ 
+	setCamera: function(){//La cámara se va recolocando según Popo va ascendiendo por la montaña -> 
+		//cuando está por encima de la mitad de la cámara y se encuentra apoyado en el suelo
+    	if(this._popo.suelo && this._popo.y < this.game.camera.y + this.game.camera.height/2){ 
+    		this.movCamera = true;
+    	}else if(this._popo.y >= this.game.camera.y + this.game.camera.height/2)
+    		this.movCamera = false;
+
+    	if(this.movCamera){
     		this.game.camera.y -=10 ;
     	}
+    	
 	},
 };
 
