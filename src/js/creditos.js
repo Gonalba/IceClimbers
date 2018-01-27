@@ -2,8 +2,8 @@
 var scene;
 var Creditos = {
 	create: function () {
-		this.escKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
-    this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.ESC);
+		this.escKey = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
+    this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.S);
 
     this.menu = this.game.add.sprite(25, 25, 'menuBTN');
     this.menu.scale.setTo(0.30, 0.3);
