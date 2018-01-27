@@ -60,7 +60,7 @@ var PreloaderScene = {
     this.game.load.image('Nintendo', 'images/Creditos/Nintendo.png');
     this.game.load.image('Uni', 'images/Creditos/Uni.png');
    
-    this.game.load.image('GameOver', 'imagess/GameOver.png');
+    this.game.load.image('GameOver', 'images/GameOver.png');
 
 
   //Mapa
