@@ -1,5 +1,6 @@
 'use strict';
 
+var Level2 = require('./level2.js');
 var PlayScene = require('./play_scene.js');
 var MenuPrincipal = require('./menu_principal.js');
 var Creditos = require('./creditos.js');
@@ -80,6 +81,7 @@ window.onload = function () {
   game.state.add('boot', BootScene);
   game.state.add('preloader', PreloaderScene);
   game.state.add('play', PlayScene);
+  game.state.add('level2', Level2);
   game.state.add('menu_principal', MenuPrincipal);
   game.state.add('creditos', Creditos);
   game.state.add('gameOver', GameOver);

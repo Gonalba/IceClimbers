@@ -119,6 +119,7 @@ function Popo (game, x, y, martillo, graphic,salto){
  	this.posX;
 	this.posY;
  	this.suelo;
+ 	this.game = game;
 	
 	//ANIMACIONES
 	this.MoveLeftPopo = this.animations.add('MoveRightPopo',[7,8,9,10]);
@@ -153,7 +154,7 @@ Popo.prototype.update = function(){
 
 		}
 		else{
-			this.MuertePopo.onComplete.add(this.kill, this);
+			this.game.state.start('gameOver');
 		}
 	}
 	this.suelo = this.body.onFloor();

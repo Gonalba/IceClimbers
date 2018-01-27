@@ -125,6 +125,9 @@ var PlayScene = {
 		else if(this.paused){
     		this.exitKey.onDown.add(this.goMenu, this);
     		this.resetKey.onDown.add(this.resetGame, this);
+    	} 
+    	if(this.gameover){
+		    this.exitKey.onDown.add(this.goMenu, this);
     	}
     	this.game.debug.text(this.puntos, 0, 500);
 
@@ -143,6 +146,16 @@ var PlayScene = {
 		this.collision();
 		this.ptosUdate();
 
+		/*if(this.timeReset){
+			this.Xpopo = this._popo.x;
+			this.timeReset = false;
+			this.tiempo = this.game.time.totalElapsedSeconds();
+		}
+
+		if(this.game.time.totalElapsedSeconds() > this.tiempo + this.tiempoAparicion){
+			this.timeReset = true;
+			this.addOso();
+		}*/
 		if(this._popo.x != this.Xpopo){
 			this.Xpopo = this._popo.x;
 			this.timeReset = true;
@@ -157,6 +170,7 @@ var PlayScene = {
 		this.game.debug.text(this.Xpopo, 0, 300);
 		this.game.debug.text(this._popo.pulsaTecla, 0, 200);
 		this.game.debug.text(this.bonus, 100, 200);
+
 
 
 	},
@@ -214,18 +228,18 @@ var PlayScene = {
 		//MUERTE POPO, VIDAS Y FIN JUEGO-------------------------------------------
 		if(this.game.physics.arcade.collide(this._popo, this.enemiesGroup) || this._popo.y >= this.game.camera.y + this.game.camera.height){
 			if(this.bonus){
-				this.game.state.start('level2');
+				this.gameOver();
 			}
 			else if(this._popo.muere && this.i < 3 ){
 				this._popo.morir();
 				this.vidas[this.i].destroy();
 				this.i++;
 			}
-			else if(this._popo.muere &&this.i < 4){
+			else if(this.i >= 3){
 				this._popo.morir();
+				this._popo.destroy();
+				this.gameOver();
 			}
-			if(this._popo.vidas <= 0)
-				this.game.state.start('gameOver');
 		}
 
 		//COLISIÓN CON LOS BONUS--------------------------------------------------
@@ -250,7 +264,7 @@ var PlayScene = {
 			//this.pterodactilo.addChild(this._popo);
 			if(this.game.time.totalElapsedSeconds() >= this.time + 5){
 				this.game.sound.stopAll();
-				this.game.state.start('level2');
+				this.game.state.start('gameOver');
 			}
 		}
 	},
@@ -352,6 +366,14 @@ var PlayScene = {
 		}*/
 	},
 
+	gameOver: function(){
+    	this.gameover = true;
+		this._popo.pause();
+		this.imagen = this.game.add.sprite(150, 200,'icestart');
+		this.imagen.fixedToCamera = true;
+    	this.imagen.scale.setTo(1.5, 1.5);
+	},
+
 	pause: function(){
 		if(!this.paused){
 			this._popo.pause();
@@ -359,7 +381,7 @@ var PlayScene = {
 			this.paused = true;
 			this.menu.alpha = this.resume.alpha = this.reset.alpha = 1;
 		}
-		else if(this.paused){
+		else if(this.paused||this.gameover){
 			this._popo.pause();
 			this.enemiesGroup.callAll('pause');
 			this.paused = false;
@@ -370,7 +392,7 @@ var PlayScene = {
 	},
 
 	goMenu: function(){
-		if(this.paused){
+		if(this.paused||this.gameover){
 			this.game.sound.stopAll();
 			this.game.state.start('menu_principal');
 		}
