@@ -71,7 +71,7 @@ var PreloaderScene = {
 
   //Sonidos
   	this.game.load.audio('himalayaMelody',['Sounds/melodias/himalaya.mp3','Sounds/melodias/himalaya.ogg']);
-  	this.game.load.audio('menuMelody','Sounds/melodias/Menu1.ogg');
+  	this.game.load.audio('menuMelody',['Sounds/melodias/Menu1.mp3','Sounds/melodias/Menu1.ogg']);
   	this.game.load.audio('OnlyYouMelody','Sounds/melodias/OnlyYou.mp3');
   	this.game.load.audio('jumpSound','Sounds/SonidosWeb/jump.wav');
   	this.game.load.audio('killEnemySound','Sounds/SonidosWeb/matarEnemigo.wav');
@@ -79,7 +79,7 @@ var PreloaderScene = {
   	this.game.load.audio('popoMuerteSound','Sounds/SonidosWeb/muertePopo.wav');
   	this.game.load.audio('puntosSound','Sounds/SonidosWeb/puntos.wav');
   	this.game.load.audio('marcadorSound','Sounds/melodias/marcador.wav');
-  	this.game.load.audio('bonusSound','Sounds/melodias/Bonus.ogg');
+  	this.game.load.audio('bonusSound',['Sounds/melodias/Menu2.mp3','Sounds/melodias/Bonus.ogg']);
 
   	this.game.load.onLoadComplete.add(this.loadComplete, this);
   },
