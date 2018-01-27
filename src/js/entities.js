@@ -51,6 +51,10 @@ Movable.prototype.pause = function(){
 		this.paused = false;
 	}
 };
+Movable.prototype.enSuelo = function(obj){
+	return(obj.body.onFloor());
+};
+
 
 //PTERODACTILO-----------------------------------------------------------------------
 function Pterodactilo (game,x,y,graphic){
@@ -292,9 +296,7 @@ Enemy.prototype.constructor = Enemy;
 Enemy.prototype.goBack = function(){
 	this._direction = -this._direction;
 };
-Enemy.prototype.numeroRandom = function(max, min){
-	return (Math.random() * (max - min) + min);
-};
+
 
 //YETI--------------------------------------------------------------------------------------
 function Yeti(game, x, y,  graphic){
@@ -302,6 +304,8 @@ function Yeti(game, x, y,  graphic){
 	this.MoveLeftYeti = this.animations.add('MoveRightYeti',[144,145,146]);
 	this.MoveRightYeti = this.animations.add('MoveLeftYeti',[143,142,141]);
 	this.MuertoYeti = this.animations.add('MuertoYeti',[140,147]);
+	this.detectado = false;
+	this.auxD;
 };
 Yeti.prototype = Object.create(Enemy.prototype);
 Yeti.prototype.constructor = Yeti;
@@ -323,8 +327,6 @@ Yeti.prototype.update = function(){
 		if(this.alpha <=0)
 			this.destroy();
 	}
-
-
 };
 
 Yeti.prototype.morir = function (){
@@ -362,8 +364,6 @@ Oso.prototype = Object.create(Enemy.prototype);
 Oso.prototype.constructor = Oso;
 
 Oso.prototype.update = function(){
-	
-
 	if(this.timeReset){
 		this.timeReset = false;
 		this.tiempo = this.game.time.totalElapsedSeconds();
@@ -374,8 +374,6 @@ Oso.prototype.update = function(){
 		this.jump();
 		this.camara.y -= 50;
 	}
-
-
 	if(!this.muerto){
 		this.move();
 		if(this._direction == 1)
@@ -421,9 +419,15 @@ Oso.prototype.saltar = function(){
 	if(this.tiempo > this.tiempoIni + this.tiempoSalto && !this.saltado){
 		this._velocity = 0;
 		this._direction = 0;
+<<<<<<< HEAD
+			if(this.tiempo > this.tiempoIni + this.tiempoSalto + 0.5){
+				//this.jump();
+				this.saltado = true;
+=======
 		if(this.tiempo > this.tiempoIni + this.tiempoSalto + 0.5){
 			this.jump();
 			this.saltado = true;
+>>>>>>> f937601119a5f80b7e2f8247a865871fb8dcc4f1
 
 		}
 	}
@@ -434,7 +438,7 @@ Oso.prototype.saltar = function(){
 	}
 },
 Oso.prototype.jump = function(){
-	this.body.velocity.y = -200;
+	//this.body.velocity.y = -200;
 };
 */
 Oso.prototype.morir = function (){
@@ -516,6 +520,9 @@ Pajaro.prototype.update = function(){
 			this.destroy();
 	}
 };
+Pajaro.prototype.numeroRandom = function(max, min){
+	return (Math.random() * (max - min) + min);
+};
 
 Pajaro.prototype.morir = function (){
 	this.killBirdSound.play();
@@ -525,7 +532,6 @@ Pajaro.prototype.morir = function (){
 };
 
 module.exports = {
-	Objeto: Objeto,
 	Popo: Popo,
 	Yeti: Yeti,
 	Oso: Oso,

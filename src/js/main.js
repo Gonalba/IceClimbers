@@ -1,4 +1,5 @@
 'use strict';
+//  <link href="styles.css" rel="stylesheet" type="text/css">
 
 var Level2 = require('./level2.js');
 var PlayScene = require('./play_scene.js');
@@ -26,7 +27,8 @@ var PreloaderScene = {
     this.loadingBar.anchor.setTo(0, 0.5);
     this.load.setPreloadSprite(this.loadingBar);
 
-   // this.game.load.bitmapFont('carrier_command', 'images/carrier_command.png', 'font/carrier_command.xml');
+   this.game.load.bitmapFont('fuente', 'fonts/font.png', 'fonts/font.fnt');
+   this.game.load.bitmapFont('fuente_verde', 'fonts/fontV.png', 'fonts/fontV.fnt');
 
     // TODO: load here the assets for the game
     this.game.load.image('logo', 'images/phaser.png');
