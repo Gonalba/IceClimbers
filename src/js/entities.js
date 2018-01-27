@@ -32,7 +32,7 @@ Movable.prototype.move = function(){
 	else if(this.x < 1)
 		this.x = this.game.width - this.width-30;
 /*lado a lado*/
-	if(this.x > this.game.width - this.width -30)
+	if(this.x > this.game.width - this.width - 5)
 		this._direction = -1;
 	else if(this.x < 1)
 		this._direction = 1;
@@ -54,9 +54,8 @@ Movable.prototype.pause = function(){
 Movable.prototype.enSuelo = function(obj){
 	return(obj.body.onFloor());
 };
-Movable.prototype.numeroRandom = function(max, min){
-	return (Math.random() * (max - min) + min);
-};
+
+
 //PTERODACTILO-----------------------------------------------------------------------
 function Pterodactilo (game,x,y,graphic){
 	Movable.call(this, game, x, y, graphic);
@@ -236,6 +235,7 @@ Popo.prototype.keyboardInput = function(){
 			this.frame = 7;
 		else if(this._direction === -1&&this.body.onFloor()&&!this.atacando)
 			this.frame = 6;	
+		this.pulsaTecla = false;
 	}
 }
 };
@@ -326,8 +326,6 @@ Yeti.prototype.update = function(){
 		if(this.alpha <=0)
 			this.destroy();
 	}
-
-
 };
 
 Yeti.prototype.morir = function (){
@@ -341,26 +339,40 @@ Yeti.prototype.morir = function (){
 
 
 //OSO--------------------------------------------------------------------------------------
-function Oso(game, x, y, graphic, mapa){
+function Oso(game, x, y, graphic, camera){
 	Enemy.call(this, game, x, y, graphic);
 	this.MoveLeftOso = this.animations.add('MoveRightOso',[0,1,2]);
 	this.MoveRightOso = this.animations.add('MoveLeftOso',[3,4,5]);
 	this._velocity = 5;
+
+	this.timeReset = true;
+	this.tiempoSalto = 5;
+	this.jumpPower = -400;
+	this.camara = camera;
+
+	/*
 	this.velAux = this._velocity;
 	this.dirAux = this._direction;
 	this.tiempoIni = 0;
-	this.tiempo=0;
+	this.tiempo = 0;
 	this.saltando = false;
 	this.map = mapa;
-	this.tiempoSalto = this.numeroRandom(3, 1.500);
+	this.tiempoSalto = this.numeroRandom(3, 1.500);*/
 };
 Oso.prototype = Object.create(Enemy.prototype);
 Oso.prototype.constructor = Oso;
 
 Oso.prototype.update = function(){
-	this.tiempo = this.game.time.totalElapsedSeconds();
-			this.move();
+	if(this.timeReset){
+		this.timeReset = false;
+		this.tiempo = this.game.time.totalElapsedSeconds();
+	}
 
+	if(this.game.time.totalElapsedSeconds() > this.tiempo + this.tiempoSalto){
+		this.timeReset = true;
+		this.jump();
+		this.camara.y -= 50;
+	}
 	if(!this.muerto){
 		this.move();
 		if(this._direction == 1)
@@ -373,7 +385,10 @@ Oso.prototype.update = function(){
 	}
 	else if (this.alpha <= 0)
 		this.destroy();
-	if(this.saltando){
+
+	
+
+	/*if(this.saltando){
 		this._velocity = 0;
 		this._direction = 0;
 		this.jump();
@@ -388,33 +403,43 @@ Oso.prototype.update = function(){
 	else{
 		this.movement();
 	}
-
-	};
-	Oso.prototype.movement = function(){
-		if(this.tiempo > this.tiempoIni + this.tiempoSalto && !this.saltado)
-			this.saltando = true;
-	}
+*/
+};
+Oso.prototype.jump = function(){
+	this.body.velocity.y = this.jumpPower;
+}
+/*
+Oso.prototype.movement = function(){
+	if(this.tiempo > this.tiempoIni + this.tiempoSalto && !this.saltado)
+		this.saltando = true;
+}
 Oso.prototype.saltar = function(){
 
 	if(this.tiempo > this.tiempoIni + this.tiempoSalto && !this.saltado){
 		this._velocity = 0;
 		this._direction = 0;
+<<<<<<< HEAD
 			if(this.tiempo > this.tiempoIni + this.tiempoSalto + 0.5){
 				//this.jump();
 				this.saltado = true;
+=======
+		if(this.tiempo > this.tiempoIni + this.tiempoSalto + 0.5){
+			this.jump();
+			this.saltado = true;
+>>>>>>> f937601119a5f80b7e2f8247a865871fb8dcc4f1
 
-			}
-		
+		}
+	}
 	else if(this.tiempo > this.tiempoIni + this.tiempoSalto + 0.5 && this.saltado){
 		this.body.velocity.y = 0;
 		this._velocity = this.velAux;
 		this._direction = this.dirAux;
 	}
-	}},
+},
 Oso.prototype.jump = function(){
 	//this.body.velocity.y = -200;
 };
-
+*/
 Oso.prototype.morir = function (){
 	this.killEnemySound.play();
 	this.muerto = true;
@@ -493,6 +518,9 @@ Pajaro.prototype.update = function(){
 		if(this.alpha <= 0)
 			this.destroy();
 	}
+};
+Pajaro.prototype.numeroRandom = function(max, min){
+	return (Math.random() * (max - min) + min);
 };
 
 Pajaro.prototype.morir = function (){
