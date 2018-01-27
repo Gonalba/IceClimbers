@@ -14,7 +14,6 @@ var PlayScene = {
 
 		this.bonusSound = this.game.add.sound('bonusSound',0.3,true);
 
-
 		this.tileH = 40;
 		this.tileW = this.world.width/11;
 
@@ -51,28 +50,23 @@ var PlayScene = {
 		this._bird.height *= 3;
 		this._bird.width *= 3;
 		this.game.world.addChild(this._bird);
-		//OSO---------------------------------------
-		/*this._oso = new entities.Oso(this.game,10,2200,'oso',this.game.camera);
-		this._oso.height *= 2;
-		this._oso.width *= 4;
-		this.game.world.addChild(this._oso);*/
 
 		//GRUPO ENEMIGOS------------------------
 		this.enemiesGroup = this.game.add.group();
 		this.enemiesGroup.add(this._bird);
 
 		//MENÚ DE PAUSA----------------------------------------------
-		this.menu = this.game.add.sprite(295, 400, 'menuBTN');//this.game.world.centerX - 265, this.game.world.centerY-260,'icestart');
+		this.menu = this.game.add.sprite(295, 400, 'menuBTN');
         this.menu.scale.setTo(0.5, 0.5);
         this.menu.fixedToCamera = true;
         this.menu.bringToTop();
 
-        this.resume = this.game.add.sprite(75, 300, 'resumeBTN');//this.game.world.centerX - 265, this.game.world.centerY-260,'icestart');
+        this.resume = this.game.add.sprite(75, 300, 'resumeBTN');
         this.resume.scale.setTo(0.5, 0.5);
         this.resume.fixedToCamera = true;
         this.resume.bringToTop();
 
-        this.reset = this.game.add.sprite(500, 300, 'resetBTN');//this.game.world.centerX - 265, this.game.world.centerY-260,'icestart');
+        this.reset = this.game.add.sprite(500, 300, 'resetBTN');
         this.reset.scale.setTo(0.5, 0.5);
         this.reset.fixedToCamera = true;
         this.reset.bringToTop();
@@ -107,7 +101,6 @@ var PlayScene = {
    		this.berenjenaGroup.add(this.berenjena1);
    		this.berenjenaGroup.add(this.berenjena2);
 
-
 		//VIDAS------------------------------------
 		this.vidas = new Array (3);
 		for (this.i = 0; this.i < 3; this.i++){
@@ -124,13 +117,13 @@ var PlayScene = {
    		this.textPtos =  this.game.add.bitmapText(500, 50, 'fuente','Score: 0' + this.puntos,50);
 		this.textPtos.fixedToCamera = true;
 
-
+		//VARIABLES DEL JUEGO-----------------------------------------------
     	this.paused = false;
     	this.gameover = false;	
     	this.playSound = true;
     	this.win = false;
     	this.bonus = false;
-    	this.tiempoAparicion = 20;
+    	this.tiempoAparicion = 30;
     	this.timeReset = true;
 
 		this.configure();	       
@@ -142,13 +135,10 @@ var PlayScene = {
     		this.exitKey.onDown.add(this.goMenu, this);
     		this.resetKey.onDown.add(this.resetGame, this);
     	}
-    	this.game.debug.text(this.puntos, 0, 500);
-
     	if(this.game.camera.y <= 660&&this.playSound){
     		this.bonus = true;
     		this.playSound = false;
     		this.himalayaMelody.fadeOut(1000)
-    		//this._bird.paused();
     		if(this.himalayaMelody.onFadeComplete){
     			this.bonusSound.fadeIn(5000,true);
     		}
@@ -170,12 +160,6 @@ var PlayScene = {
 			this.timeReset = false;
 			this.addOso();
 		}
-		this.game.debug.text(this.timeReset, 0, 400);
-		this.game.debug.text(this.Xpopo, 0, 300);
-		this.game.debug.text(this._popo.pulsaTecla, 0, 200);
-		this.game.debug.text(this.bonus, 100, 200);
-
-
 	},
 	addOso : function(){
 		this._oso = new entities.Oso(this.game,10,this._popo.y-220,'oso',this.game.camera);
@@ -187,14 +171,6 @@ var PlayScene = {
 	},
 
 	render : function(){
-		this.game.debug.bodyInfo(this._popo, 32, 32);
-
-		this.game.debug.body(this._popo);
-		this.game.debug.body(this.martillo);
-		//this.game.debug.body(this._oso);
-		this.game.debug.body(this._yeti);
-		this.game.debug.body(this._bird);
-		this.game.debug.body(this.pterodactilo);
 	},
 	collision: function(){
 		//COLISION CON EL MAPA---------------------------------------  		
@@ -203,17 +179,11 @@ var PlayScene = {
 		this.game.physics.arcade.collide(this.yetiGroup, this.groundLayer);
 
 		this.game.physics.arcade.collide(this._popo, this.cloudLayer);
-		//this.game.physics.arcade.collide(this.enemiesGroup, this.cloudLayer);
-		//this.game.physics.arcade.collide(this.yetiGroup, this.cloudLayer);
 
 		this.game.physics.arcade.collide(this._popo, this.bonusLayer);
-		//this.game.physics.arcade.collide(this.enemiesGroup, this.bonusLayer);
-		//this.game.physics.arcade.collide(this.enemiesGroup, this.bonusLayer);
 
 		//ROMPE SUELO SUPERIOR-------------------------------------------------------
 		if(this.game.physics.arcade.overlap(this.martillo, this.groundLayer)){
-			//this.game.debug.text('Popo: ' + (this._popo.x + this.martillo.x) + ", " + (this._popo.y + this.martillo.y), 0, 400);
-
 			this.varX = Math.trunc((this._popo.x + this.martillo.x+20)/this.tileW);
 			this.varY = Math.trunc((this._popo.y + this.martillo.y)/this.tileH);
 			
@@ -221,12 +191,8 @@ var PlayScene = {
 				this._popo.body.velocity.y = 0;
 				this.puntosSound.play();
 				this.puntos+=10;
-			   	//this.textSumaPtos =  this.game.add.bitmapText(Math.random() * (600 - 100) + 100, Math.random() * (600 - 100) + 100, 'fuente_verde','+' + 10, 50);
-			   	//this.textSumaPtos.fixedToCamera = true;
-
 				this.sumaPuntos(10);
 			}
-			//this.game.debug.text('Tile: ' + this.varX + ", " + this.varY, 0, 500);
 		}
 
 		//COLISION CON ENEMIGOS------------------------------------------------------------
@@ -274,8 +240,6 @@ var PlayScene = {
 			if(!obj.muerto)
 				self.huecoYeti();
 		})
-		/*if(!this._oso.muerto)
-			this.huecoOso();*/
 		if (this.game.physics.arcade.overlap(this._popo, this.pterodactilo)){
 			if(!this.win){
 				this.time = this.game.time.totalElapsedSeconds();
@@ -393,22 +357,6 @@ var PlayScene = {
 		}
 	}
 	})},
-	huecoOso: function(){
-		/*if(this._oso.suelo){
-
-			if(this._oso._direction == 1){//Si va hacia la derecha
-				this.varX = Math.trunc((this._oso.x + this.width)/this.tileW);
-				this.varY= Math.trunc((this.y + this.height)/this.tileH);
-			}
-			else{//Hacia la izqd
-				this.varX = Math.trunc((this._oso.x)/this.tileW);
-				this.varY= Math.trunc((this._oso.y + this.height)/this.tileH);
-			}
-			if(this.map.getTile(this.varX, this.varY) === null){ //Si encuentra un hueco en el suelo
-				this._oso.goBack();				
-			}
-		}*/
-	},
 
 	pause: function(){
 		if(!this.paused){

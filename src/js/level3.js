@@ -125,7 +125,7 @@ var PlayScene = {
     	this.playSound = true;
     	this.win = false;
     	this.bonus = false;
-    	this.tiempoAparicion = 20;
+    	this.tiempoAparicion = 30;
     	this.timeReset = true;
 
 		this.configure();	       
@@ -137,8 +137,6 @@ var PlayScene = {
     		this.exitKey.onDown.add(this.goMenu, this);
     		this.resetKey.onDown.add(this.resetGame, this);
     	}
-    	this.game.debug.text(this.puntos, 0, 500);
-
     	if(this.game.camera.y <= 660&&this.playSound){
     		this.bonus = true;
     		this.playSound = false;
@@ -164,12 +162,6 @@ var PlayScene = {
 			this.timeReset = false;
 			this.addOso();
 		}
-		this.game.debug.text(this.timeReset, 0, 400);
-		this.game.debug.text(this.Xpopo, 0, 300);
-		this.game.debug.text(this._popo.pulsaTecla, 0, 200);
-		this.game.debug.text(this.bonus, 100, 200);
-
-
 	},
 	addOso : function(){
 		this._oso = new entities.Oso(this.game,10,this._popo.y-220,'oso',this.game.camera);
@@ -181,14 +173,6 @@ var PlayScene = {
 	},
 
 	render : function(){
-		this.game.debug.bodyInfo(this._popo, 32, 32);
-
-		this.game.debug.body(this._popo);
-		this.game.debug.body(this.martillo);
-		//this.game.debug.body(this._oso);
-		this.game.debug.body(this._yeti);
-		this.game.debug.body(this._bird);
-		this.game.debug.body(this.pterodactilo);
 	},
 	collision: function(){
 		//COLISION CON EL MAPA---------------------------------------  		
@@ -197,17 +181,11 @@ var PlayScene = {
 		this.game.physics.arcade.collide(this.yetiGroup, this.groundLayer);
 
 		this.game.physics.arcade.collide(this._popo, this.cloudLayer);
-		//this.game.physics.arcade.collide(this.enemiesGroup, this.cloudLayer);
-		//this.game.physics.arcade.collide(this.yetiGroup, this.cloudLayer);
 
 		this.game.physics.arcade.collide(this._popo, this.bonusLayer);
-		//this.game.physics.arcade.collide(this.enemiesGroup, this.bonusLayer);
-		//this.game.physics.arcade.collide(this.enemiesGroup, this.bonusLayer);
 
 		//ROMPE SUELO SUPERIOR-------------------------------------------------------
 		if(this.game.physics.arcade.overlap(this.martillo, this.groundLayer)){
-			//this.game.debug.text('Popo: ' + (this._popo.x + this.martillo.x) + ", " + (this._popo.y + this.martillo.y), 0, 400);
-
 			this.varX = Math.trunc((this._popo.x + this.martillo.x+20)/this.tileW);
 			this.varY = Math.trunc((this._popo.y + this.martillo.y)/this.tileH);
 			
@@ -215,12 +193,8 @@ var PlayScene = {
 				this._popo.body.velocity.y = 0;
 				this.puntosSound.play();
 				this.puntos+=10;
-			   	//this.textSumaPtos =  this.game.add.bitmapText(Math.random() * (600 - 100) + 100, Math.random() * (600 - 100) + 100, 'fuente_verde','+' + 10, 50);
-			   	//this.textSumaPtos.fixedToCamera = true;
-
 				this.sumaPuntos(10);
 			}
-			//this.game.debug.text('Tile: ' + this.varX + ", " + this.varY, 0, 500);
 		}
 
 		//COLISION CON ENEMIGOS------------------------------------------------------------
@@ -228,13 +202,11 @@ var PlayScene = {
 			this.puntosSound.play();
 			this.puntos += 50;
 			this.sumaPuntos(50);
-
 		}
 		if(this.game.physics.arcade.collide(this.martillo, this.yetiGroup, this.mataEnemigo)){
 			this.puntosSound.play();
 			this.puntos += 50;
 			this.sumaPuntos(50);
-
 		}
 
 		//MUERTE POPO, VIDAS Y FIN JUEGO-------------------------------------------
@@ -268,8 +240,6 @@ var PlayScene = {
 			if(!obj.muerto)
 				self.huecoYeti();
 		})
-		/*if(!this._oso.muerto)
-			this.huecoOso();*/
 		if (this.game.physics.arcade.overlap(this._popo, this.pterodactilo)){
 			if(!this.win){
 				this.time = this.game.time.totalElapsedSeconds();
@@ -342,6 +312,7 @@ var PlayScene = {
 	ptosUpdate: function(){
 		this.textPtos.setText("Score: " + this.puntos);
 	},
+	//Puntos que salen al matar enemigos y destruir hielos
 	sumaPuntos: function(pts){
 		this.sumaPunts = this.game.add.bitmapText(Math.random() * (600 - 100) + 100, Math.random() * (600 - 100) + 100, 'fuente_verde','+' + pts, 50);
 		this.sumaPunts.fixedToCamera = true;
@@ -352,7 +323,7 @@ var PlayScene = {
 	mataEnemigo: function(martillo, enemy){
 		enemy.morir();	
 	},
-
+	//logica del yeti para rellenar los huecos
 	huecoYeti: function(){ //Para que el detecte si hay un hueco a su lado
 		var self = this;
 
@@ -402,8 +373,6 @@ var PlayScene = {
 			this.paused = false;
 			this.menu.alpha = this.resume.alpha = this.reset.alpha = 0;
 		}
-
-
 	},
 
 	goMenu: function(){

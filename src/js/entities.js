@@ -26,12 +26,8 @@ Movable.prototype.constructor = Movable;
 Movable.prototype.move = function(){
 	//USO this.x EN VEZ DE this.body.velocity.x PORQUE CON EL SEGUNDO SE MUEVE CON ACELERACION
 	this.x += this._velocity * this._direction;
-//Toroide	
-	/*if(this.x > this.game.width - this.width-30)
-		this.x = 2;
-	else if(this.x < 1)
-		this.x = this.game.width - this.width-30;
-/*lado a lado*/
+
+	/*lado a lado*/
 	if(this.x > this.game.width - this.width - 5)
 		this._direction = -1;
 	else if(this.x < 1)
@@ -79,8 +75,10 @@ Pterodactilo.prototype.update = function(){
 //PREGUNTAR A CARLOS COMO IMPLEMENTAR EL ATAQUE DEL MARTILLO
 function Martillo (game, x, y, graphic){
  	Objeto.call(this, game, x, y, graphic);
+ 	//POSICION INICIAL
  	this.xInit = x;
  	this.yInit = y;
+
  	this.alpha = 0;
 };
 Martillo.prototype = Object.create(Objeto.prototype);
@@ -196,14 +194,10 @@ Popo.prototype.keyboardInput = function(){
 			this.martillo.setPosJump();
 			if(this._direction === -1){
 				this.play('JumpLeftPopo', 2);
-				//this.height *= 1;
-				//this.width *= 1;
   				this.JumpLeftPopo.onComplete.add(this.martillo.setPosInit,this.martillo);
 			}
 			else if(this._direction === 1){
 				this.play('JumpRightPopo', 2);
-				//this.height *= 1;
-				//this.width *= 1;
   				this.JumpRightPopo.onComplete.add(this.martillo.setPosInit,this.martillo);			
 			}
 		}
@@ -265,10 +259,6 @@ Popo.prototype.resetPopo = function(){
 			this.vivo = true;
 		 	this.alpha = 0.3;
 			this.reset(this.posX- this._direction*20, this.posY);
-			this.game.debug.text('Posición: ' + (this.posX- this._direction*20) + ', ' + this.posY , 0, 500);
-
-			
-		
 	}
 };
 Popo.prototype.killMartillo = function(){
@@ -287,8 +277,6 @@ Popo.prototype.savePosition = function(){
 //ENEMIGOS---------------------------------------------------------------------------------
 function Enemy(game, x, y,  graphic){
 	Movable.call(this, game, x, y, graphic);
-	this.game.debug.text(this.map, 0, 100);
-
 };
 Enemy.prototype = Object.create(Movable.prototype);
 Enemy.prototype.constructor = Enemy;
@@ -350,15 +338,6 @@ function Oso(game, x, y, graphic, camera){
 	this.tiempoSalto = 5;
 	this.jumpPower = -400;
 	this.camara = camera;
-
-	/*
-	this.velAux = this._velocity;
-	this.dirAux = this._direction;
-	this.tiempoIni = 0;
-	this.tiempo = 0;
-	this.saltando = false;
-	this.map = mapa;
-	this.tiempoSalto = this.numeroRandom(3, 1.500);*/
 };
 Oso.prototype = Object.create(Enemy.prototype);
 Oso.prototype.constructor = Oso;
@@ -386,61 +365,11 @@ Oso.prototype.update = function(){
 	}
 	else if (this.alpha <= 0)
 		this.destroy();
-
-	
-
-	/*if(this.saltando){
-		this._velocity = 0;
-		this._direction = 0;
-		this.jump();
-//		this.body.velocity.y = 0;
-
-		if(this.body.onFloor()){
-			this.saltando = false;
-			this._velocity = this.velAux;
-			this._direction = this.dirAux;
-		}
-	}
-	else{
-		this.movement();
-	}
-*/
 };
 Oso.prototype.jump = function(){
 	this.body.velocity.y = this.jumpPower;
 }
-/*
-Oso.prototype.movement = function(){
-	if(this.tiempo > this.tiempoIni + this.tiempoSalto && !this.saltado)
-		this.saltando = true;
-}
-Oso.prototype.saltar = function(){
 
-	if(this.tiempo > this.tiempoIni + this.tiempoSalto && !this.saltado){
-		this._velocity = 0;
-		this._direction = 0;
-<<<<<<< HEAD
-			if(this.tiempo > this.tiempoIni + this.tiempoSalto + 0.5){
-				//this.jump();
-				this.saltado = true;
-=======
-		if(this.tiempo > this.tiempoIni + this.tiempoSalto + 0.5){
-			this.jump();
-			this.saltado = true;
->>>>>>> f937601119a5f80b7e2f8247a865871fb8dcc4f1
-
-		}
-	}
-	else if(this.tiempo > this.tiempoIni + this.tiempoSalto + 0.5 && this.saltado){
-		this.body.velocity.y = 0;
-		this._velocity = this.velAux;
-		this._direction = this.dirAux;
-	}
-},
-Oso.prototype.jump = function(){
-	//this.body.velocity.y = -200;
-};
-*/
 Oso.prototype.morir = function (){
 	this.killEnemySound.play();
 	this.muerto = true;

@@ -45,9 +45,6 @@ var PreloaderScene = {
 
   //Imagenes personajes
     this.game.load.image('berenjena', 'images/berenjena.png');
-    
-    this.game.load.image('pajaro', 'images/pajaro.png');
-
     this.game.load.spritesheet('oso', 'images/SpritesJson/oso.png', 17.5, 31, 6);
     this.game.load.spritesheet('personajes', 'images/SpritesJson/Personajes.png', 29.571428571428, 27.076923076923, 200);
     this.game.load.spritesheet('personajesPajaro', 'images/SpritesJson/Personajes.png', 29, 26, 200);
@@ -63,6 +60,7 @@ var PreloaderScene = {
   //Sonidos
   	this.game.load.audio('himalayaMelody',['Sounds/melodias/himalaya.mp3','Sounds/melodias/himalaya.ogg']);
   	this.game.load.audio('menuMelody','Sounds/melodias/Menu1.ogg');
+  	this.game.load.audio('OnlyYouMelody','Sounds/melodias/OnlyYou.mp3');
   	this.game.load.audio('jumpSound','Sounds/SonidosWeb/jump.wav');
   	this.game.load.audio('killEnemySound','Sounds/SonidosWeb/matarEnemigo.wav');
   	this.game.load.audio('killBirdSound','Sounds/SonidosWeb/muertePajaro.wav');

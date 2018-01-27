@@ -14,7 +14,6 @@ var PlayScene = {
 
 		this.bonusSound = this.game.add.sound('bonusSound',0.3,true);
 
-
 		this.tileH = 40;
 		this.tileW = this.world.width/11;
 
@@ -51,11 +50,6 @@ var PlayScene = {
 		this._bird.height *= 3;
 		this._bird.width *= 3;
 		this.game.world.addChild(this._bird);
-		//OSO---------------------------------------
-		/*this._oso = new entities.Oso(this.game,10,2200,'oso',this.game.camera);
-		this._oso.height *= 2;
-		this._oso.width *= 4;
-		this.game.world.addChild(this._oso);*/
 
 		//GRUPO ENEMIGOS------------------------
 		this.enemiesGroup = this.game.add.group();
@@ -124,13 +118,13 @@ var PlayScene = {
    		this.textPtos =  this.game.add.bitmapText(500, 50, 'fuente','Score: 0' + this.puntos,50);
 		this.textPtos.fixedToCamera = true;
 
-
+		//VARIABLES DEL JUEGO-----------------------------------------------
     	this.paused = false;
     	this.gameover = false;	
     	this.playSound = true;
     	this.win = false;
     	this.bonus = false;
-    	this.tiempoAparicion = 20;
+    	this.tiempoAparicion = 30;
     	this.timeReset = true;
 
 		this.configure();	       
@@ -142,13 +136,10 @@ var PlayScene = {
     		this.exitKey.onDown.add(this.goMenu, this);
     		this.resetKey.onDown.add(this.resetGame, this);
     	}
-    	this.game.debug.text(this.puntos, 0, 500);
-
     	if(this.game.camera.y <= 660&&this.playSound){
     		this.bonus = true;
     		this.playSound = false;
     		this.himalayaMelody.fadeOut(1000)
-    		//this._bird.morir();
     		if(this.himalayaMelody.onFadeComplete){
     			this.bonusSound.fadeIn(5000,true);
     		}
@@ -170,12 +161,6 @@ var PlayScene = {
 			this.timeReset = false;
 			this.addOso();
 		}
-		this.game.debug.text(this.timeReset, 0, 400);
-		this.game.debug.text(this.Xpopo, 0, 300);
-		this.game.debug.text(this._popo.pulsaTecla, 0, 200);
-		this.game.debug.text(this.bonus, 100, 200);
-
-
 	},
 	addOso : function(){
 		this._oso = new entities.Oso(this.game,10,this._popo.y-220,'oso',this.game.camera);
@@ -187,14 +172,6 @@ var PlayScene = {
 	},
 
 	render : function(){
-		this.game.debug.bodyInfo(this._popo, 32, 32);
-
-		this.game.debug.body(this._popo);
-		this.game.debug.body(this.martillo);
-		//this.game.debug.body(this._oso);
-		this.game.debug.body(this._yeti);
-		this.game.debug.body(this._bird);
-		this.game.debug.body(this.pterodactilo);
 	},
 	collision: function(){
 		//COLISION CON EL MAPA---------------------------------------  		
@@ -203,17 +180,11 @@ var PlayScene = {
 		this.game.physics.arcade.collide(this.yetiGroup, this.groundLayer);
 
 		this.game.physics.arcade.collide(this._popo, this.cloudLayer);
-		//this.game.physics.arcade.collide(this.enemiesGroup, this.cloudLayer);
-		//this.game.physics.arcade.collide(this.yetiGroup, this.cloudLayer);
 
 		this.game.physics.arcade.collide(this._popo, this.bonusLayer);
-		//this.game.physics.arcade.collide(this.enemiesGroup, this.bonusLayer);
-		//this.game.physics.arcade.collide(this.enemiesGroup, this.bonusLayer);
 
 		//ROMPE SUELO SUPERIOR-------------------------------------------------------
 		if(this.game.physics.arcade.overlap(this.martillo, this.groundLayer)){
-			//this.game.debug.text('Popo: ' + (this._popo.x + this.martillo.x) + ", " + (this._popo.y + this.martillo.y), 0, 400);
-
 			this.varX = Math.trunc((this._popo.x + this.martillo.x+20)/this.tileW);
 			this.varY = Math.trunc((this._popo.y + this.martillo.y)/this.tileH);
 			
@@ -221,12 +192,8 @@ var PlayScene = {
 				this._popo.body.velocity.y = 0;
 				this.puntosSound.play();
 				this.puntos+=10;
-			   	//this.textSumaPtos =  this.game.add.bitmapText(Math.random() * (600 - 100) + 100, Math.random() * (600 - 100) + 100, 'fuente_verde','+' + 10, 50);
-			   	//this.textSumaPtos.fixedToCamera = true;
-
 				this.sumaPuntos(10);
 			}
-			//this.game.debug.text('Tile: ' + this.varX + ", " + this.varY, 0, 500);
 		}
 
 		//COLISION CON ENEMIGOS------------------------------------------------------------
@@ -234,19 +201,17 @@ var PlayScene = {
 			this.puntosSound.play();
 			this.puntos += 50;
 			this.sumaPuntos(50);
-
 		}
 		if(this.game.physics.arcade.collide(this.martillo, this.yetiGroup, this.mataEnemigo)){
 			this.puntosSound.play();
 			this.puntos += 50;
 			this.sumaPuntos(50);
-
 		}
 
 		//MUERTE POPO, VIDAS Y FIN JUEGO-------------------------------------------
 		if(this.game.physics.arcade.collide(this._popo, this.enemiesGroup) || this.game.physics.arcade.collide(this._popo, this.yetiGroup) || this._popo.y >= this.game.camera.y + this.game.camera.height){
 			if(this.bonus){
-				this.game.state.start('level2');
+				this.game.state.start('level3');
 			}
 			else if(this._popo.muere && this.i < 3 ){
 				this._popo.morir();
@@ -274,8 +239,6 @@ var PlayScene = {
 			if(!obj.muerto)
 				self.huecoYeti();
 		})
-		/*if(!this._oso.muerto)
-			this.huecoOso();*/
 		if (this.game.physics.arcade.overlap(this._popo, this.pterodactilo)){
 			if(!this.win){
 				this.time = this.game.time.totalElapsedSeconds();
