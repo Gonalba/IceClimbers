@@ -90,7 +90,7 @@ var PlayScene = {
         this.menu.alpha = this.resume.alpha = this.reset.alpha = 0;
 		
 		//MAPA------------------------------
-		this.map = this.game.add.tilemap('mapa2');
+		this.map = this.game.add.tilemap('mapa3');
 		this.map.addTilesetImage('TileSet','tiles');
 
 
@@ -288,7 +288,7 @@ var PlayScene = {
 			//this.pterodactilo.addChild(this._popo);
 			if(this.game.time.totalElapsedSeconds() >= this.time + 5){
 				this.game.sound.stopAll();
-				this.game.state.start('level3');
+				this.game.state.start('menu_principal');
 			}
 		}
 	},

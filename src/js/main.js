@@ -55,6 +55,8 @@ var PreloaderScene = {
     
   //Mapa
     this.game.load.tilemap('mapa', 'images/Mapa1.json', null, Phaser.Tilemap.TILED_JSON);
+    this.game.load.tilemap('mapa2', 'images/Mapa2.json', null, Phaser.Tilemap.TILED_JSON);
+    this.game.load.tilemap('mapa3', 'images/Mapa3.json', null, Phaser.Tilemap.TILED_JSON);
     this.game.load.image('tiles', 'images/TileSet.png');
 
   //Sonidos

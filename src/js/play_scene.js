@@ -130,7 +130,7 @@ var PlayScene = {
     	this.playSound = true;
     	this.win = false;
     	this.bonus = false;
-    	this.tiempoAparicion = 10;
+    	this.tiempoAparicion = 20;
     	this.timeReset = true;
 
 		this.configure();	       
@@ -148,7 +148,7 @@ var PlayScene = {
     		this.bonus = true;
     		this.playSound = false;
     		this.himalayaMelody.fadeOut(1000)
-    		this._bird.morir();
+    		//this._bird.paused();
     		if(this.himalayaMelody.onFadeComplete){
     			this.bonusSound.fadeIn(5000,true);
     		}
@@ -248,7 +248,7 @@ var PlayScene = {
 			if(this.bonus){
 				this.game.state.start('level2');
 			}
-			else if(this._popo.muere && this.i < 3 ){
+			else if(this._popo.muere && this.i < 3){
 				this._popo.morir();
 				this.vidas[this.i].destroy();
 				this.i++;
