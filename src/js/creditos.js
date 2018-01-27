@@ -2,6 +2,7 @@
 var scene;
 var Creditos = {
 	create: function () {
+
 	this.escKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
     this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.ESC);
 
