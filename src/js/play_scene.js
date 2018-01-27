@@ -16,6 +16,7 @@ var PlayScene = {
 
 		this.tileH = 40;
 		this.tileW = this.world.width/11;
+
 		//PTERODÁCTILO------------------------------	
 		this.pterodactilo = new entities.Pterodactilo(this.game, 100, 50,'personajesPt');
 		this.pterodactilo.height *= 3;
@@ -28,17 +29,22 @@ var PlayScene = {
 		this.martillo.width *= 0.07;
 
 		//POPO--------------------------------------
-		this._popo = new entities.Popo(this.game, 400, 2500,this.martillo, 'personajes');
+		this._popo = new entities.Popo(this.game, 400, 900,this.martillo, 'personajes');
 		this._popo.height *= 3;
 		this._popo.width *= 3;
 		this.game.world.addChild(this._popo);
 		this._popo.addChild(this.martillo);
 
-		//YETI-------------------------------------
-		this._yeti = new entities.Yeti(this.game,100,2050,'personajes');
+		//YETIS-------------------------------------
+		this.yetiGroup = this.game.add.group();
+   
+   		for (var i = 0; i < 7; i++){
+		this._yeti = new entities.Yeti(this.game, Math.random() * 550,2500 - i*200,'personajes');
 		this._yeti.height *= 3;
 		this._yeti.width *= 3;
 		this.game.world.addChild(this._yeti);
+		this.yetiGroup.add(this._yeti);
+		}
 		//PÁJARO-------------------------------------
 		this._bird = new entities.Pajaro(this.game,100,2050,'personajesPajaro', this.game.camera);
 		this._bird.height *= 3;
@@ -52,19 +58,24 @@ var PlayScene = {
 
 		//GRUPO ENEMIGOS------------------------
 		this.enemiesGroup = this.game.add.group();
-		this.enemiesGroup.add(this._yeti);
 		this.enemiesGroup.add(this._oso);
 		this.enemiesGroup.add(this._bird);
 
+		//MENÚ DE PAUSA----------------------------------------------
 		this.menu = this.game.add.sprite(295, 400, 'menuBTN');//this.game.world.centerX - 265, this.game.world.centerY-260,'icestart');
         this.menu.scale.setTo(0.5, 0.5);
         this.menu.fixedToCamera = true;
+        this.menu.bringToTop();
+
         this.resume = this.game.add.sprite(75, 300, 'resumeBTN');//this.game.world.centerX - 265, this.game.world.centerY-260,'icestart');
         this.resume.scale.setTo(0.5, 0.5);
         this.resume.fixedToCamera = true;
+        this.resume.bringToTop();
+
         this.reset = this.game.add.sprite(500, 300, 'resetBTN');//this.game.world.centerX - 265, this.game.world.centerY-260,'icestart');
         this.reset.scale.setTo(0.5, 0.5);
         this.reset.fixedToCamera = true;
+        this.reset.bringToTop();
 
         //PAUSA--------------------------------
 		this.escKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
@@ -84,8 +95,18 @@ var PlayScene = {
 
 
 		//BERENJENAS---------------------------------------
-		this.berenjena = this.game.add.sprite (200, 1000, 'berenjena');
-	    this.berenjena.scale.setTo(3, 3);
+		this.berenjenaGroup = this.game.add.group();
+
+		this.berenjena = this.game.add.sprite (100, 870, 'berenjena');
+	    this.berenjena.scale.setTo(3, 3);	
+	    this.berenjena1 = this.game.add.sprite (500, 710, 'berenjena');
+	    this.berenjena1.scale.setTo(3, 3);	
+	    this.berenjena2 = this.game.add.sprite (75, 540, 'berenjena');
+	    this.berenjena2.scale.setTo(3, 3);
+   		this.berenjenaGroup.add(this.berenjena);
+   		this.berenjenaGroup.add(this.berenjena1);
+   		this.berenjenaGroup.add(this.berenjena2);
+
 
 		//VIDAS------------------------------------
 		this.vidas = new Array (3);
@@ -96,17 +117,13 @@ var PlayScene = {
 			this.vidas[this.i] = this.vida;
 			this.vidas[this.i].fixedToCamera = true;
 		}
-
 		this.i = 0;//Contador para las vidas
 
+		//PUNTOS----------------------------------------------------------
 		this.puntos = 0;
-		this.textPtos = this.game.add.text(400, 50, "Score: " + this.puntos, {
-        font: "25px Pixeled",
-        fill: "#ffffff",
-        align: "center"
-    });
-    //this.game.add.bitmapText(10, 10, 'carrier_command','Score: ',34);
+   		this.textPtos =  this.game.add.bitmapText(500, 50, 'fuente','Score: 0' + this.puntos,50);
 		this.textPtos.fixedToCamera = true;
+
 
     	this.paused = false;
     	this.gameover = false;	
@@ -127,9 +144,10 @@ var PlayScene = {
     	}
     	this.game.debug.text(this.puntos, 0, 500);
 
-    	if(this.game.camera.y <= 660&&this.playSound){
+    	if(this.game.camera.y <= 660 && this.playSound){
     		this.playSound = false;
-    		this.himalayaMelody.fadeOut(1000);
+    		this.himalayaMelody.fadeOut(1000)
+    		this._bird.morir();
     		if(this.himalayaMelody.onFadeComplete){
     			this.bonusSound.fadeIn(5000,true);
     		}
@@ -139,7 +157,7 @@ var PlayScene = {
 
     	this.setCamera();
 		this.collision();
-		this.ptosUdate();
+		//this.ptosUdate();
 	},
 
 	render : function(){
@@ -156,12 +174,15 @@ var PlayScene = {
 		//COLISION CON EL MAPA---------------------------------------  		
 		this.game.physics.arcade.collide(this._popo, this.groundLayer);
 		this.game.physics.arcade.collide(this.enemiesGroup, this.groundLayer);
+		this.game.physics.arcade.collide(this.yetiGroup, this.groundLayer);
 
 		this.game.physics.arcade.collide(this._popo, this.cloudLayer);
-		this.game.physics.arcade.collide(this.enemiesGroup, this.cloudLayer);
+		//this.game.physics.arcade.collide(this.enemiesGroup, this.cloudLayer);
+		//this.game.physics.arcade.collide(this.yetiGroup, this.cloudLayer);
 
 		this.game.physics.arcade.collide(this._popo, this.bonusLayer);
-		this.game.physics.arcade.collide(this.enemiesGroup, this.bonusLayer);
+		//this.game.physics.arcade.collide(this.enemiesGroup, this.bonusLayer);
+		//this.game.physics.arcade.collide(this.enemiesGroup, this.bonusLayer);
 
 		//ROMPE SUELO SUPERIOR-------------------------------------------------------
 		if(this.game.physics.arcade.overlap(this.martillo, this.groundLayer)){
@@ -174,6 +195,10 @@ var PlayScene = {
 				this._popo.body.velocity.y = 0;
 				this.puntosSound.play();
 				this.puntos+=10;
+			   	//this.textSumaPtos =  this.game.add.bitmapText(Math.random() * (600 - 100) + 100, Math.random() * (600 - 100) + 100, 'fuente_verde','+' + 10, 50);
+			   	//this.textSumaPtos.fixedToCamera = true;
+
+				this.sumaPuntos(10);
 			}
 			//this.game.debug.text('Tile: ' + this.varX + ", " + this.varY, 0, 500);
 		}
@@ -182,10 +207,18 @@ var PlayScene = {
 		if(this.game.physics.arcade.collide(this.martillo, this.enemiesGroup, this.mataEnemigo)){
 			this.puntosSound.play();
 			this.puntos += 50;
+			this.sumaPuntos(50);
+
+		}
+		if(this.game.physics.arcade.collide(this.martillo, this.yetiGroup, this.mataEnemigo)){
+			this.puntosSound.play();
+			this.puntos += 50;
+			this.sumaPuntos(50);
+
 		}
 
 		//MUERTE POPO, VIDAS Y FIN JUEGO-------------------------------------------
-		if(this.game.physics.arcade.collide(this._popo, this.enemiesGroup) || this._popo.y >= this.game.camera.y + this.game.camera.height){
+		if(this.game.physics.arcade.collide(this._popo, this.enemiesGroup) || this.game.physics.arcade.collide(this._popo, this.yetiGroup) || this._popo.y >= this.game.camera.y + this.game.camera.height){
 			if(this._popo.muere && this.i < 3 ){
 				this._popo.morir();
 				this.vidas[this.i].destroy();
@@ -199,20 +232,21 @@ var PlayScene = {
 		}
 
 		//COLISIÓN CON LOS BONUS--------------------------------------------------
-		if(this.game.physics.arcade.overlap(this._popo, this.berenjena)){
-			this.puntosSound.play();
-			this.puntos += 20;
-			this.berenjena.destroy();
-		}
+		if(this.game.physics.arcade.overlap(this._popo, this.berenjenaGroup, this.cogeBerenjena)){
+				this.puntosSound.play();
+				this.puntos += 20;
+				this.sumaPuntos(20);
+			}
 
+			
+		var self = this;
 		//DETECCIÓN DE HUECOS POR EL YETI---------------------------------------
-		if(!this._yeti.muerto)
-<<<<<<< HEAD
-			this.huecoYeti();
+		this.yetiGroup.forEach(function(obj){
+			if(!obj.muerto)
+				self.huecoYeti();
+		})
 		if(!this._oso.muerto)
 			this.huecoOso();
-=======
-			this.hueco();
 
 		if (this.game.physics.arcade.overlap(this._popo, this.pterodactilo)){
 			if(!this.win){
@@ -229,7 +263,6 @@ var PlayScene = {
 				this.game.state.start('gameOver');
 			}
 		}
->>>>>>> d7716cb338395abd65f93ed7fc913e7fa85933b8
 	},
 
 	configure: function(){ //configura las físicas de los elementos del juego
@@ -249,6 +282,11 @@ var PlayScene = {
 		this._bird.body.collideWorldBounds = true;
 
 		//ENEMIGOS------------------------
+		this.game.physics.arcade.enable(this.yetiGroup);
+		this.yetiGroup.forEach(function(obj){
+     		 obj.body.collideWorldBounds = true;
+    		});
+
 		this.game.physics.arcade.enable(this.enemiesGroup);
 		this.enemiesGroup.forEach(function(obj){
      		 obj.body.collideWorldBounds = true;
@@ -256,9 +294,10 @@ var PlayScene = {
 		this._bird.body.allowGravity = false;
 
 		//BONUS BERENJENA-------------------------
-		this.game.physics.arcade.enable(this.berenjena);
-		this.berenjena.body.allowGravity = false;
-
+		this.game.physics.arcade.enable(this.berenjenaGroup);
+		this.berenjenaGroup.forEach(function(obj){
+			obj.body.allowGravity = false;
+		});
 		this.game.physics.arcade.enable(this.pterodactilo);
 		this.pterodactilo.body.allowGravity = false;
   		//MAPA----------------------------
@@ -276,42 +315,56 @@ var PlayScene = {
 
 	},
 
-	ptosUdate: function(){
+	cogeBerenjena: function(popo, beren){
+		beren.destroy();
+	},
+	ptosUpdate: function(){
 		this.textPtos.setText("Score: " + this.puntos);
+	},
+	sumaPuntos: function(pts){
+		this.sumaPunts = this.game.add.bitmapText(Math.random() * (600 - 100) + 100, Math.random() * (600 - 100) + 100, 'fuente_verde','+' + pts, 50);
+		this.sumaPunts.fixedToCamera = true;
+   		this.game.add.tween(this.sumaPunts).to( {y: 0, alpha: 0 }, 2000, Phaser.Easing.Linear.None, true, 0);// Number.MAX_VALUE, true);
+   		this.ptosUpdate();
+
 	},
 	mataEnemigo: function(martillo, enemy){
 		enemy.morir();	
 	},
 
 	huecoYeti: function(){ //Para que el detecte si hay un hueco a su lado
-		if(this._yeti.suelo){
-		if(this._yeti._direction == 1){//Si va hacia la derecha
-			this.varX = Math.trunc((this._yeti.x + this._yeti.width)/this.tileW);
-			this.varY= Math.trunc((this._yeti.y + this._yeti.height)/this.tileH);
+		var self = this;
+
+		this.yetiGroup.forEach(function(obj){
+
+		if(obj.suelo && !obj.muerto){
+		if(obj._direction == 1){//Si va hacia la derecha
+			self.varX = Math.trunc((obj.x + obj.width)/self.tileW);
+			self.varY= Math.trunc((obj.y + obj.height)/self.tileH);
 		}
 		else{//Hacia la izqd
-			this.varX = Math.trunc((this._yeti.x)/this.tileW);
-			this.varY= Math.trunc((this._yeti.y + this._yeti.height)/this.tileH);
+			self.varX = Math.trunc((obj.x)/self.tileW);
+			self.varY= Math.trunc((obj.y + obj.height)/self.tileH);
 		}
-		if(this.map.getTile(this.varX, this.varY) === null){ //Si encuentra un hueco en el suelo
+		if(self.map.getTile(self.varX, self.varY) === null){ //Si encuentra un hueco en el suelo
 
-			if (!this.detectado){ //Si dicho hueco aún no había sido detectado cambia la dirección del yeti y pone "detectado" a true
-					this.detectado = true;
-					this.auxD = this._yeti._direction;
-					this._yeti.goBack();				
+			if (!obj.detectado){ //Si dicho hueco aún no había sido detectado cambia la dirección del yeti y pone "detectado" a true
+					obj.detectado = true;
+					obj.auxD = obj._direction;
+					obj.goBack();				
 			}
 			else{	//Si el hueco sí había sido detectado -> "detectado" lo pone a false y crea un tile nuevo en el hueco que corresponde.
-				if (this._yeti._direction === this.auxD){ //Si va en la dirección original en la que ha detectado el hueco significa que ha llegado al final y así que coloca el tile
-					this.detectado = false;
-					this.map.putTile(7, this.varX, this.varY, this.groundLayer);
+				if (obj._direction === obj.auxD){ //Si va en la dirección original en la que ha detectado el hueco significa que ha llegado al final y así que coloca el tile
+					self.detectado = false;
+					self.map.putTile(7, self.varX, self.varY, self.groundLayer);
 				}
 				else{//Si no se habrá quedado encerrado y muere
-					this._yeti.morir();
+					obj.morir();
 				}
 			}
 		}
 	}
-	},
+	})},
 	huecoOso: function(){
 		if(this._oso.suelo){
 
@@ -341,12 +394,14 @@ var PlayScene = {
 		if(!this.paused){
 			this._popo.pause();
 			this.enemiesGroup.callAll('pause');
+			this.yetiGroup.callAll('pause');
 			this.paused = true;
 			this.menu.alpha = this.resume.alpha = this.reset.alpha = 1;
 		}
 		else if(this.paused||this.gameover){
 			this._popo.pause();
 			this.enemiesGroup.callAll('pause');
+			this.yetiGroup.callAll('pause');
 			this.paused = false;
 			this.menu.alpha = this.resume.alpha = this.reset.alpha = 0;
 		}

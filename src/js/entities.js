@@ -54,6 +54,9 @@ Movable.prototype.pause = function(){
 Movable.prototype.enSuelo = function(obj){
 	return(obj.body.onFloor());
 };
+Movable.prototype.numeroRandom = function(max, min){
+	return (Math.random() * (max - min) + min);
+};
 //PTERODACTILO-----------------------------------------------------------------------
 function Pterodactilo (game,x,y,graphic){
 	Movable.call(this, game, x, y, graphic);
@@ -292,9 +295,7 @@ Enemy.prototype.constructor = Enemy;
 Enemy.prototype.goBack = function(){
 	this._direction = -this._direction;
 };
-Enemy.prototype.numeroRandom = function(max, min){
-	return (Math.random() * (max - min) + min);
-};
+
 
 //YETI--------------------------------------------------------------------------------------
 function Yeti(game, x, y,  graphic){
@@ -302,6 +303,8 @@ function Yeti(game, x, y,  graphic){
 	this.MoveLeftYeti = this.animations.add('MoveRightYeti',[144,145,146]);
 	this.MoveRightYeti = this.animations.add('MoveLeftYeti',[143,142,141]);
 	this.MuertoYeti = this.animations.add('MuertoYeti',[140,147]);
+	this.detectado = false;
+	this.auxD;
 };
 Yeti.prototype = Object.create(Enemy.prototype);
 Yeti.prototype.constructor = Yeti;
@@ -356,7 +359,8 @@ Oso.prototype.constructor = Oso;
 
 Oso.prototype.update = function(){
 	this.tiempo = this.game.time.totalElapsedSeconds();
-	
+			this.move();
+
 	if(!this.muerto){
 		this.move();
 		if(this._direction == 1)
@@ -396,7 +400,7 @@ Oso.prototype.saltar = function(){
 		this._velocity = 0;
 		this._direction = 0;
 			if(this.tiempo > this.tiempoIni + this.tiempoSalto + 0.5){
-				this.jump();
+				//this.jump();
 				this.saltado = true;
 
 			}
@@ -408,7 +412,7 @@ Oso.prototype.saltar = function(){
 	}
 	}},
 Oso.prototype.jump = function(){
-	this.body.velocity.y = -200;
+	//this.body.velocity.y = -200;
 };
 
 Oso.prototype.morir = function (){
@@ -499,7 +503,6 @@ Pajaro.prototype.morir = function (){
 };
 
 module.exports = {
-	Objeto: Objeto,
 	Popo: Popo,
 	Yeti: Yeti,
 	Oso: Oso,
