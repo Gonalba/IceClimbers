@@ -51,11 +51,6 @@ var PlayScene = {
 		this._bird.height *= 3;
 		this._bird.width *= 3;
 		this.game.world.addChild(this._bird);
-		//OSO---------------------------------------
-		/*this._oso = new entities.Oso(this.game,10,2200,'oso',this.game.camera);
-		this._oso.height *= 2;
-		this._oso.width *= 4;
-		this.game.world.addChild(this._oso);*/
 
 		//GRUPO ENEMIGOS------------------------
 		this.enemiesGroup = this.game.add.group();
@@ -77,7 +72,7 @@ var PlayScene = {
         this.reset.fixedToCamera = true;
         this.reset.bringToTop();
 
-        //PAUSA--------------------------------
+        //TECLAS DE PAUSA--------------------------------
 		this.escKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
     	this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.ESC);
     	this.selecKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
@@ -124,7 +119,7 @@ var PlayScene = {
    		this.textPtos =  this.game.add.bitmapText(500, 50, 'fuente','Score: 0' + this.puntos,50);
 		this.textPtos.fixedToCamera = true;
 
-
+		//VARIABLES DEL CODIGO------------------------
     	this.paused = false;
     	this.gameover = false;	
     	this.playSound = true;
@@ -148,7 +143,6 @@ var PlayScene = {
     		this.bonus = true;
     		this.playSound = false;
     		this.himalayaMelody.fadeOut(1000)
-    		//this._bird.morir();
     		if(this.himalayaMelody.onFadeComplete){
     			this.bonusSound.fadeIn(5000,true);
     		}
@@ -246,7 +240,7 @@ var PlayScene = {
 		//MUERTE POPO, VIDAS Y FIN JUEGO-------------------------------------------
 		if(this.game.physics.arcade.collide(this._popo, this.enemiesGroup) || this.game.physics.arcade.collide(this._popo, this.yetiGroup) || this._popo.y >= this.game.camera.y + this.game.camera.height){
 			if(this.bonus){
-				this.game.state.start('level2');
+				this.game.state.start('menu_principal');
 			}
 			else if(this._popo.muere && this.i < 3 ){
 				this._popo.morir();
@@ -285,7 +279,6 @@ var PlayScene = {
 			this._popo.body.gravity = false;
 			this._popo.x = this.pterodactilo.x;
 			this._popo.y = this.pterodactilo.y - 20;
-			//this.pterodactilo.addChild(this._popo);
 			if(this.game.time.totalElapsedSeconds() >= this.time + 5){
 				this.game.sound.stopAll();
 				this.game.state.start('menu_principal');

@@ -2,6 +2,7 @@
 //  <link href="styles.css" rel="stylesheet" type="text/css">
 
 var Level2 = require('./level2.js');
+var Level3 = require('./level3.js');
 var PlayScene = require('./play_scene.js');
 var MenuPrincipal = require('./menu_principal.js');
 var Creditos = require('./creditos.js');
@@ -86,6 +87,7 @@ window.onload = function () {
   game.state.add('preloader', PreloaderScene);
   game.state.add('play', PlayScene);
   game.state.add('level2', Level2);
+  game.state.add('level3', Level3);
   game.state.add('menu_principal', MenuPrincipal);
   game.state.add('creditos', Creditos);
   game.state.add('gameOver', GameOver);
