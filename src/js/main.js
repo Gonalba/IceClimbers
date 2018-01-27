@@ -59,6 +59,8 @@ var PreloaderScene = {
     this.game.load.image('Asignatura', 'images/Creditos/Asignatura.png');
     this.game.load.image('Nintendo', 'images/Creditos/Nintendo.png');
     this.game.load.image('Uni', 'images/Creditos/Uni.png');
+   
+    this.game.load.image('GameOver', 'imagess/GameOver.png');
 
 
   //Mapa

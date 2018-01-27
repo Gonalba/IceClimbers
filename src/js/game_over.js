@@ -12,6 +12,8 @@ var GameOver = {
 	    this.enterKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 	    this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.ENTER);
 
+      this.GO = this.game.add.sprite(100, 75, 'GameOver');
+      this.GO.scale.setTo(0.4, 0.4);
 	    this.martillo = this.game.add.sprite(pos1.x, pos1.y, 'martilloMenu');
 	    this.martillo.scale.setTo(0.4, 0.4);
 			this.buttonPlay = this.game.add.sprite(300, 325, 'playBTN');
